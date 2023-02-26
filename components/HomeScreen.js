@@ -11,7 +11,7 @@ export default function HomeScreen({ navigation  }) {
         <Text style={styles.logoText}>Mon Application</Text>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('LoginScreen')}>
+        <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('AlaUne')}>
           <Text style={styles.buttonText}>Se connecter</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.signupButton}>

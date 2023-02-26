@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './HomeScreen';
-import LoginScreen from './LoginScreen';
+import AlaUne from './AlaUne';
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
 
@@ -11,7 +11,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        <Stack.Screen name="AlaUne" component={AlaUne} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function TopBar() {
+export default function AlaUne() {
   return (
     <View style={styles.container}>
       <Ionicons name="menu" size={24} color="white" style={styles.menuIcon} />
