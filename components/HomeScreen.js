@@ -4,14 +4,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native';
 
 
-export default function App() {
+export default function HomeScreen({ navigation  }) {
   return (
-<LinearGradient colors={['#9b59b6', '#FFB347', '#F2C94C']} style={styles.container}>
+    <LinearGradient colors={['#9b59b6', '#FFB347', '#F2C94C']} style={styles.container}>
       <View style={styles.logoContainer}>
         <Text style={styles.logoText}>Mon Application</Text>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.loginButton}>
+        <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('LoginScreen')}>
           <Text style={styles.buttonText}>Se connecter</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.signupButton}>
@@ -21,6 +21,7 @@ export default function App() {
     </LinearGradient>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
