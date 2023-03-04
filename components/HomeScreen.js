@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native';
 
@@ -8,13 +8,13 @@ export default function HomeScreen({ navigation  }) {
   return (
     <LinearGradient colors={['#9b59b6', '#FFB347', '#F2C94C']} style={styles.container}>
       <View style={styles.logoContainer}>
-        <Text style={styles.logoText}>Mon Application</Text>
+      <Image source={require('./logo.png')} style={styles.logo} />
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('AlaUne')}>
+        <TouchableOpacity style={[styles.loginButton, { marginTop: 20, marginBottom: 10 }]} onPress={() => navigation.navigate('AlaUne')}>
           <Text style={styles.buttonText}>Se connecter</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.signupButton}>
+        <TouchableOpacity style={[styles.signupButton, { marginBottom: 20 } ]}>
           <Text style={styles.buttonText}>S'inscrire</Text>
         </TouchableOpacity>
       </View>
@@ -30,16 +30,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logoContainer: {
-    marginTop: 50,
-    marginBottom: 30,
+    marginTop: -150,
+    marginBottom: 1,
+    alignItems: 'center',
   },
-  logoText: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: '#FFF',
+  logo: {
+    height: 400,
+    resizeMode: 'contain',
   },
   buttonContainer: {
+    marginTop: 30,
     width: '80%',
+    alignItems: 'center',
   },
   loginButton: {
     backgroundColor: '#FFF',
@@ -48,6 +50,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 15,
+    width: '100%',
   },
   signupButton: {
     backgroundColor: '#FFF',
@@ -55,6 +58,7 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
   },
   buttonText: {
     color: '#000',
