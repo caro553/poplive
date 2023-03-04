@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function TopBar() {
@@ -28,8 +28,8 @@ export default function TopBar() {
           <Ionicons name="menu" size={24} color="white" style={styles.menuIcon} />
         </TouchableOpacity>
       </View>
-      <Text style={styles.title}>Mon application</Text>
-      <Ionicons name="person" size={24} color="white" style={styles.profileIcon} />
+      <Image source={require('./logo.png')} style={styles.logo} />
+            <Ionicons name="person" size={24} color="white" style={styles.profileIcon} />
       {showMenu && (
         <View style={styles.menuContainer}>
           <TouchableOpacity onPress={handlePage1}>
@@ -91,4 +91,10 @@ const styles = StyleSheet.create({
     width: '100%',
     bottom: 0,
   },
+  logo: {
+    flex: 1,
+    height: 110,
+    resizeMode: 'contain'
+  },
+  
 });
