@@ -3,13 +3,15 @@ import { View, ScrollView, TouchableOpacity, Text, Image, Linking, StyleSheet } 
 
 import { WebView } from 'react-native-webview';
 import TopBar from './TopBar';
-
+import BottomBar from './BottomBar';
 export default function AlaUne() {
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
         <TopBar />
       </View>
+      {/* Contenu de la page */}
+      <BottomBar />
 
       <View style={styles.videoContainer}>
         <WebView
@@ -17,7 +19,6 @@ export default function AlaUne() {
           style={styles.video}
         />
       </View>
-
       <View style={styles.actionsContainer}>
         <TouchableOpacity style={styles.actionButton}>
           <Image source={require('./like.png')} style={styles.icon} />
@@ -119,13 +120,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 80,
     height: 30,
-    backgroundColor: 'white',
+   
     borderRadius: 10,
     marginHorizontal: 5,
   },
   icon: {
-    width: 20,
-    height: 20,
+    width: 30,
+    height: 30,
   },
   descriptionContainer: {
     marginTop: 10,
