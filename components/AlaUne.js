@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Linking } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Text, Image, Linking, StyleSheet } from 'react-native';
+
 import { WebView } from 'react-native-webview';
 import TopBar from './TopBar';
 
@@ -33,18 +34,50 @@ export default function AlaUne() {
         </Text>
       </View>
 
-      <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
-        <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
-        <View style={styles.twitchTextContainer}>
-          <Text style={styles.twitchTitle}>Nom de la vidéo sur Youtube</Text>
-          <Text style={styles.twitchChannel}>Nom de la chaîne Youtube</Text>
-        </View>
-        
-      </TouchableOpacity>
+      <ScrollView style={styles.scrollView}>
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
+          <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
+            <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.twitch.tv')}>
+          <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Text style={styles.twitchTitle}>Stream en direct sur Twitch</Text>
+            <Text style={styles.twitchChannel}>Chaîne Twitch 1</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=ZXsQAXx_ao0')}>
+          <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Text style={styles.twitchTitle}>Première vidéo sur Youtube</Text>
+            <Text style={styles.twitchChannel}>Chaîne Youtube 1</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=ZXsQAXx_ao0')}>
+          <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Text style={styles.twitchTitle}>Première vidéo sur Youtube</Text>
+            <Text style={styles.twitchChannel}>Chaîne Youtube 1</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=ZXsQAXx_ao0')}>
+          <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Text style={styles.twitchTitle}>Première vidéo sur Youtube</Text>
+            <Text style={styles.twitchChannel}>Chaîne Youtube 1</Text>
+          </View>
+        </TouchableOpacity>
+
+        {/* Ajoutez autant d'éléments <TouchableOpacity> que vous le souhaitez ici */}
+      </ScrollView>
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -68,8 +101,9 @@ const styles = StyleSheet.create({
     height: 160,
     justifyContent: 'center',
     alignItems: 'center',
-    
+    marginTop: 100, // Ajout de la marge supérieure
   },
+  
   video: {
     width: '100%',
     aspectRatio: 2,
@@ -102,11 +136,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   twitchContainer: {
-    width: '95%',
-    height: 100,
+    width: '100%',
+    height: 110,
     backgroundColor: 'white',
     borderRadius: 10,
-    marginTop: 10,
+    marginTop: 20,
     flexDirection: 'row',
     alignItems: 'center',
   }, // Added the missing closing curly brace
