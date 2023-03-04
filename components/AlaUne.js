@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Linking } from 'react-native';
 import { WebView } from 'react-native-webview';
 import TopBar from './TopBar';
 
@@ -16,17 +16,35 @@ export default function AlaUne() {
           style={styles.video}
         />
       </View>
+
       <View style={styles.actionsContainer}>
-        <View style={styles.actionButton}>
-          <Text style={styles.likeIcon}>Like</Text>
-        </View>
-        <View style={styles.actionButton}>
-          <Text style={styles.commentIcon}>Comment</Text>
-        </View>
+        <TouchableOpacity style={styles.actionButton}>
+          <Image source={require('./like.png')} style={styles.icon} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.actionButton}>
+          <Image source={require('./comment.png')} style={styles.icon} />
+        </TouchableOpacity>
       </View>
+
+      <View style={styles.descriptionContainer}>
+        <Text style={styles.descriptionText}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor pharetra ipsum in bibendum.
+          Pellentesque sed augue non eros congue tincidunt. Nullam bibendum faucibus nulla eu rhoncus.
+        </Text>
+      </View>
+
+      <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
+        <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
+        <View style={styles.twitchTextContainer}>
+          <Text style={styles.twitchTitle}>Nom de la vidéo sur Youtube</Text>
+          <Text style={styles.twitchChannel}>Nom de la chaîne Youtube</Text>
+        </View>
+        
+      </TouchableOpacity>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -47,9 +65,10 @@ const styles = StyleSheet.create({
   },
   videoContainer: {
     width: '80%',
-    height: 150,
+    height: 160,
     justifyContent: 'center',
     alignItems: 'center',
+    
   },
   video: {
     width: '100%',
@@ -70,10 +89,25 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 5,
   },
-  likeIcon: {
-    fontWeight: 'bold',
+  icon: {
+    width: 20,
+    height: 20,
   },
-  commentIcon: {
-    fontWeight: 'bold',
+  descriptionContainer: {
+    marginTop: 10,
+    paddingHorizontal: 20,
   },
+  descriptionText: {
+    color: 'white',
+    textAlign: 'center',
+  },
+  twitchContainer: {
+    width: '95%',
+    height: 100,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  }, // Added the missing closing curly brace
 });
