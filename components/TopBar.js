@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, Image, Modal  } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function TopBar() {
@@ -23,30 +23,39 @@ export default function TopBar() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.burgerContainer}>
-        <TouchableOpacity onPress={toggleMenu}>
-          <Ionicons name="menu" size={24} color="white" style={styles.menuIcon} />
-        </TouchableOpacity>
-      </View>
-      <Image source={require('./logo.png')} style={styles.logo} />
-            <Ionicons name="person" size={24} color="white" style={styles.profileIcon} />
-      {showMenu && (
+    <View style={styles.burgerContainer}>
+      <TouchableOpacity onPress={toggleMenu}>
+        <Ionicons name="menu" size={24} color="white" style={styles.menuIcon} />
+      </TouchableOpacity>
+    </View>
+    <Image source={require('./logo.png')} style={styles.logo} />
+    <View style={styles.profileContainer}>
+      <Ionicons name="person" size={24} color="white" style={styles.profileIcon} />
+    </View>
+    <Modal
+      animationType="fade"
+      visible={showMenu}
+      transparent={true}
+      onRequestClose={toggleMenu}
+    >
+      <TouchableOpacity style={styles.menuOverlay} onPress={toggleMenu}>
         <View style={styles.menuContainer}>
-          <TouchableOpacity onPress={handlePage1}>
+          <TouchableOpacity onPress={handlePage1} style={styles.menuItem}>
             <Ionicons name="ios-home" size={24} color="black" style={styles.menuIcon} />
             <Text style={styles.menuText}>Page 1</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handlePage2}>
+          <TouchableOpacity onPress={handlePage2} style={styles.menuItem}>
             <Ionicons name="ios-rocket" size={24} color="black" style={styles.menuIcon} />
             <Text style={styles.menuText}>Page 2</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handlePage3}>
+          <TouchableOpacity onPress={handlePage3} style={styles.menuItem}>
             <Ionicons name="ios-settings" size={24} color="black" style={styles.menuIcon} />
             <Text style={styles.menuText}>Page 3</Text>
           </TouchableOpacity>
         </View>
-      )}
-    </View>
+      </TouchableOpacity>
+    </Modal>
+  </View>
   );
 }
 
@@ -60,15 +69,30 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   burgerContainer: {
+    marginRight: 10,
+  },
+  profileContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 2, // Modification
+  },
+  
+  burgerContainer: {
     position: 'absolute',
     top: 0,
     bottom: 0,
     left: 0,
     justifyContent: 'center',
-    zIndex: 1,
+    zIndex: 2, // Modification
   },
+  
   menuIcon: {
-    marginLeft: 16,
+    marginHorizontal: 10,
   },
   title: {
     flex: 1,
@@ -78,23 +102,48 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   profileIcon: {
-    marginLeft: 16,
+    marginRight: 8,
   },
   menuContainer: {
-    position: 'absolute',
-    top: 64,
-    left: 0,
     backgroundColor: 'white',
-    padding: 16,
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
     elevation: 5,
-    flex: 1,
-    width: '100%',
-    bottom: 0,
-  },
-  logo: {
-    flex: 1,
-    height: 110,
-    resizeMode: 'contain'
   },
   
-});
+  
+  
+  
+  menuItem: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginVertical: 20,
+  },
+  menuItemText: {
+    marginLeft: 16,
+    fontSize: 16,
+    fontWeight: 'bold',
+},
+logo: {
+  height: 100,
+  resizeMode: 'contain'
+},
+menuOverlay: {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  flex: 1,
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+menuText: {
+  fontSize: 16,
+},
+});  

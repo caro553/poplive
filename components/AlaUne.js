@@ -13,14 +13,14 @@ export default function AlaUne() {
       {/* Contenu de la page */}
       <BottomBar />
 
-      <View style={styles.videoContainer}>
+      <View style={styles.videoContainer} zIndex={0}>
         <WebView
           source={{ uri: 'https://player.twitch.tv/?video=v1748916709&autoplay=false' }}
           style={styles.video}
         />
       </View>
       <View style={styles.actionsContainer}>
-        <TouchableOpacity style={styles.actionButton}>
+        <TouchableOpacity style={styles.actionButton} zIndex={0}>
           <Image source={require('./like.png')} style={styles.icon} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionButton}>
@@ -28,7 +28,7 @@ export default function AlaUne() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.descriptionContainer}>
+      <View style={styles.descriptionContainer} zIndex={0}>
         <Text style={styles.descriptionText}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor pharetra ipsum in bibendum.
           Pellentesque sed augue non eros congue tincidunt. Nullam bibendum faucibus nulla eu rhoncus.
@@ -86,6 +86,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#6441A4', // nouvelle couleur de fond correspondant à la couleur de Twitch
+    position: 'relative',
+
+    zIndex: 0, // Réduire le niveau de z-index
+
   },
   topBar: {
     backgroundColor: '#5f5f5f',
