@@ -30,44 +30,49 @@ export default function Live() {
 
 
 
-      <ScrollView style={styles.scrollView}>
-        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
-        <Image source={require('./Photo.png')} style={[styles.twitchIcon, {width: 70, height: 70, borderRadius: 10}]} />
-          <View style={styles.twitchTextContainer}>
-            <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
-            <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
-          </View>
-        </TouchableOpacity>
+<ScrollView style={styles.scrollView}>
+  <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
+    <Image source={require('./Photo.png')} style={[styles.twitchIcon, {width: 70, height: 70, borderRadius: 10}]} />
+    <View style={styles.twitchTextContainer}>
+      <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
+      <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
+      <Image source={require('./Vue.png')} style={{ width: 20, height: 20 }} />
+    </View>
+  </TouchableOpacity>
 
-        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.twitch.tv')}>
-        <Image source={require('./Photo.png')} style={[styles.twitchIcon, {width: 70, height: 70, borderRadius: 10}]} />
-          <View style={styles.twitchTextContainer}>
-            <Text style={styles.twitchTitle}>Stream en direct sur Twitch</Text>
-            <Text style={styles.twitchChannel}>Chaîne Twitch 1</Text>
-          </View>
-        </TouchableOpacity>
+  <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
+    <Image source={require('./Photo.png')} style={[styles.twitchIcon, {width: 70, height: 70, borderRadius: 10}]} />
+    <View style={styles.twitchTextContainer}>
+      <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
+      <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
+      <Image source={require('./Vue.png')} style={{ width: 20, height: 20 }} />
+    </View>
+  </TouchableOpacity>
 
-        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=ZXsQAXx_ao0')}>
-        <Image source={require('./Photo.png')} style={[styles.twitchIcon, {width: 70, height: 70, borderRadius: 10}]} />
-          <View style={styles.twitchTextContainer}>
-            <Text style={styles.twitchTitle}>Première vidéo sur Youtube</Text>
-            <Text style={styles.twitchChannel}>Chaîne Youtube 1</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=ZXsQAXx_ao0')}>
-        <Image source={require('./Photo.png')} style={[styles.twitchIcon, {width: 70, height: 70, borderRadius: 10}]} />
-          <View style={styles.twitchTextContainer}>
-            <Text style={styles.twitchTitle}>Première vidéo sur Youtube</Text>
-            <Text style={styles.twitchChannel}>Chaîne Youtube 1</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=ZXsQAXx_ao0')}>
-        <Image source={require('./Photo.png')} style={[styles.twitchIcon, {width: 70, height: 70, borderRadius: 10}]} />
-          <View style={styles.twitchTextContainer}>
-            <Text style={styles.twitchTitle}>Première vidéo sur Youtube</Text>
-            <Text style={styles.twitchChannel}>Chaîne Youtube 1</Text>
-          </View>
-        </TouchableOpacity>
+  <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
+    <Image source={require('./Photo.png')} style={[styles.twitchIcon, {width: 70, height: 70, borderRadius: 10}]} />
+    <View style={styles.twitchTextContainer}>
+      <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
+      <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
+      <Image source={require('./Vue.png')} style={{ width: 20, height: 20 }} />
+    </View>
+  </TouchableOpacity>
+  <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
+    <Image source={require('./Photo.png')} style={[styles.twitchIcon, {width: 70, height: 70, borderRadius: 10}]} />
+    <View style={styles.twitchTextContainer}>
+      <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
+      <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
+      <Image source={require('./Vue.png')} style={{ width: 20, height: 20 }} />
+    </View>
+  </TouchableOpacity>
+  <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
+    <Image source={require('./Photo.png')} style={[styles.twitchIcon, {width: 70, height: 70, borderRadius: 10}]} />
+    <View style={styles.twitchTextContainer}>
+      <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
+      <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
+      <Image source={require('./Vue.png')} style={{ width: 20, height: 20 }} />
+    </View>
+  </TouchableOpacity>
 
         {/* Ajoutez autant d'éléments <TouchableOpacity> que vous le souhaitez ici */}
       </ScrollView>
