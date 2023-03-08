@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Text, Image, Linking, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 // import de TopBar et BottomBar depuis un autre fichier
 import TopBar from './TopBar';
@@ -12,10 +13,65 @@ export default function Live() {
       <View style={styles.topBar}>
         <TopBar />
       </View>
-      
-      <View style={styles.content}>
-        <Text>This is the Live Screen</Text>
-      </View>
+      <View style={styles.rectangleContainer}>
+  <View style={styles.rectangle}>
+    <Image source={require('./like.png')} style={styles.icon} />
+  </View>
+  <View style={[styles.rectangle, { backgroundColor: 'transparent' }]}>
+    <Image source={require('./like.png')} style={styles.icon} />
+    <View style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>
+      <LinearGradient colors={['#9b59b6', '#FFB347', '#F2C94C']} style={{ flex: 1, borderRadius: 10, overflow: 'hidden' }}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ color: '#fff', fontSize: 18 }}>Rectangle 2</Text>
+        </View>
+      </LinearGradient>
+    </View>
+  </View>
+</View>
+
+
+
+      <ScrollView style={styles.scrollView}>
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
+          <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
+            <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.twitch.tv')}>
+          <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Text style={styles.twitchTitle}>Stream en direct sur Twitch</Text>
+            <Text style={styles.twitchChannel}>Chaîne Twitch 1</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=ZXsQAXx_ao0')}>
+          <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Text style={styles.twitchTitle}>Première vidéo sur Youtube</Text>
+            <Text style={styles.twitchChannel}>Chaîne Youtube 1</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=ZXsQAXx_ao0')}>
+          <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Text style={styles.twitchTitle}>Première vidéo sur Youtube</Text>
+            <Text style={styles.twitchChannel}>Chaîne Youtube 1</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=ZXsQAXx_ao0')}>
+          <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Text style={styles.twitchTitle}>Première vidéo sur Youtube</Text>
+            <Text style={styles.twitchChannel}>Chaîne Youtube 1</Text>
+          </View>
+        </TouchableOpacity>
+
+        {/* Ajoutez autant d'éléments <TouchableOpacity> que vous le souhaitez ici */}
+      </ScrollView>
       
       {/* Ajout de la bottombar */}
       <View style={styles.bottomBar}>
@@ -43,4 +99,86 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: '#5f5f5f', // couleur de la bottombar
   },
+  videoContainer: {
+    width: '80%',
+    height: 160,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 100, // Ajout de la marge supérieure
+  },
+  
+  video: {
+    width: '100%',
+    aspectRatio: 2,
+  },
+  actionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  actionButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 80,
+    height: 30,
+   
+    borderRadius: 10,
+    marginHorizontal: 5,
+  },
+  icon: {
+    width: 30,
+    height: 30,
+  },
+  descriptionContainer: {
+    marginTop: 10,
+    paddingHorizontal: 20,
+  },
+  descriptionText: {
+    color: 'white',
+    textAlign: 'center',
+  },
+twitchContainer: {
+  width: '90%',
+  height: 100,
+  backgroundColor: 'white',
+  borderRadius: 30,
+  marginTop: 30,
+  flexDirection: 'row',
+  alignItems: 'center',
+  alignSelf: 'center', // Ajouter cette ligne pour centrer horizontalement
+},
+profileContainer: {
+  width: 50,
+  height: 50,
+  backgroundColor: 'white',
+  borderRadius: 10,
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginRight: 10,
+},
+profileIcon: {
+  width: 30,
+  height: 30,
+},
+rectangleContainer: {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginTop: 10,
+},
+rectangle: {
+  marginTop: 50, // Ajout de la marge supérieure
+  width: 170,
+  height: 35,
+  backgroundColor: 'white',
+  borderRadius: 10,
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginHorizontal: 5,
+},
+icon: {
+  width: 30,
+  height: 30,
+},
 });
