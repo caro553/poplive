@@ -1,13 +1,17 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
 
 export default function BottomBar() {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.bottomContainer}>
       <TouchableOpacity style={styles.logoContainer} onPress={() => console.log("Logo 1 clicked")}>
         <Image source={require('./domicile.png')} style={styles.logo} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.logoContainer} onPress={() => console.log("Logo 2 clicked")}>
+      <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate("LiveScreen")}>
         <Image source={require('./camera.png')} style={styles.logo} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.logoContainer} onPress={() => console.log("Logo 3 clicked")}>
