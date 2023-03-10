@@ -8,13 +8,13 @@ export default function BottomBar() {
 
   return (
     <View style={styles.bottomContainer}>
-      <TouchableOpacity style={styles.logoContainer} onPress={() => console.log("Logo 1 clicked")}>
+      <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate("AlaUne")}>
         <Image source={require('./acceuil.png')} style={styles.logo} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate("LiveScreen")}>
         <Image source={require('./direct.png')} style={styles.logo} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.logoContainer} onPress={() => console.log("Logo 3 clicked")}>
+      <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate("bestof")}>
         <Image source={require('./video.png')} style={styles.logo} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.logoContainer} onPress={() => console.log("Logo 3 clicked")}>
