@@ -1,9 +1,9 @@
 {
-  "expoServerPort": 19000,
+  "expoServerPort": null,
   "packagerPort": 19000,
   "packagerPid": null,
   "expoServerNgrokUrl": "https://cn-pmz.anonymous.poplive.exp.direct",
   "packagerNgrokUrl": "https://cn-pmz.anonymous.poplive.exp.direct",
-  "ngrokPid": 14516,
+  "ngrokPid": 22576,
   "webpackServerPort": null
 }

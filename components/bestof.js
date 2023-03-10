@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import TopBar from './TopBar';
 import BottomBar from './BottomBar';
 
-export default function bestof() {
+export default function Bestof() {
   return (
     <View style={styles.container}>
       {/* Ajout de la topbar */}
@@ -175,7 +175,7 @@ rectangleContainer: {
 rectangle: {
   marginTop: 50, // Ajout de la marge supérieure
   width: 170,
-  height: 35,
+  height: 50,
   backgroundColor: 'white',
   borderRadius: 10,
   justifyContent: 'center',
