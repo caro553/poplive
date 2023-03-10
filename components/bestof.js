@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, ScrollView, TouchableOpacity, Text, Image, Linking, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -7,77 +7,93 @@ import TopBar from './TopBar';
 import BottomBar from './BottomBar';
 
 export default function Bestof() {
+  const [videoData, setVideoData] = useState([]);
+
+  useEffect(() => {
+    async function fetchVideoData() {
+      const videoId = 't4Nq3dz4VTg'; // Remplacez par l'ID de la vidéo YouTube souhaitée
+      const apiKey = 'AIzaSyDvjinFVOfL1Dwxlt4UY_9s99gCIuKtyGY'; // Remplacez par votre clé API YouTube
+      const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?id=t4Nq3dz4VTg&key=AIzaSyDvjinFVOfL1Dwxlt4UY_9s99gCIuKtyGY&part=snippet&fields=items(snippet(thumbnails(default),title,channelTitle,description))`);
+      const data = await response.json();
+      const thumbnailUrl = data.items[0].snippet.thumbnails.default.url;
+      setVideoData({ ...data.items[0].snippet, thumbnailUrl });
+    }
+    fetchVideoData();
+  }, []);
+
   return (
     <View style={styles.container}>
       {/* Ajout de la topbar */}
       <View style={styles.topBar}>
         <TopBar />
       </View>
-    
 
       <View style={styles.descriptionContainer} zIndex={0}>
         <Text style={styles.descriptionText}>
-        Best-OF
+          Best-OF
         </Text>
       </View>
 
-
-<ScrollView style={styles.scrollView}>
-<TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
-          <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
+      <ScrollView style={styles.scrollView}>
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=t4Nq3dz4VTg')}>
+        <Image source={{ uri: videoData.thumbnailUrl }} style={styles.videoImage} />
           <View style={styles.twitchTextContainer}>
-            <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
-            <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
+            {videoData && (
+              <>
+                <Text style={[styles.twitchTitle, {fontWeight: 'bold'}]}>{videoData.title}</Text>
+                <Text style={styles.twitchChannel}>{videoData.channelTitle}</Text>
+              </>
+            )}
           </View>
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
-          <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=t4Nq3dz4VTg')}>
+        <Image source={{ uri: videoData.thumbnailUrl }} style={styles.videoImage} />
           <View style={styles.twitchTextContainer}>
-            <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
-            <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
+            {videoData && (
+              <>
+                <Text style={[styles.twitchTitle, {fontWeight: 'bold'}]}>{videoData.title}</Text>
+                <Text style={styles.twitchChannel}>{videoData.channelTitle}</Text>
+              </>
+            )}
           </View>
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
-          <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=t4Nq3dz4VTg')}>
+        <Image source={{ uri: videoData.thumbnailUrl }} style={styles.videoImage} />
           <View style={styles.twitchTextContainer}>
-            <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
-            <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
+            {videoData && (
+              <>
+                <Text style={[styles.twitchTitle, {fontWeight: 'bold'}]}>{videoData.title}</Text>
+                <Text style={styles.twitchChannel}>{videoData.channelTitle}</Text>
+              </>
+            )}
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
-          <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=t4Nq3dz4VTg')}>
+        <Image source={{ uri: videoData.thumbnailUrl }} style={styles.videoImage} />
           <View style={styles.twitchTextContainer}>
-            <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
-            <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
+            {videoData && (
+              <>
+                <Text style={[styles.twitchTitle, {fontWeight: 'bold'}]}>{videoData.title}</Text>
+                <Text style={styles.twitchChannel}>{videoData.channelTitle}</Text>
+              </>
+            )}
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
-          <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=t4Nq3dz4VTg')}>
+        <Image source={{ uri: videoData.thumbnailUrl }} style={styles.videoImage} />
           <View style={styles.twitchTextContainer}>
-            <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
-            <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
-          <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
-          <View style={styles.twitchTextContainer}>
-            <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
-            <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
-          <Image source={require('./rectangle.png')} style={styles.twitchIcon} />
-          <View style={styles.twitchTextContainer}>
-            <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
-            <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
+            {videoData && (
+              <>
+                <Text style={[styles.twitchTitle, {fontWeight: 'bold'}]}>{videoData.title}</Text>
+                <Text style={styles.twitchChannel}>{videoData.channelTitle}</Text>
+              </>
+            )}
           </View>
         </TouchableOpacity>
 
         {/* Ajoutez autant d'éléments <TouchableOpacity> que vous le souhaitez ici */}
       </ScrollView>
-      
+
       {/* Ajout de la bottombar */}
       <View style={styles.bottomBar}>
         <BottomBar />
@@ -145,7 +161,7 @@ const styles = StyleSheet.create({
   },
 twitchContainer: {
   width: '90%',
-  height: 100,
+  height: '40%',
   backgroundColor: 'white',
   borderRadius: 30,
   marginTop: 30,
