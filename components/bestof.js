@@ -11,12 +11,16 @@ export default function Bestof() {
 
   useEffect(() => {
     async function fetchVideoData() {
-      const videoId = 't4Nq3dz4VTg'; // Remplacez par l'ID de la vidéo YouTube souhaitée
+      const videoIds = ['t4Nq3dz4VTg', 'yLqTBlJ3cSg']; // Remplacez par les IDs des vidéos YouTube souhaitées
       const apiKey = 'AIzaSyDvjinFVOfL1Dwxlt4UY_9s99gCIuKtyGY'; // Remplacez par votre clé API YouTube
-      const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?id=t4Nq3dz4VTg&key=AIzaSyDvjinFVOfL1Dwxlt4UY_9s99gCIuKtyGY&part=snippet&fields=items(snippet(thumbnails(default),title,channelTitle,description))`);
-      const data = await response.json();
-      const thumbnailUrl = data.items[0].snippet.thumbnails.default.url;
-      setVideoData({ ...data.items[0].snippet, thumbnailUrl });
+      const promises = videoIds.map(async (id) => {
+        const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?id=${id}&key=${apiKey}&part=snippet&fields=items(snippet(thumbnails(default),title,channelTitle,description))`);
+        const data = await response.json();
+        const thumbnailUrl = data.items[0].snippet.thumbnails.default.url;
+        return { ...data.items[0].snippet, thumbnailUrl };
+      });
+      const data = await Promise.all(promises);
+      setVideoData(data);
     }
     fetchVideoData();
   }, []);
@@ -35,63 +39,15 @@ export default function Bestof() {
       </View>
 
       <ScrollView style={styles.scrollView}>
-        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=t4Nq3dz4VTg')}>
-        <Image source={{ uri: videoData.thumbnailUrl }} style={styles.videoImage} />
-          <View style={styles.twitchTextContainer}>
-            {videoData && (
-              <>
-                <Text style={[styles.twitchTitle, {fontWeight: 'bold'}]}>{videoData.title}</Text>
-                <Text style={styles.twitchChannel}>{videoData.channelTitle}</Text>
-              </>
-            )}
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=t4Nq3dz4VTg')}>
-        <Image source={{ uri: videoData.thumbnailUrl }} style={styles.videoImage} />
-          <View style={styles.twitchTextContainer}>
-            {videoData && (
-              <>
-                <Text style={[styles.twitchTitle, {fontWeight: 'bold'}]}>{videoData.title}</Text>
-                <Text style={styles.twitchChannel}>{videoData.channelTitle}</Text>
-              </>
-            )}
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=t4Nq3dz4VTg')}>
-        <Image source={{ uri: videoData.thumbnailUrl }} style={styles.videoImage} />
-          <View style={styles.twitchTextContainer}>
-            {videoData && (
-              <>
-                <Text style={[styles.twitchTitle, {fontWeight: 'bold'}]}>{videoData.title}</Text>
-                <Text style={styles.twitchChannel}>{videoData.channelTitle}</Text>
-              </>
-            )}
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=t4Nq3dz4VTg')}>
-        <Image source={{ uri: videoData.thumbnailUrl }} style={styles.videoImage} />
-          <View style={styles.twitchTextContainer}>
-            {videoData && (
-              <>
-                <Text style={[styles.twitchTitle, {fontWeight: 'bold'}]}>{videoData.title}</Text>
-                <Text style={styles.twitchChannel}>{videoData.channelTitle}</Text>
-              </>
-            )}
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=t4Nq3dz4VTg')}>
-        <Image source={{ uri: videoData.thumbnailUrl }} style={styles.videoImage} />
-          <View style={styles.twitchTextContainer}>
-            {videoData && (
-              <>
-                <Text style={[styles.twitchTitle, {fontWeight: 'bold'}]}>{videoData.title}</Text>
-                <Text style={styles.twitchChannel}>{videoData.channelTitle}</Text>
-              </>
-            )}
-          </View>
-        </TouchableOpacity>
-
-        {/* Ajoutez autant d'éléments <TouchableOpacity> que vous le souhaitez ici */}
+        {videoData.map((video, index) => (
+          <TouchableOpacity key={index} style={styles.twitchContainer} onPress={() => Linking.openURL(index === 0 ? 'https://www.youtube.com/watch?v=t4Nq3dz4VTg' : 'https://www.youtube.com/watch?v=yLqTBlJ3cSg')}>
+            <Image source={{ uri: video.thumbnailUrl }} style={styles.videoImage} />
+            <View style={styles.twitchTextContainer}>
+              <Text style={[styles.twitchTitle, { fontWeight: 'bold' }]}>{video.title}</Text>
+              <Text style={styles.twitchChannel}>{video.channelTitle}</Text>
+            </View>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
 
       {/* Ajout de la bottombar */}
@@ -101,6 +57,7 @@ export default function Bestof() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
