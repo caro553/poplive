@@ -1,13 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, ScrollView, TouchableOpacity, Text, Image, Linking, StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 import TopBar from './TopBar';
 import BottomBar from './BottomBar';
 import * as ImagePicker from 'expo-image-picker';
 import { AntDesign } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Compte() {
   const [profileImageUrl, setProfileImageUrl] = useState(''); // initialiser l'URL de l'image de profil à une chaîne vide
+
+  useEffect(() => {
+    // Vérifier si l'utilisateur a déjà sélectionné une image auparavant
+    (async () => {
+      const savedImage = await AsyncStorage.getItem('profileImage');
+      if (savedImage) {
+        setProfileImageUrl(savedImage);
+      }
+    })();
+  }, []);
+
   const selectImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
@@ -23,14 +35,28 @@ export default function Compte() {
     });
   
     if (!result.cancelled) {
-      // Do something with the selected image
+      // Sauvegarder l'URL de l'image sélectionnée avec AsyncStorage
+      await AsyncStorage.setItem('profileImageUrl', result.uri);
       setProfileImageUrl(result.uri);
     }
   };
-
-  const removeImage = () => {
+  const loadProfileImage = async () => {
+    const url = await AsyncStorage.getItem('profileImageUrl');
+    if (url) {
+      setProfileImageUrl(url);
+    }
+  };
+  
+  // Appeler loadProfileImage lors de l'ouverture de l'application
+  useEffect(() => {
+    loadProfileImage();
+  }, []);
+  
+  const removeImage = async () => {
+    // Supprimer l'URL de l'image du stockage local
+    await AsyncStorage.removeItem('profileImage');
     setProfileImageUrl('');
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -38,7 +64,7 @@ export default function Compte() {
         <TopBar />
       </View>
 
-      {/* Ajouter l'image ici */}
+      {/* Afficher l'image sélectionnée ou l'image par défaut */}
       {profileImageUrl ? (
         <TouchableOpacity onPress={selectImage}>
           <Image source={{ uri: profileImageUrl }} style={styles.logo} />
