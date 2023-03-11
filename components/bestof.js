@@ -41,11 +41,14 @@ export default function Bestof() {
       <ScrollView style={styles.scrollView}>
         {videoData.map((video, index) => (
           <TouchableOpacity key={index} style={styles.twitchContainer} onPress={() => Linking.openURL(index === 0 ? 'https://www.youtube.com/watch?v=t4Nq3dz4VTg' : 'https://www.youtube.com/watch?v=yLqTBlJ3cSg')}>
-            <Image source={{ uri: video.thumbnailUrl }} style={styles.videoImage} />
-            <View style={styles.twitchTextContainer}>
-              <Text style={[styles.twitchTitle, { fontWeight: 'bold' }]}>{video.title}</Text>
-              <Text style={styles.twitchChannel}>{video.channelTitle}</Text>
-            </View>
+<Image source={{ uri: video.thumbnailUrl }} style={styles.videoImage} />
+<View style={styles.rectangle}>
+  <Image style={styles.twitchImage} source={{ uri: video.thumbnail }} />
+  <View style={styles.twitchTextContainer}>
+    <Text numberOfLines={2} style={[styles.twitchTitle, { fontWeight: 'bold' }]}>{video.title}</Text>
+    <Text style={styles.twitchChannel}>{video.channelTitle}</Text>
+  </View>
+</View>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -57,7 +60,6 @@ export default function Bestof() {
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -118,7 +120,7 @@ const styles = StyleSheet.create({
   },
 twitchContainer: {
   width: '90%',
-  height: '40%',
+  height: '50%',
   backgroundColor: 'white',
   borderRadius: 30,
   marginTop: 30,
@@ -144,9 +146,10 @@ rectangleContainer: {
   justifyContent: 'center',
   alignItems: 'center',
   marginTop: 10,
+  overflow: 'hidden',
 },
 rectangle: {
-  marginTop: 50, // Ajout de la marge supérieure
+  marginTop: 50,
   width: 170,
   height: 50,
   backgroundColor: 'white',
@@ -155,8 +158,17 @@ rectangle: {
   alignItems: 'center',
   marginHorizontal: 5,
 },
+rectangleText: {
+  overflow: 'hidden', // Ajouter cette ligne pour cacher le texte qui dépasse
+  textAlign: 'center',
+},
 icon: {
   width: 30,
   height: 30,
 },
+videoImage: {
+  width: 70,
+  height: 70,
+},
+
 });
