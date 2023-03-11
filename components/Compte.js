@@ -67,7 +67,7 @@ export default function Compte() {
       {/* Afficher l'image sélectionnée ou l'image par défaut */}
       {profileImageUrl ? (
         <TouchableOpacity onPress={selectImage}>
-          <Image source={{ uri: profileImageUrl }} style={styles.logo} />
+          <Image source={{ uri: profileImageUrl }} style={[styles.logo, styles.profileImage, { borderColor: '#9b59b6', borderWidth: 10 }]} resizeMode="contain" />
           <TouchableOpacity onPress={removeImage} style={styles.removeIcon}>
             <AntDesign name="closecircle" size={24} color="white" />
           </TouchableOpacity>
@@ -107,14 +107,30 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 125,
-    top : -150,
+    borderColor: '#9b59b6',
+    borderWidth: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+    marginTop: -280
+  },
+  profileImage: {
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    borderColor: '#FFB347',
+    borderWidth: 5,
+    
   },
   removeIcon: {
     position: 'absolute',
-    top: -15,
-    right: -15,
+    top: -150,
+    right: -5,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     borderRadius: 15,
     padding: 5,
-  }
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  
 });
