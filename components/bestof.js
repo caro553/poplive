@@ -11,7 +11,7 @@ export default function Bestof() {
 
   useEffect(() => {
     async function fetchVideoData() {
-      const videoIds = ['t4Nq3dz4VTg', 'yLqTBlJ3cSg']; // Remplacez par les IDs des vidéos YouTube souhaitées
+      const videoIds = ['t4Nq3dz4VTg', 'yLqTBlJ3cSg', 'CmgyUYCibwA', 'Lvh28X0I4Jg']; // Remplacez par les IDs des vidéos YouTube souhaitées
       const apiKey = 'AIzaSyDvjinFVOfL1Dwxlt4UY_9s99gCIuKtyGY'; // Remplacez par votre clé API YouTube
       const promises = videoIds.map(async (id) => {
         const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?id=${id}&key=${apiKey}&part=snippet&fields=items(snippet(thumbnails(default),title,channelTitle,description))`);
@@ -40,7 +40,13 @@ export default function Bestof() {
 
       <ScrollView style={styles.scrollView}>
         {videoData.map((video, index) => (
-          <TouchableOpacity key={index} style={styles.twitchContainer} onPress={() => Linking.openURL(index === 0 ? 'https://www.youtube.com/watch?v=t4Nq3dz4VTg' : 'https://www.youtube.com/watch?v=yLqTBlJ3cSg')}>
+          <TouchableOpacity key={index} style={styles.twitchContainer} onPress={() => Linking.openURL(
+            index === 0 ? 'https://www.youtube.com/watch?v=t4Nq3dz4VTg' :
+            index === 1 ? 'https://www.youtube.com/watch?v=yLqTBlJ3cSg' :
+            index === 2 ? 'https://www.youtube.com/watch?v=https://youtu.be/CmgyUYCibwA' :
+            index === 3 ? 'https://youtu.be/Lvh28X0I4Jg' :
+            'https://www.youtube.com/watch?v=defaultLink'
+          )}>
 <Image source={{ uri: video.thumbnailUrl }} style={styles.videoImage} />
 <View style={styles.rectangle}>
   <Image style={styles.twitchImage} source={{ uri: video.thumbnail }} />
@@ -120,7 +126,7 @@ const styles = StyleSheet.create({
   },
 twitchContainer: {
   width: '90%',
-  height: '50%',
+  height: '20%',
   backgroundColor: 'white',
   borderRadius: 30,
   marginTop: 30,
