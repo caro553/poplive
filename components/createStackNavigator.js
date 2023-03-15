@@ -1,6 +1,11 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './HomeScreen';
 import AlaUne from './AlaUne';
+import LiveScreen from './LiveScreen';
+import Bestof from './Bestof';
+import Compte from './Compte';
+
+
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
 
@@ -12,6 +17,11 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="AlaUne" component={AlaUne} />
+        <Stack.Screen name="LiveScreen" component={LiveScreen} />
+        <Stack.Screen name="Bestof" component={Bestof} />
+        <Stack.Screen name="Compte" component={Compte} />
+
+
       </Stack.Navigator>
     </NavigationContainer>
   );

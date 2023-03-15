@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, Image, Modal  } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function TopBar() {
+  const navigation = useNavigation();
+
   const [showMenu, setShowMenu] = useState(false);
 
   const toggleMenu = () => {
@@ -30,7 +33,10 @@ export default function TopBar() {
     </View>
     <Image source={require('./logo.png')} style={styles.logo} />
     <View style={styles.profileContainer}>
-      <Ionicons name="person" size={24} color="white" style={styles.profileIcon} />
+    <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate("Compte")}>
+          <Ionicons name="person" size={24} color="white" style={styles.profileIcon} />
+        </TouchableOpacity>
+
     </View>
     <Modal
       animationType="fade"
