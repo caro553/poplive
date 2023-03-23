@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Compte() {
   const [profileImageUrl, setProfileImageUrl] = useState(''); // initialiser l'URL de l'image de profil à une chaîne vide
+  const [username, setUsername] = useState('Le pseudo');
 
   useEffect(() => {
     // Vérifier si l'utilisateur a déjà sélectionné une image auparavant
@@ -40,18 +41,27 @@ export default function Compte() {
       setProfileImageUrl(result.uri);
     }
   };
+
   const loadProfileImage = async () => {
     const url = await AsyncStorage.getItem('profileImageUrl');
     if (url) {
       setProfileImageUrl(url);
     }
   };
-  
-  // Appeler loadProfileImage lors de l'ouverture de l'application
+
+  const loadUsername = async () => {
+    const name = await AsyncStorage.getItem('username');
+    if (name) {
+      setUsername(name);
+    }
+  };
+
+  // Appeler loadProfileImage et loadUsername lors de l'ouverture de l'application
   useEffect(() => {
     loadProfileImage();
+    loadUsername();
   }, []);
-  
+
   const removeImage = async () => {
     // Supprimer l'URL de l'image du stockage local
     await AsyncStorage.removeItem('profileImage');
@@ -59,29 +69,42 @@ export default function Compte() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.topBar}>
-        <TopBar />
-      </View>
+ <View style={styles.container}>
+  <View style={styles.topBar}>
+    <Text style={styles.username}>{username}</Text>
+    <TopBar />
+  </View>
 
-      {/* Afficher l'image sélectionnée ou l'image par défaut */}
-      {profileImageUrl ? (
-        <TouchableOpacity onPress={selectImage}>
-          <Image source={{ uri: profileImageUrl }} style={[styles.logo, styles.profileImage, { borderColor: '#9b59b6', borderWidth: 10 }]} resizeMode="contain" />
-          <TouchableOpacity onPress={removeImage} style={styles.removeIcon}>
-            <AntDesign name="closecircle" size={24} color="white" />
-          </TouchableOpacity>
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity onPress={selectImage}>
-          <Image source={require('./Photo.png')} style={styles.logo} />
-        </TouchableOpacity>
-      )}
+  {/* Afficher l'image sélectionnée ou l'image par défaut */}
+  {profileImageUrl ? (
+    <TouchableOpacity onPress={selectImage}>
+      <Image source={{ uri: profileImageUrl }} style={[styles.logo, styles.profileImage, { borderColor: '#9b59b6', borderWidth: 10 }]} resizeMode="contain" />
+      <TouchableOpacity onPress={removeImage} style={styles.removeIcon}>
+        <AntDesign name="closecircle" size={24} color="white" />
+      </TouchableOpacity>
+    </TouchableOpacity>
+  ) : (
+    <TouchableOpacity onPress={selectImage}>
+      <Image source={require('./Photo.png')} style={styles.logo} />
+    </TouchableOpacity>
+  )}
+  <Text style={[styles.username, { color: 'white', fontSize: 25, marginTop: -70 }]}>{username}</Text>
 
-      {/* Contenu de la page */}
-      <BottomBar />
-    </View>
+  {/* Ajouter le View pour la bio */}
+  <View style={styles.bioContainer}>
+  <View style={[styles.bio, { position: 'absolute', bottom: 50 }]}>
+    {/* Contenu du rectangle blanc */}
+  </View>
+</View>
+
+
+  {/* Contenu de la page */}
+  <BottomBar />
+</View>
+
+    
   );
+
 }
 
 const styles = StyleSheet.create({
@@ -132,5 +155,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  bioContainer: {
+    backgroundColor: 'white',
+    paddingHorizontal: 100,
+    paddingVertical: 50,
+    borderRadius: 10,
+    marginBottom: -50
+  },
+  
+  bio: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  }
   
 });
