@@ -21,7 +21,9 @@ const db = firebase.firestore();
 
 export default function Compte() {
   const [profileImageUrl, setProfileImageUrl] = useState(""); // initialiser l'URL de l'image de profil à une chaîne vide
+  const [username, setUsername] = useState("");
   const [data, setData] = useState([]);
+
   useEffect(() => {
     // Vérifier si l'utilisateur a déjà sélectionné une image auparavant
     (async () => {

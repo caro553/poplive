@@ -5,6 +5,6 @@
   "minify": false,
   "urlRandomness": "cn-pmz",
   "https": false,
-  "scheme": null,
+  "scheme": "exp+poplive",
   "devClient": false
 }
