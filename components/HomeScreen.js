@@ -11,7 +11,7 @@ export default function HomeScreen({ navigation  }) {
       <Image source={require('./logo.png')} style={styles.logo} />
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.loginButton, { marginTop: 20, marginBottom: 10 }]} onPress={() => navigation.navigate('AlaUne')}>
+        <TouchableOpacity style={[styles.loginButton, { marginTop: 20, marginBottom: 10 }]} onPress={() => navigation.navigate('Connexion')}>
           <Text style={styles.buttonText}>Se connecter</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.signupButton, { marginBottom: 20 } ]} onPress={() => navigation.navigate('Inscription')}>

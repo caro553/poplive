@@ -8,22 +8,37 @@ import {
   StatusBar,
   Image
 } from 'react-native';
+import firebase from "./firebaseConfig";
 
-const Connexion = () => {
+const Connexion = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const handleSignup = () => {
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then(() => {
+      console.log('Utilisateur enregistré avec succès!');
+    })
+    .catch((error) => {
+      console.log(error.message);
+    });
+  };
+
   const handleLogin = () => {
-    // Ici vous pouvez ajouter votre fonction de connexion
-    // qui utilise les données d'email et de mot de passe
+    firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(() => {
+      console.log('Connexion réussie');
+      navigation.navigate('AlaUne'); // rediriger vers la page Alaune
+    })
+    .catch((error) => {
+      console.log(error.message);
+    });
   };
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <View style={styles.logoContainer}>
-        <Image style={styles.logo} source={require('./logo.png')} />
-      </View>
+     
       <View style={styles.formContainer}>
         <TextInput
           style={styles.input}
@@ -46,11 +61,11 @@ const Connexion = () => {
         <TouchableOpacity style={styles.buttonContainer} onPress={handleLogin}>
           <Text style={styles.buttonText}>CONNEXION</Text>
         </TouchableOpacity>
+
       </View>
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

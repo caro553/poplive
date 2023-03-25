@@ -20,12 +20,11 @@ import firebase from "./firebaseConfig";
 const db = firebase.firestore();
 
 export default function Compte() {
-  const [profileImageUrl, setProfileImageUrl] = useState(""); // initialiser l'URL de l'image de profil à une chaîne vide
+  const [profileImageUrl, setProfileImageUrl] = useState("");
   const [username, setUsername] = useState("");
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    // Vérifier si l'utilisateur a déjà sélectionné une image auparavant
     (async () => {
       const savedImage = await AsyncStorage.getItem("profileImage");
       if (savedImage) {
@@ -49,7 +48,6 @@ export default function Compte() {
     });
 
     if (!result.cancelled) {
-      // Sauvegarder l'URL de l'image sélectionnée avec AsyncStorage
       await AsyncStorage.setItem("profileImageUrl", result.uri);
       setProfileImageUrl(result.uri);
     }
@@ -64,20 +62,17 @@ export default function Compte() {
 
   const loadUsername = async () => {
     const name = await AsyncStorage.getItem('username');
-    if (name) {
+        if (name) {
       setUsername(name);
     }
   };
 
-  // Appeler loadProfileImage et loadUsername lors de l'ouverture de l'application
-  // Appeler loadProfileImage lors de l'ouverture de l'application
   useEffect(() => {
     loadProfileImage();
-    loadUsername();
+    loadUsername(); // Appel de la fonction loadUsername ici
   }, []);
 
   const removeImage = async () => {
-    // Supprimer l'URL de l'image du stockage local
     await AsyncStorage.removeItem("profileImage");
     setProfileImageUrl("");
   };
@@ -93,13 +88,15 @@ export default function Compte() {
   }, []);
 
   return (
- <View style={styles.container}>
-  <View style={styles.topBar}>
-    <Text style={styles.username}>{username}</Text>
-    <TopBar />
-  </View>
+    <View style={styles.container}>
+      <View style={styles.topBar}>
+        <TopBar />
+      </View>
 
-      {/* Afficher l'image sélectionnée ou l'image par défaut */}
+      <View>
+  <Text>{username}</Text>
+</View>
+     
       {profileImageUrl ? (
         <TouchableOpacity onPress={selectImage}>
           <Image
@@ -120,10 +117,6 @@ export default function Compte() {
           <Image source={require("./Photo.png")} style={styles.logo} />
         </TouchableOpacity>
       )}
-
-      {data.map((item, index) => (
-        <Text key={index}>{item.nom}</Text>
-      ))}
 
       {/* Contenu de la page */}
       <BottomBar />
