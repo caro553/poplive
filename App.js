@@ -7,6 +7,7 @@ import AlaUne from "./components/AlaUne";
 import LiveScreen from "./components/LiveScreen";
 import Bestof from "./components/Bestof";
 import Compte from "./components/Compte";
+import Connexion from "./components/Connexion";
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,8 @@ export default function App() {
         <Stack.Screen name="LiveScreen" component={LiveScreen} />
         <Stack.Screen name="Bestof" component={Bestof} />
         <Stack.Screen name="Compte" component={Compte} />
+        <Stack.Screen name="Connexion" component={Connexion} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
