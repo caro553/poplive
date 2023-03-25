@@ -9,8 +9,8 @@ export default function Inscription() {
   const [password, setPassword] = useState('');
 
   const handleSignUp = () => {
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-      .then(() => {
+    auth.createUserWithEmailAndPassword(email, password)
+    .then(() => {
         console.log('Utilisateur créé avec succès');
       })
       .catch(error => {
