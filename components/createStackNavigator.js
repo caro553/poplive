@@ -22,6 +22,7 @@ export default function App() {
         <Stack.Screen name="Bestof" component={Bestof} />
         <Stack.Screen name="Compte" component={Compte} />
         <Stack.Screen name="Connexion" component={Connexion} />
+        <Stack.Screen name="Inscription" component={Inscription} />
 
 
       </Stack.Navigator>
