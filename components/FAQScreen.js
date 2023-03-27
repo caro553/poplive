@@ -8,6 +8,13 @@ return (
 <Text style={styles.title}>Foire Aux Questions</Text>
 <View style={styles.questionContainer}>
 <Text style={styles.question}>Quel est le but de cette application?</Text>
+
+
+
+
+
+
+
 <Text style={styles.answer}>
 Cette application est conçue pour fournir aux utilisateurs les dernières nouvelles et mises à jour dans le monde du stream et d'améliorer leur référencements.
 </Text>
@@ -49,6 +56,8 @@ Oui, l'application est entièrement gratuite à télécharger et à utiliser. Ce
  Oui, totalement, cette application permet seulement d'avoir un meilleur référencement et plus de visibilité, ce n'est en aucun cas une application de boosting où de faux spectateurs. Les utilisateurs de cette
  application sont tous humains. 
 </Text>
+
+
 </View>
 <View style={styles.questionContainer}>
 <Text style={styles.question}>Que m'offre l'option premium ?</Text>
