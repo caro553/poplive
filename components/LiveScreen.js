@@ -82,7 +82,7 @@ export default function Live() {
         <BottomBar />
       </View>
     </View>
-  );
+);
 }
 
 const styles = StyleSheet.create({

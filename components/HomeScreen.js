@@ -1,14 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Button } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native';
-
 
 export default function HomeScreen({ navigation  }) {
   return (
     <LinearGradient colors={['#9b59b6', '#FFB347', '#F2C94C']} style={styles.container}>
       <View style={styles.logoContainer}>
-      <Image source={require('./logo.png')} style={styles.logo} />
+        <Image source={require('./logo.png')} style={styles.logo} />
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={[styles.loginButton, { marginTop: 20, marginBottom: 10 }]} onPress={() => navigation.navigate('AlaUne')}>
@@ -17,10 +16,15 @@ export default function HomeScreen({ navigation  }) {
         <TouchableOpacity style={[styles.signupButton, { marginBottom: 20 } ]}>
           <Text style={styles.buttonText}>S'inscrire</Text>
         </TouchableOpacity>
+        <Button
+          title="FAQ"
+          onPress={() => navigation.navigate('FAQ')}
+        />
       </View>
     </LinearGradient>
   );
 }
+
 
 
 const styles = StyleSheet.create({

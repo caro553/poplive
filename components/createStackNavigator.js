@@ -4,6 +4,7 @@ import AlaUne from './AlaUne';
 import LiveScreen from './LiveScreen';
 import Bestof from './Bestof';
 import Compte from './Compte';
+import FAQScreen from './FAQScreen';
 
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -20,7 +21,7 @@ export default function App() {
         <Stack.Screen name="LiveScreen" component={LiveScreen} />
         <Stack.Screen name="Bestof" component={Bestof} />
         <Stack.Screen name="Compte" component={Compte} />
-
+        <Stack.Screen name="FAQScreen" component={FAQScreen} />
 
       </Stack.Navigator>
     </NavigationContainer>
