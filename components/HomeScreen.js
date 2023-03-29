@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native';
 
 export default function HomeScreen({ navigation  }) {
   return (
-    <LinearGradient colors={['#9b59b6', '#FFB347', '#F2C94C']} style={styles.container}>
+    <LinearGradient colors={['#624F9C', '#714F9B', '#814E9A', '#8B4D99', '#8B4D99', '#8E4D98', '#C24E97', '#E55599', '#F08479', '#FABE4B', '#F3E730']} style={styles.container}>
       <View style={styles.logoContainer}>
       <Image source={require('./logo.png')} style={styles.logo} />
       </View>
@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+   
   },
   logoContainer: {
     marginTop: -150,
@@ -51,6 +52,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 15,
     width: '100%',
+    
   },
   signupButton: {
     backgroundColor: '#FFF',

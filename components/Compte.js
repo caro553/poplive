@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import {
   View,
   ScrollView,
@@ -7,6 +8,7 @@ import {
   Image,
   Linking,
   StyleSheet,
+  TextInput
 } from "react-native";
 import { WebView } from "react-native-webview";
 import TopBar from "./TopBar";
@@ -23,6 +25,7 @@ export default function Compte() {
   const [profileImageUrl, setProfileImageUrl] = useState("");
   const [username, setUsername] = useState("");
   const [data, setData] = useState([]);
+  const [bio, setBio] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -87,6 +90,10 @@ export default function Compte() {
     fetchData();
   }, []);
 
+  const handleBioChange = (text) => {
+    setBio(text);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
@@ -96,7 +103,18 @@ export default function Compte() {
       <View>
   <Text>{username}</Text>
 </View>
-     
+<View style={styles.contentContainer}>
+  <View style={styles.bioContainer}>
+    <TextInput
+      style={styles.bio}
+      placeholder="Entrez votre bio ici"
+      multiline={true}
+      numberOfLines={4}
+      onChangeText={handleBioChange}
+      value={bio}
+    />
+  </View>
+</View>
       {profileImageUrl ? (
         <TouchableOpacity onPress={selectImage}>
           <Image
@@ -174,15 +192,17 @@ const styles = StyleSheet.create({
   },
   bioContainer: {
     backgroundColor: 'white',
-    paddingHorizontal: 100,
-    paddingVertical: 50,
-    borderRadius: 10,
-    marginBottom: -50
+    paddingHorizontal: 30,
+    paddingVertical: 20,
+    borderRadius: 20,
+    marginTop: 10,
+    alignSelf: 'stretch'
   },
-  
   bio: {
     fontSize: 18,
     fontWeight: 'bold',
+    textAlign: 'center'
   }
+  
   
 });
