@@ -8,7 +8,8 @@ import {
   Image,
   Linking,
   StyleSheet,
-  TextInput
+  TextInput,
+  handleNomChange
 } from "react-native";
 import { WebView } from "react-native-webview";
 import TopBar from "./TopBar";
@@ -16,7 +17,7 @@ import BottomBar from "./BottomBar";
 import * as ImagePicker from "expo-image-picker";
 import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { AutoGrowingTextInput } from 'react-native-autogrow-textinput'
 import firebase from "./firebaseConfig";
 
 const db = firebase.firestore();
@@ -26,6 +27,9 @@ export default function Compte() {
   const [username, setUsername] = useState("");
   const [data, setData] = useState([]);
   const [bio, setBio] = useState("");
+  const [nom, setNom] = useState("");
+  const [prenom, setPrenom] = useState("");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -35,14 +39,18 @@ export default function Compte() {
       }
     })();
   }, []);
-
+  const handleBioChange = (newBio) => {
+    setBio(newBio);
+    AsyncStorage.setItem('bio', newBio); // sauvegarder la bio dans le stockage local
+  };
   const selectImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       alert("Permission to access media library is required!");
       return;
     }
-
+  
+  
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -55,7 +63,20 @@ export default function Compte() {
       setProfileImageUrl(result.uri);
     }
   };
-
+  const getSavedBio = async () => {
+    try {
+      const savedBio = await AsyncStorage.getItem('bio');
+      if (savedBio !== null) {
+        setBio(savedBio);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  useEffect(() => {
+    getSavedBio();
+  }, []);
   const loadProfileImage = async () => {
     const url = await AsyncStorage.getItem("profileImageUrl");
     if (url) {
@@ -90,39 +111,20 @@ export default function Compte() {
     fetchData();
   }, []);
 
-  const handleBioChange = (text) => {
-    setBio(text);
-  };
-
+  
   return (
     <View style={styles.container}>
-      <View style={styles.topBar}>
+       <View style={styles.topBar}>
         <TopBar />
       </View>
-
-      <View>
-  <Text>{username}</Text>
-</View>
-<View style={styles.contentContainer}>
-  <View style={styles.bioContainer}>
-    <TextInput
-      style={styles.bio}
-      placeholder="Entrez votre bio ici"
-      multiline={true}
-      numberOfLines={4}
-      onChangeText={handleBioChange}
-      value={bio}
-    />
-  </View>
-</View>
-      {profileImageUrl ? (
+       {profileImageUrl ? (
         <TouchableOpacity onPress={selectImage}>
           <Image
             source={{ uri: profileImageUrl }}
             style={[
               styles.logo,
               styles.profileImage,
-              { borderColor: "#9b59b6", borderWidth: 10 },
+              { borderColor: "#9b59b6", borderWidth: 10 }
             ]}
             resizeMode="contain"
           />
@@ -135,7 +137,54 @@ export default function Compte() {
           <Image source={require("./Photo.png")} style={styles.logo} />
         </TouchableOpacity>
       )}
-
+      <View style={styles.usernameContainer}>
+        <Text style={{ fontSize: 30, color: "white" }}>{username}</Text>
+      </View>
+  
+     
+  
+      <View style={styles.contentContainer}>
+        <View style={styles.bioContainer}>
+          <AutoGrowingTextInput
+            style={styles.bio}
+            placeholder="Entrez votre bio ici"
+            onChangeText={handleBioChange}
+            value={bio}
+            autoGrow={true}
+            maxHeight={200} // Hauteur maximale du conteneur
+            textAlignVertical="top" // Alignement du texte en haut
+          />
+        </View>
+      </View>
+  
+      <View style={styles.fieldContainer}>
+        <Text style={styles.label}>Nom :</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Entrez votre nom ici"
+          onChangeText={handleNomChange}
+          value={nom}
+        />
+      </View>
+  
+      <View style={styles.fieldContainer}>
+        <Text style={styles.label}>Prénom :</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Entrez votre prénom ici"
+        />
+      </View>
+  
+      <View style={styles.fieldContainer}>
+        <Text style={styles.label}>Email :</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Entrez votre email ici"
+        />
+      </View>
+  
+     
+  
       {/* Contenu de la page */}
       <BottomBar />
     </View>
@@ -151,6 +200,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#6441A4", // nouvelle couleur de fond correspondant à la couleur de Twitch
     position: "relative",
     zIndex: 0, // Réduire le niveau de z-index
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+
   },
   topBar: {
     backgroundColor: "#5f5f5f",
@@ -171,7 +224,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
-    marginTop: -280,
+    marginTop: -150, // déplacer la vue vers le haut
+
   },
   profileImage: {
     width: 180,
@@ -180,9 +234,10 @@ const styles = StyleSheet.create({
     borderColor: "#FFB347",
     borderWidth: 5,
   },
+  
   removeIcon: {
     position: "absolute",
-    top: -150,
+    top: -50,
     right: -5,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     borderRadius: 15,
@@ -192,17 +247,17 @@ const styles = StyleSheet.create({
   },
   bioContainer: {
     backgroundColor: 'white',
-    paddingHorizontal: 30,
+    paddingHorizontal: 100,
     paddingVertical: 20,
     borderRadius: 20,
-    marginTop: 10,
-    alignSelf: 'stretch'
+    marginTop: 40,
+    alignSelf: 'stretch',
+    height: 100 // Hauteur fixe du conteneur
   },
+  
   bio: {
     fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center'
+    padding: 10 // Padding du texte
   }
-  
-  
 });
