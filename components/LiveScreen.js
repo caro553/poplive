@@ -1,90 +1,99 @@
-import React from 'react';
-import { View, ScrollView, TouchableOpacity, Text, Image, Linking, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useState, useEffect } from 'react';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { WebView } from 'react-native-webview';
+import axios from 'axios';
+import * as AuthSession from 'expo-auth-session';
 
-// import de TopBar et BottomBar depuis un autre fichier
 import TopBar from './TopBar';
 import BottomBar from './BottomBar';
 
+const clientId = 'nlm1gsckgdulewvh1e1wcme2qt76bz';
+const redirectUri = AuthSession.makeRedirectUri({ useProxy: true });
+
 export default function Live() {
+  const [liveStreams, setLiveStreams] = useState([]);
+  const [accessToken, setAccessToken] = useState(null);
+  
+  const loginWithTwitch = async () => {
+    try {
+      const result = await AuthSession.startAsync({
+        authUrl:
+          `https://id.twitch.tv/oauth2/authorize?response_type=token` +
+          `&client_id=${clientId}` +
+          `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+          `&scope=user:read:email`,
+      });
+      if (result.type === 'success') {
+        const { access_token } = result.params;
+        setAccessToken(access_token);
+      } else {
+        console.error('Authentication failed:', result);
+      }
+    } catch (error) {
+      console.error('Error logging in with Twitch:', error);
+    }
+  };
+
+  const getLiveStreams = async () => {
+    if (!accessToken) {
+      return;
+    }
+
+    try {
+      const headers = {
+        'Client-ID': clientId,
+        'Authorization': `Bearer ${accessToken}`,
+      };
+      const response = await axios.get('https://api.twitch.tv/helix/streams', { headers });
+
+      if (response.data && response.data.data) {
+        setLiveStreams(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching live streams:', error);
+    }
+  };
+
+  useEffect(() => {
+    getLiveStreams();
+  }, [accessToken]);
+
   return (
-    <View style={styles.container}>
-      {/* Ajout de la topbar */}
+    <View style={[styles.container, { flex: 1 }]}>
       <View style={styles.topBar}>
         <TopBar />
       </View>
-      <View style={styles.rectangleContainer}>
-  <View style={styles.rectangle}>
-    <Image source={require('./Iconenonpre.png')} style={styles.icon} />
-  </View>
-  <View style={styles.rectangle}>
-    <Image source={require('./IconePre.png')} style={styles.icon} />
-      <LinearGradient colors={['#9b59b6', '#FFB347', '#F2C94C']} style={{ flex: 1, borderRadius: 10, overflow: 'hidden' }}>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      
-        </View>
-      </LinearGradient>
-
-  </View>
-</View>
-
-
-
-<ScrollView style={styles.scrollView}>
-  <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
-    <Image source={require('./Photo.png')} style={[styles.twitchIcon, {width: 70, height: 70, borderRadius: 10}]} />
-    <View style={styles.twitchTextContainer}>
-      <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
-      <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
-      <Image source={require('./Vue.png')} style={{ width: 20, height: 20 }} />
-    </View>
-  </TouchableOpacity>
-
-  <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
-    <Image source={require('./Photo.png')} style={[styles.twitchIcon, {width: 70, height: 70, borderRadius: 10}]} />
-    <View style={styles.twitchTextContainer}>
-      <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
-      <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
-      <Image source={require('./Vue.png')} style={{ width: 20, height: 20 }} />
-    </View>
-  </TouchableOpacity>
-
-  <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
-    <Image source={require('./Photo.png')} style={[styles.twitchIcon, {width: 70, height: 70, borderRadius: 10}]} />
-    <View style={styles.twitchTextContainer}>
-      <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
-      <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
-      <Image source={require('./Vue.png')} style={{ width: 20, height: 20 }} />
-    </View>
-  </TouchableOpacity>
-  <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
-    <Image source={require('./Photo.png')} style={[styles.twitchIcon, {width: 70, height: 70, borderRadius: 10}]} />
-    <View style={styles.twitchTextContainer}>
-      <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
-      <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
-      <Image source={require('./Vue.png')} style={{ width: 20, height: 20 }} />
-    </View>
-  </TouchableOpacity>
-  <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
-    <Image source={require('./Photo.png')} style={[styles.twitchIcon, {width: 70, height: 70, borderRadius: 10}]} />
-    <View style={styles.twitchTextContainer}>
-      <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
-      <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
-      <Image source={require('./Vue.png')} style={{ width: 20, height: 20 }} />
-    </View>
-  </TouchableOpacity>
-
-        {/* Ajoutez autant d'éléments <TouchableOpacity> que vous le souhaitez ici */}
-      </ScrollView>
-      
+  
+      {/* Contenu principal */}
+      <View style={[styles.content, { flex: 1 }]}>
+        {/* Bouton de connexion Twitch */}
+        {!accessToken && (
+          <TouchableOpacity onPress={loginWithTwitch} style={styles.loginButton}>
+            <Text style={styles.loginButtonText}>Connect with Twitch</Text>
+          </TouchableOpacity>
+        )}
+  
+        {/* Affichez le live de l'utilisateur connecté à votre application Twitch */}
+        {liveStreams.map((stream, index) => (
+          <View key={index} style={styles.rectangleContainer}>
+            <View style={styles.rectangle}>
+              {/* Ici, vous pouvez afficher le contenu du live, par exemple en utilisant un composant WebView */}
+            </View>
+            <View style={styles.rectangle}>
+              {/* Ici, vous pouvez afficher d'autres informations sur le stream en direct, comme le titre, le nom de la chaîne, etc. */}
+            </View>
+          </View>
+        ))}
+      </View>
+  
       {/* Ajout de la bottombar */}
       <View style={styles.bottomBar}>
         <BottomBar />
       </View>
     </View>
   );
+  
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -112,8 +121,9 @@ const styles = StyleSheet.create({
   },
   
   video: {
+    flex: 1,
     width: '100%',
-    aspectRatio: 2,
+    height: '100%',
   },
   actionsContainer: {
     flexDirection: 'row',
@@ -185,4 +195,7 @@ icon: {
   width: 30,
   height: 30,
 },
+  content: {
+    flex: 1,
+  },
 });

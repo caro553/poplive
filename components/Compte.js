@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 
 import {
   View,
@@ -9,7 +9,7 @@ import {
   Linking,
   StyleSheet,
   TextInput,
-  handleNomChange
+   
 } from "react-native";
 import { WebView } from "react-native-webview";
 import TopBar from "./TopBar";
@@ -19,25 +19,84 @@ import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AutoGrowingTextInput } from 'react-native-autogrow-textinput'
 import firebase from "./firebaseConfig";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 
 const db = firebase.firestore();
 
 export default function Compte() {
+  const navigation = useNavigation();
   const [profileImageUrl, setProfileImageUrl] = useState("");
   const [username, setUsername] = useState("");
   const [data, setData] = useState([]);
   const [bio, setBio] = useState("");
-  const [nom, setNom] = useState("");
-  const [prenom, setPrenom] = useState("");
+  const [nom, setnom] = useState("");
+  const [prenom, setprenom] = useState("");
   const [email, setEmail] = useState("");
-
+  const handleLogout = async () => {
+    try {
+      await firebase.auth().signOut();
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+const nomRef = useRef(null);
+  const handleNomChange = () => {
+    console.log('handleNomChange called');
+    nomRef.current.focus(); // Donnez le focus sur le champ "Nom"
+  };
+  const firebaseConfig = {
+    // ...
+  };
+  
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
   useEffect(() => {
+    const userId = firebase.auth().currentUser.uid;
+    console.log("User ID:", userId);
+    const userRef = firebase.database().ref(`users/${userId}`);
+    console.log("Data from Firebase:", data);
+
+    const handleData = (snapshot) => {
+      const data = snapshot.val();
+      console.log("Data from Firebase:", data);
+    
+      if (data) {
+        setNom(data.nom || "");
+        setPrenom(data.prenom || "");
+      } else {
+        setnom("");
+        setprenom("");
+      }
+    };
+    const saveUserData = async (nom, prenom) => {
+      try {
+        const userId = firebase.auth().currentUser.uid;
+        await firebase.database().ref(`users/${userId}`).set({
+          nom,
+          prenom,
+        });
+        console.log('User data saved successfully');
+      } catch (error) {
+        console.error('Error saving user data:', error);
+      }
+    };
+                                                                                                                                                                                                                                                                                 
+    
     (async () => {
       const savedImage = await AsyncStorage.getItem("profileImage");
       if (savedImage) {
         setProfileImageUrl(savedImage);
       }
     })();
+    userRef.on('value', handleData);
+
+    return () => {
+      userRef.off('value', handleData);
+    };
   }, []);
   const handleBioChange = (newBio) => {
     setBio(newBio);
@@ -49,6 +108,8 @@ export default function Compte() {
       alert("Permission to access media library is required!");
       return;
     }
+  
+
   
   
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -114,17 +175,22 @@ export default function Compte() {
   
   return (
     <View style={styles.container}>
-       <View style={styles.topBar}>
+      <View style={styles.topBar}>
         <TopBar />
       </View>
-       {profileImageUrl ? (
+      <KeyboardAwareScrollView
+  contentContainerStyle={styles.keyboardAwareScrollView}
+  keyboardShouldPersistTaps="handled"
+  keyboardDismissMode="on-drag"
+>
+      {profileImageUrl ? (
         <TouchableOpacity onPress={selectImage}>
           <Image
             source={{ uri: profileImageUrl }}
             style={[
               styles.logo,
               styles.profileImage,
-              { borderColor: "#9b59b6", borderWidth: 10 }
+              { borderColor: "#9b59b6", borderWidth: 10 },
             ]}
             resizeMode="contain"
           />
@@ -137,14 +203,13 @@ export default function Compte() {
           <Image source={require("./Photo.png")} style={styles.logo} />
         </TouchableOpacity>
       )}
+  
       <View style={styles.usernameContainer}>
         <Text style={{ fontSize: 30, color: "white" }}>{username}</Text>
       </View>
   
-     
-  
       <View style={styles.contentContainer}>
-        <View style={styles.bioContainer}>
+        <View style={[styles.bioContainer, { marginBottom: 40 }]}>
           <AutoGrowingTextInput
             style={styles.bio}
             placeholder="Entrez votre bio ici"
@@ -155,59 +220,66 @@ export default function Compte() {
             textAlignVertical="top" // Alignement du texte en haut
           />
         </View>
+        <View style={styles.fieldContainer}>
+  <TextInput
+    style={[styles.input, styles.whiteBackground]}
+    value={`Nom: ${nom}`}
+    editable={false}
+  />
+</View>
+
+<View style={styles.fieldContainer}>
+  <TextInput
+    style={[styles.input, styles.whiteBackground]}
+    value={`Prénom: ${prenom}`}
+    editable={false}
+  />
+</View>
+
+<View style={styles.fieldContainer}>
+  <TextInput
+    style={[styles.input, styles.whiteBackground]}
+    value="Email: Entrez votre email ici"
+  />
+</View>
       </View>
-  
-      <View style={styles.fieldContainer}>
-        <Text style={styles.label}>Nom :</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Entrez votre nom ici"
-          onChangeText={handleNomChange}
-          value={nom}
-        />
-      </View>
-  
-      <View style={styles.fieldContainer}>
-        <Text style={styles.label}>Prénom :</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Entrez votre prénom ici"
-        />
-      </View>
-  
-      <View style={styles.fieldContainer}>
-        <Text style={styles.label}>Email :</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Entrez votre email ici"
-        />
-      </View>
-  
-     
-  
+      {/* Add your custom icon */}
+    <TouchableOpacity style={styles.customIconContainer}>
+      <Image source={require("./Editer.png")} style={styles.customIcon} />
+    </TouchableOpacity>
+      <View style={styles.logoutContainer}>
+      <LinearGradient
+  colors={['#624F9C', '#714F9B', '#814E9A', '#8B4D99', '#8B4D99', '#8E4D98', '#C24E97', '#E55599', '#F08479', '#FABE4B', '#F3E730']}
+  style={styles.logoutButton}
+>
+  <TouchableOpacity onPress={handleLogout}>
+    <Text style={styles.logoutText}>Déconnexion</Text>
+  </TouchableOpacity>
+</LinearGradient>
+</View>
+ 
       {/* Contenu de la page */}
+      </KeyboardAwareScrollView>
+
+
       <BottomBar />
     </View>
   );
+  
 
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column', // Ajoutez cette ligne
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#6441A4", // nouvelle couleur de fond correspondant à la couleur de Twitch
-    position: "relative",
-    zIndex: 0, // Réduire le niveau de z-index
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-
+    backgroundColor: "#6441A4",
   },
   topBar: {
     backgroundColor: "#5f5f5f",
-    position: "absolute",
+    // position: "absolute", // Supprimez cette ligne
     top: 0,
     left: 0,
     right: 0,
@@ -224,8 +296,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
-    marginTop: -150, // déplacer la vue vers le haut
-
+    alignSelf: "center",
+    marginTop: 30, // Add marginTop to increase spacing
   },
   profileImage: {
     width: 180,
@@ -237,7 +309,7 @@ const styles = StyleSheet.create({
   
   removeIcon: {
     position: "absolute",
-    top: -50,
+    top: 90,
     right: -5,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     borderRadius: 15,
@@ -250,14 +322,78 @@ const styles = StyleSheet.create({
     paddingHorizontal: 100,
     paddingVertical: 20,
     borderRadius: 20,
-    marginTop: 40,
     alignSelf: 'stretch',
-    height: 100 // Hauteur fixe du conteneur
+    height: 100,
+    marginTop: 30, // Increase the marginTop value
+    marginHorizontal: 20,
   },
-  
   bio: {
     fontSize: 18,
     fontWeight: 'bold',
     padding: 10 // Padding du texte
-  }
+  },
+  fieldContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    marginHorizontal: 20, // Add margin to left and right
+  },
+  label: {
+    fontWeight: 'bold',
+    marginRight: 10,
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 15, // Increase borderRadius to make the rectangles more rounded
+    padding: 5,
+  },
+  whiteBackground: {
+    backgroundColor: 'white',
+  },
+  logoutContainer: {
+    alignSelf: "flex-start", // Change from 'absolute' to 'flex-start'
+    marginVertical: 20, // Add some margin at the top and bottom
+    marginLeft: 20,
+  },
+  logoutButton: {
+    backgroundColor: "#FFB347",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10, // Add border radius to make it rounded
+  },
+  logoutText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  usernameContainer: {
+    alignSelf: "center", // Ajoutez cette ligne pour centrer le nom d'utilisateur
+  },
+  
+  keyboardAvoidingViewWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scrollViewContent: {
+    paddingTop: 70,
+  },
+  keyboardAwareScrollView: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: -90, // Ajoutez une marge en haut correspondant à la hauteur de la topBar
+  },
+  customIconContainer: {
+    alignSelf: 'flex-end', // Align the icon to the right
+    position: 'absolute', // Position the icon absolutely
+    bottom: 90, // Increase the bottom value to match the "Déconnexion" button's position
+    right: 20,
+  },
+  customIcon: {
+    width: 50, // Increase the width
+    height: 50, // Increase the height
+  },
 });
