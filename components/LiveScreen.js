@@ -3,12 +3,17 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 import axios from 'axios';
 import * as AuthSession from 'expo-auth-session';
+import * as Linking from 'expo-linking';
+
 
 import TopBar from './TopBar';
 import BottomBar from './BottomBar';
 
-const clientId = 'nlm1gsckgdulewvh1e1wcme2qt76bz';
-const redirectUri = AuthSession.makeRedirectUri({ useProxy: true });
+const clientId = 'i34nc3xu598asoajw481awags63pnl';
+const redirectUri = 'https://exp.host/@caro_vkc/poplive/--/';
+const twitchClientSecret = 'ti2x3lczbx4x8o611jeiqnydfqk4j1';
+
+
 
 export default function Live() {
   const [liveStreams, setLiveStreams] = useState([]);
@@ -16,13 +21,16 @@ export default function Live() {
   
   const loginWithTwitch = async () => {
     try {
+      const authUrl = new URL('https://id.twitch.tv/oauth2/authorize');
+      authUrl.searchParams.append('client_id', 'i34nc3xu598asoajw481awags63pnl');
+      authUrl.searchParams.append('redirect_uri', redirectUri);
+      authUrl.searchParams.append('response_type', 'token');
+      authUrl.searchParams.append('scope', 'user:read:email user:read:broadcast');
+      
       const result = await AuthSession.startAsync({
-        authUrl:
-          `https://id.twitch.tv/oauth2/authorize?response_type=token` +
-          `&client_id=${clientId}` +
-          `&redirect_uri=${encodeURIComponent(redirectUri)}` +
-          `&scope=user:read:email`,
+        authUrl: authUrl.toString(),
       });
+  
       if (result.type === 'success') {
         const { access_token } = result.params;
         setAccessToken(access_token);
@@ -33,6 +41,8 @@ export default function Live() {
       console.error('Error logging in with Twitch:', error);
     }
   };
+  
+  
 
   const getLiveStreams = async () => {
     if (!accessToken) {
