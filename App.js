@@ -9,7 +9,6 @@ import Bestof from './components/bestof';
 import Compte from './components/Compte';
 import FAQScreen from './components/FAQScreen';
 
-
 const Stack = createStackNavigator();
 
 export default function App() {
