@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, Alert, Image, TouchableOpacity } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet, Alert, Image, TouchableOpacity, TouchableHighlight } from 'react-native';
 import axios from 'axios';
 import { WebView } from 'react-native-webview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import BottomBar from './BottomBar';
+import TopBar from './TopBar';
+import viewIcon from './Vue.png';
 
 
 
@@ -155,6 +158,12 @@ const App = ({ navigation }) => {
       flex: 1,
       justifyContent: 'center',
       paddingHorizontal: 20,
+      backgroundColor: '#6441A4',
+    },
+    viewIcon: {
+      width: 20,
+      height: 20,
+      marginRight: 5,
     },
     input: {
       height: 40,
@@ -163,9 +172,48 @@ const App = ({ navigation }) => {
       marginBottom: 10,
       paddingLeft: 10,
     },
+    topBar: {
+      backgroundColor: '#5f5f5f',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 50,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    streamInfoContainer: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      backgroundColor: 'white',
+      borderRadius: 10,
+      padding: 10,
+      marginTop: 10,
+    },
+    profileImage: {
+      width: 50,
+      height: 50,
+      borderRadius: 25,
+      marginRight: 10,
+    },
+    streamTitleContainer: {
+      flex: 1,
+      paddingRight: 10,
+    },
+    streamTitle: {
+      marginBottom: 5,
+    },
+    streamThumbnail: {
+      width: 100,
+      height: 60,
+    },
   });
   return (
     <View style={styles.container}>
+      <View style={styles.topBar}>
+        <TopBar />
+      </View>
+      <BottomBar />
       <TextInput
         style={styles.input}
         placeholder="Nom d'utilisateur Twitch"
@@ -174,27 +222,29 @@ const App = ({ navigation }) => {
       />
       <Button title="Rechercher" onPress={handleSearch} />
       {stream && (
-        <View>
-          <Text>{stream.user.display_name}</Text>
-          <Image
-            source={{ uri: stream.user.profile_image_url }}
-            style={{ width: 100, height: 100 }}
-          />
-          <Text>{stream.user.description}</Text>
-          {stream.stream && (
-            <>
-              <Text>{stream.stream.title}</Text>
-              <TouchableOpacity onPress={showDetails}>
-                <Text style={{ color: 'blue' }}>Afficher les détails</Text>
-              </TouchableOpacity>
-            </>
-          )}
-        </View>
+        <TouchableHighlight onPress={showDetails} underlayColor="transparent">
+          <View style={styles.streamInfoContainer}>
+            <Image
+              source={{ uri: stream.user.profile_image_url }}
+              style={styles.profileImage}
+            />
+            <View style={styles.streamTitleContainer}>
+              <Text style={styles.streamTitle}>{stream.stream.title}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Image source={viewIcon} style={styles.viewIcon} />
+                <Text>{stream.stream.viewer_count}</Text>
+              </View>
+            </View>
+            <Image
+              source={{ uri: stream.stream.thumbnail_url.replace('{width}', '100').replace('{height}', '60') }}
+              style={styles.streamThumbnail}
+            />
+          </View>
+        </TouchableHighlight>
       )}
     </View>
   );
-  
-};
+      }  
 
 export default App;
 
