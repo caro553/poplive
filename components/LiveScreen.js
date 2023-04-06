@@ -184,12 +184,15 @@ const App = ({ navigation }) => {
     },
     streamInfoContainer: {
       flexDirection: 'row',
-      alignItems: 'flex-start',
-      backgroundColor: 'white',
-      borderRadius: 10,
+      alignItems: 'center',
+      backgroundColor: '#fff',
+      borderRadius: 30,
       padding: 10,
-      marginTop: 10,
+      marginBottom: 20,
+      height: 120, // Ajustez la hauteur
+
     },
+  
     profileImage: {
       width: 50,
       height: 50,
