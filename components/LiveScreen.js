@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, Alert, Image, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet, Alert, Image, TouchableOpacity, TouchableHighlight, ScrollView } from 'react-native';
 import axios from 'axios';
 import { WebView } from 'react-native-webview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -83,6 +83,8 @@ const App = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [stream, setStream] = useState(null);
   const [checkInterval, setCheckInterval] = useState(0);
+    const [streamers, setStreamers] = useState([]);
+  const [sortDescending, setSortDescending] = useState(true);
 
 
 
@@ -90,7 +92,15 @@ const App = ({ navigation }) => {
     try {
       const data = await AsyncStorage.getItem('streamData');
       if (data) {
-        setStream(JSON.parse(data));
+        const parsedData = JSON.parse(data);
+        const liveData = await getStream(parsedData.user.login);
+  
+        if (liveData.stream) {
+          setStream(liveData);
+        } else {
+          setStream(null);
+          await AsyncStorage.removeItem('streamData');
+        }
       }
     } catch (error) {
       console.error('Error loading stream data:', error);
@@ -104,12 +114,14 @@ const App = ({ navigation }) => {
       if (!data.stream) {
         Alert.alert('Flux terminé', 'Le flux en direct est maintenant terminé.');
         setStream(null);
-        clearInterval(checkInterval);
-        setCheckInterval(null);
+        await AsyncStorage.removeItem('streamData');
+    return;
       }
     }
   };
   useEffect(() => {
+    loadStreamData();
+
     (async () => {
       try {
         const data = await AsyncStorage.getItem('streamData');
@@ -132,7 +144,6 @@ const App = ({ navigation }) => {
     }
   
     try {
-      
       const data = await getStream(username);
       console.log('User and stream data:', data);
   
@@ -142,16 +153,31 @@ const App = ({ navigation }) => {
         return;
       }
   
-      setStream(data);
-      saveStreamData(data); // Ajoutez cette ligne
+      setStreamers(prevStreamers => {
+        const newStreamers = [...prevStreamers, data];
+        return sortDescending
+          ? newStreamers.sort((a, b) => b.stream.viewer_count - a.stream.viewer_count)
+          : newStreamers.sort((a, b) => a.stream.viewer_count - b.stream.viewer_count);
+      });
     } catch (error) {
       console.error('Error fetching stream data:', error);
       Alert.alert('Erreur', 'Une erreur est survenue lors de la récupération des données du flux.');
     }
   };
-  const showDetails = () => {
+  
+  
+  const showDetails = (stream) => {
     navigation.navigate('LiveCompte', { user: stream.user, stream: stream.stream });
   };
+  const handleSort = () => {
+    setSortDescending(!sortDescending);
+    setStreamers(prevStreamers =>
+      sortDescending
+        ? prevStreamers.sort((a, b) => a.stream.viewer_count - b.stream.viewer_count)
+        : prevStreamers.sort((a, b) => b.stream.viewer_count - a.stream.viewer_count),
+    );
+  };
+  
 
   const styles = StyleSheet.create({
     container: {
@@ -210,6 +236,18 @@ const App = ({ navigation }) => {
       width: 100,
       height: 60,
     },
+    streamsContainer: {
+      marginTop: 10,
+      flex: 1,
+    },
+    input: {
+      height: 40,
+      borderColor: 'gray',
+      borderWidth: 1,
+      marginBottom: 10,
+      paddingLeft: 10,
+      marginTop: 150, // Ajoutez une marge supérieure
+    },
   });
   return (
     <View style={styles.container}>
@@ -224,29 +262,34 @@ const App = ({ navigation }) => {
         value={username}
       />
       <Button title="Rechercher" onPress={handleSearch} />
-      {stream && (
-        <TouchableHighlight onPress={showDetails} underlayColor="transparent">
-          <View style={styles.streamInfoContainer}>
-            <Image
-              source={{ uri: stream.user.profile_image_url }}
-              style={styles.profileImage}
-            />
-            <View style={styles.streamTitleContainer}>
-              <Text style={styles.streamTitle}>{stream.stream.title}</Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image source={viewIcon} style={styles.viewIcon} />
-                <Text>{stream.stream.viewer_count}</Text>
+      <ScrollView style={styles.streamersContainer}>
+              <Button title="Trier" onPress={handleSort} />
+
+              {streamers.map((stream, index) => (
+                          <TouchableHighlight key={index} onPress={() => showDetails(stream)} underlayColor="transparent">
+            <View style={styles.streamInfoContainer}>
+              <Image
+                source={{ uri: stream.user.profile_image_url }}
+                style={styles.profileImage}
+              />
+              <View style={styles.streamTitleContainer}>
+                <Text style={styles.streamTitle}>{stream.stream.title}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Image source={viewIcon} style={styles.viewIcon} />
+                  <Text>{stream.stream.viewer_count}</Text>
+                </View>
               </View>
+              <Image
+                source={{ uri: stream.stream.thumbnail_url.replace('{width}', '100').replace('{height}', '60') }}
+                style={styles.streamThumbnail}
+              />
             </View>
-            <Image
-              source={{ uri: stream.stream.thumbnail_url.replace('{width}', '100').replace('{height}', '60') }}
-              style={styles.streamThumbnail}
-            />
-          </View>
-        </TouchableHighlight>
-      )}
+          </TouchableHighlight>
+        ))}
+      </ScrollView>
     </View>
   );
+  
       }  
 
 export default App;
