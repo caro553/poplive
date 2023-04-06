@@ -252,9 +252,11 @@ if (!firebase.apps.length) {
         </LinearGradient>
       </View>
 
-      {/* Contenu de la page */}
-    </KeyboardAwareScrollView><BottomBar /></>
-    </View>
+     {/* Contenu de la page */}
+     <KeyboardAwareScrollView>
+      <BottomBar />
+    </KeyboardAwareScrollView>
+  </View>
   );
 }
 
