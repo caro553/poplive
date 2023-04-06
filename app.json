@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "poplive",
+    "scheme": "poplive",
+    "slug": "poplive",
+    "version": "1.0.0",
+    "sdkVersion": "48.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "android": {
+      "package": "com.caro_vkc.poplive"
+    }
+  }
+}

@@ -10,8 +10,12 @@ import TopBar from './TopBar';
 import BottomBar from './BottomBar';
 
 const clientId = 'i34nc3xu598asoajw481awags63pnl';
-const redirectUri = 'https://exp.host/@caro_vkc/poplive/--/';
 const twitchClientSecret = 'ti2x3lczbx4x8o611jeiqnydfqk4j1';
+const ngrokBaseUrl = 'https://d9aa-91-167-34-139.eu.ngrok.io';
+const redirectUri = ngrokBaseUrl + '/--/twitch-auth';
+
+console.log('Redirect URI:', redirectUri);
+
 
 
 
@@ -22,10 +26,11 @@ export default function Live() {
   const loginWithTwitch = async () => {
     try {
       const authUrl = new URL('https://id.twitch.tv/oauth2/authorize');
-      authUrl.searchParams.append('client_id', 'i34nc3xu598asoajw481awags63pnl');
-      authUrl.searchParams.append('redirect_uri', redirectUri);
-      authUrl.searchParams.append('response_type', 'token');
-      authUrl.searchParams.append('scope', 'user:read:email user:read:broadcast');
+authUrl.searchParams.append('client_id', clientId);
+authUrl.searchParams.append('redirect_uri', redirectUri);
+authUrl.searchParams.append('response_type', 'token');
+authUrl.searchParams.append('scope', 'user:read:email user:read:broadcast');
+
       
       const result = await AuthSession.startAsync({
         authUrl: authUrl.toString(),
@@ -85,15 +90,20 @@ export default function Live() {
   
         {/* Affichez le live de l'utilisateur connecté à votre application Twitch */}
         {liveStreams.map((stream, index) => (
-          <View key={index} style={styles.rectangleContainer}>
-            <View style={styles.rectangle}>
-              {/* Ici, vous pouvez afficher le contenu du live, par exemple en utilisant un composant WebView */}
-            </View>
-            <View style={styles.rectangle}>
-              {/* Ici, vous pouvez afficher d'autres informations sur le stream en direct, comme le titre, le nom de la chaîne, etc. */}
-            </View>
-          </View>
-        ))}
+  <View key={index} style={styles.rectangleContainer}>
+    <View style={styles.rectangle}>
+      <WebView
+        source={{ uri: `https://player.twitch.tv/?channel=${stream.user_login}&parent=${encodeURIComponent(redirectUri)}` }}
+        style={{ flex: 1 }}
+      />
+    </View>
+    <View style={styles.rectangle}>
+      {/* Ici, vous pouvez afficher d'autres informations sur le stream en direct, comme le titre, le nom de la chaîne, etc. */}
+      <Text>{stream.title}</Text>
+      <Text>{stream.user_name}</Text>
+    </View>
+  </View>
+))}
       </View>
   
       {/* Ajout de la bottombar */}

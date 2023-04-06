@@ -1,10 +1,10 @@
 {
-  "hostType": "lan",
+  "hostType": "tunnel",
   "lanType": "ip",
   "dev": true,
   "minify": false,
   "urlRandomness": "cn-pmz",
   "https": false,
-  "scheme": "exp+poplive",
+  "scheme": "com.caro_vkc.poplive",
   "devClient": false
 }
