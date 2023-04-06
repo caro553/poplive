@@ -63,7 +63,7 @@ export default function Compte() {
   };
 
   const loadUsername = async () => {
-    const name = await AsyncStorage.getItem('username');
+    const name = await AsyncStorage.getItem("username");
     if (name) {
       setUsername(name);
     }
@@ -93,11 +93,11 @@ export default function Compte() {
   }, []);
 
   return (
- <View style={styles.container}>
-  <View style={styles.topBar}>
-    <Text style={styles.username}>{username}</Text>
-    <TopBar />
-  </View>
+    <View style={styles.container}>
+      <View style={styles.topBar}>
+        <Text style={styles.username}>{username}</Text>
+        <TopBar />
+      </View>
 
       {/* Afficher l'image sélectionnée ou l'image par défaut */}
       {profileImageUrl ? (
@@ -129,7 +129,6 @@ export default function Compte() {
       <BottomBar />
     </View>
   );
-
 }
 
 const styles = StyleSheet.create({
@@ -180,16 +179,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   bioContainer: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     paddingHorizontal: 100,
     paddingVertical: 50,
     borderRadius: 10,
-    marginBottom: -50
+    marginBottom: -50,
   },
-  
+
   bio: {
     fontSize: 18,
-    fontWeight: 'bold',
-  }
-  
+    fontWeight: "bold",
+  },
 });
