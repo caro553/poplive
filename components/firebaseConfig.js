@@ -3,6 +3,8 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import 'firebase/compat/database';
 
+
+
 const firebaseConfig = {
   apiKey: "AIzaSyCCSiKrrvo0pWnQI_pIkxeD3DnZPBQxF6o",
   authDomain: "poplive-4d383.firebaseapp.com",
@@ -18,6 +20,13 @@ const firebaseConfig = {
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
+
+// Ajoutez cette partie pour vous connecter anonymement
+firebase.auth().signInAnonymously()
+  .catch((error) => {
+    console.error('Error signing in anonymously:', error);
+  });
+
 const auth = firebase.auth();
 
 export { auth };

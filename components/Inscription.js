@@ -10,6 +10,12 @@ export default function Inscription({ navigation }) {
     const [password, setPassword] = useState('');
     const [pseudo, setPseudo] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    
+    const saveUsername = async (userId) => {
+        await AsyncStorage.setItem('username', pseudo);
+        await AsyncStorage.setItem('userId', userId);
+    };
+    
 
     const handleSignUp = () => {
         auth.createUserWithEmailAndPassword(email, password)
@@ -19,9 +25,28 @@ export default function Inscription({ navigation }) {
                     displayName: pseudo,
                 })
                     .then(() => {
+                        saveUsername(userCredential.user.uid); // Ajoutez l'ID de l'utilisateur ici
                         console.log('Utilisateur créé avec succès');
-                        saveUsername();
-                        navigation.navigate('AlaUne');
+                        
+                        // Ajouter un document pour le nouvel utilisateur dans la collection 'test_users'
+                        firebase
+                            .firestore()
+                            .collection('test_users')
+                            .doc(userCredential.user.uid)
+                            .set({
+                                email: email,
+                                twitchUsername: pseudo,
+                                // Ajoutez ici d'autres informations si nécessaire
+                            })
+                            .then(() => {
+                                saveUsername();
+                                navigation.navigate('AlaUne', { // Modifiez cette ligne
+                                    twitchUsername: pseudo,
+                                });
+                            })
+                            .catch((error) => {
+                                console.log("Erreur lors de l'ajout de l'utilisateur à la collection test_users :", error);
+                            });
                     })
                     .catch((error) => {
                         console.log(error);
@@ -30,12 +55,9 @@ export default function Inscription({ navigation }) {
             .catch(error => {
                 console.log(error);
                 setErrorMessage(error.message);
-              });
+            });
     }
     
-    const saveUsername = async () => {
-        await AsyncStorage.setItem('username', pseudo);
-    };
   
     return (
         <View style={styles.container}>
