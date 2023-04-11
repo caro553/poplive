@@ -19,10 +19,12 @@ const Connexion = ({ navigation }) => {
   const getUsernameAndUserId = async () => {
     const userId = await AsyncStorage.getItem('userId');
     const username = await AsyncStorage.getItem('username');
-    console.log('userId et username récupérés depuis AsyncStorage :', userId, username); // Ajoutez cette ligne
-
-    if (!username || !userId) {
-      const user = firebase.auth().currentUser;
+    const userEmail = await AsyncStorage.getItem('email');
+  
+    const user = firebase.auth().currentUser;
+  
+    // Vérifie si l'adresse e-mail de l'utilisateur actuellement connecté correspond à celle stockée dans AsyncStorage
+    if (!username || !userId || user.email !== userEmail) {
       const userDoc = await firebase
         .firestore()
         .collection('test_users')
@@ -32,13 +34,14 @@ const Connexion = ({ navigation }) => {
       const userData = userDoc.data();
       await AsyncStorage.setItem('userId', user.uid);
       await AsyncStorage.setItem('username', userData.twitchUsername);
+      await AsyncStorage.setItem('email', user.email); // Ajoutez cette ligne
   
       return { userId: user.uid, username: userData.twitchUsername };
-      
     }
   
     return { userId, username };
   };
+  
   
   
   const handleSignup = () => {
@@ -82,8 +85,8 @@ const Connexion = ({ navigation }) => {
             console.log('userId et username après connexion :', userId, username); // Ajoutez cette ligne
 
             navigation.navigate("LiveScreen", {
-                userId: userId,
-                twitchUsername: username,
+              userId: userId,
+              twitchUsername: username,
             });
         })
         .catch((error) => {
