@@ -22,7 +22,16 @@ const Connexion = ({ navigation }) => {
     const userEmail = await AsyncStorage.getItem('email');
   
     const user = firebase.auth().currentUser;
-  
+    const addUser = (userId, twitchUsername) => {
+      // Vérifie si l'utilisateur existe déjà dans la liste d'utilisateurs
+      const userExists = users.some((user) => user.userId === userId);
+    
+      // Si l'utilisateur n'existe pas, ajoutez-le à la liste
+      if (!userExists) {
+        setUsers((prevUsers) => [...prevUsers, { userId, twitchUsername }]);
+      }
+    };
+    
     // Vérifie si l'adresse e-mail de l'utilisateur actuellement connecté correspond à celle stockée dans AsyncStorage
     if (!username || !userId || user.email !== userEmail) {
       const userDoc = await firebase
@@ -77,22 +86,33 @@ const Connexion = ({ navigation }) => {
   
   const handleLogin = () => {
     firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(async () => { // Ajoutez le mot-clé async ici
-            console.log("Connexion réussie");
-            const { userId, username } = await getUsernameAndUserId(); // Récupérez l'ID de l'utilisateur et le pseudo
-            console.log('userId et username après connexion :', userId, username); // Ajoutez cette ligne
-
-            navigation.navigate("LiveScreen", {
-              userId: userId,
-              twitchUsername: username,
-            });
-        })
-        .catch((error) => {
-            console.log(error.message);
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(async () => {
+        console.log("Connexion réussie");
+        const { userId, username } = await getUsernameAndUserId();
+        console.log('userId et username après connexion :', userId, username);
+  
+        // Récupérez la liste des utilisateurs de AsyncStorage
+        const usersJSON = await AsyncStorage.getItem('users');
+        let users = usersJSON ? JSON.parse(usersJSON) : [];
+  
+        // Ajoutez le nouvel utilisateur à la liste des utilisateurs
+        users.push({ userId, twitchUsername: username });
+  
+        // Stockez la liste mise à jour des utilisateurs dans AsyncStorage
+        await AsyncStorage.setItem('users', JSON.stringify(users));
+  
+        navigation.navigate("LiveScreen", {
+          userId: userId,
+          twitchUsername: username,
         });
-};
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+  
   
 
   return (
