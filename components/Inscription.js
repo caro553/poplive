@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import firebase from 'firebase/compat/app';
 import 'firebase/auth';
 import { auth } from './firebaseConfig.js';
@@ -39,55 +39,82 @@ export default function Inscription({ navigation }) {
   
     return (
         <View style={styles.container}>
-            <Text>Inscription</Text>
-            <Text>Email :</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Entrez votre adresse e-mail"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-                secureTextEntry={false} // assurez-vous que cette propriété est définie sur false
-            />
-            <Text>Mot de passe :</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Entrez votre mot de passe"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={true}
-                autoCapitalize="none"
-                autoCorrect={false}
-            />
-            <Text>Pseudo :</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Entrez votre pseudo"
-                value={pseudo}
-                onChangeText={setPseudo}
-                autoCapitalize="none"
-                autoCorrect={false}
-            />
-            {errorMessage ? <Text style={styles.errorMessage}>{errorMessage}</Text> : null}
-            <Button title="S'inscrire" onPress={handleSignUp} />
+                  <View style={styles.logoContainer}>
+      <Image source={require('./logo.png')} style={styles.logo} />
+      </View>
+
+          <Text style={{ color: '#fff', fontSize: 24, fontWeight: 'bold', marginBottom: 40 }}>Inscription</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Entrez votre adresse e-mail"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
+            placeholderTextColor="#999"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Entrez votre mot de passe"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={true}
+            autoCapitalize="none"
+            autoCorrect={false}
+            placeholderTextColor="#999"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Entrez votre pseudo"
+            value={pseudo}
+            onChangeText={setPseudo}
+            autoCapitalize="none"
+            autoCorrect={false}
+            placeholderTextColor="#999"
+          />
+          {errorMessage ? <Text style={styles.errorMessage}>{errorMessage}</Text> : null}
+          <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+            <Text style={styles.buttonText}>S'inscrire</Text>
+          </TouchableOpacity>
         </View>
-    );
-}
+      );
+}      
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  input: {
-    width: '80%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-});
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#6441a5',
+      paddingHorizontal: 20,
+    },
+    input: {
+      width: '100%',
+      height: 50,
+      backgroundColor: '#fff',
+      borderColor: '#ccc',
+      borderWidth: 1,
+      marginBottom: 20,
+      paddingHorizontal: 15,
+      borderRadius: 25,
+    },
+    errorMessage: {
+      color: '#fff',
+      textAlign: 'center',
+      marginBottom: 20,
+    },
+    button: {
+      width: '100%',
+      height: 50,
+      backgroundColor: '#fff',
+      borderRadius: 25,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    buttonText: {
+      color: '#7f00ff',
+      fontWeight: 'bold',
+      fontSize: 16,
+    },
+  });

@@ -10,6 +10,7 @@ import Compte from "./components/Compte";
 import Connexion from "./components/Connexion";
 import Inscription from "./components/Inscription";
 import LiveCompte from "./components/LiveCompte";
+import FAQScreen from './components/FAQScreen';
 
 const Stack = createStackNavigator();
 
@@ -25,7 +26,7 @@ export default function App() {
         <Stack.Screen name="Connexion" component={Connexion} />
         <Stack.Screen name="Inscription" component={Inscription} />
         <Stack.Screen name="LiveCompte" component={LiveCompte} />
-
+        <Stack.Screen name="FAQ" component={FAQScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

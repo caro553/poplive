@@ -17,7 +17,7 @@ export default function BottomBar() {
       <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate("Bestof")}>
         <Image source={require('./video.png')} style={styles.logo} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.logoContainer} onPress={() => console.log("Logo 3 clicked")}>
+      <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate("FAQ")}>
         <Image source={require('./faq.png')} style={styles.logo} />
       </TouchableOpacity>
     </View>
