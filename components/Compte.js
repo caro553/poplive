@@ -102,7 +102,7 @@ if (!firebase.apps.length) {
     setBio(newBio);
     AsyncStorage.setItem('bio', newBio); // sauvegarder la bio dans le stockage local
   };
-  const selectImage = async () => {
+  const selectImage = async () => {  
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       alert("Permission to access media library is required!");
