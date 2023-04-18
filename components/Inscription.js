@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import firebase from 'firebase/compat/app';
+import {
+    StyleSheet,
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    StatusBar,
+    Image,
+    Button
+  } from 'react-native';
+  import firebase from 'firebase/compat/app';
 import 'firebase/auth';
 import { auth } from './firebaseConfig.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -60,56 +69,97 @@ export default function Inscription({ navigation }) {
     
   
     return (
-        <View style={styles.container}>
-            <Text>Inscription</Text>
-            <Text>Email :</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Entrez votre adresse e-mail"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-                secureTextEntry={false} // assurez-vous que cette propriété est définie sur false
-            />
-            <Text>Mot de passe :</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Entrez votre mot de passe"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={true}
-                autoCapitalize="none"
-                autoCorrect={false}
-            />
-            <Text>Pseudo :</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Entrez votre pseudo"
-                value={pseudo}
-                onChangeText={setPseudo}
-                autoCapitalize="none"
-                autoCorrect={false}
-            />
-            {errorMessage ? <Text style={styles.errorMessage}>{errorMessage}</Text> : null}
-            <Button title="S'inscrire" onPress={handleSignUp} />
-        </View>
-    );
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" />
+      <View style={styles.logoContainer}>
+        <Image
+          style={styles.logo}
+          source={require('./logo.png')} // Remplacez par le chemin vers l'image du logo Twitch
+        />
+      </View>
+
+      <View style={styles.formContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor="rgba(255,255,255,0.7)"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+          value={email}
+          onChangeText={setEmail}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Mot de passe"
+          placeholderTextColor="rgba(255,255,255,0.7)"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Pseudo"
+          placeholderTextColor="rgba(255,255,255,0.7)"
+          autoCapitalize="none"
+          autoCorrect={false}
+          value={pseudo}
+          onChangeText={setPseudo}
+        />
+        {errorMessage ? (
+          <Text style={styles.errorMessage}>{errorMessage}</Text>
+        ) : null}
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={handleSignUp}
+        >
+          <Text style={styles.buttonText}>S'INSCRIRE</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#6441A4', // nouvelle couleur de fond correspondant à la couleur de Twitch
+    justifyContent: 'center', // Centre le contenu verticalement
+  },
+  logoContainer: {
+    position: 'absolute', // Positionne le conteneur du logo absolument
+    top: 40, // Ajoute un espacement depuis le haut
+    left: 0,
+    right: 0,
     alignItems: 'center',
-    justifyContent: 'center',
+  },
+  logo: {
+    width: 150,
+    height: 100,
+  },
+  formContainer: {
+    paddingHorizontal: 30, // Ajoute un rembourrage horizontal pour un meilleur alignement des entrées
   },
   input: {
-    width: '80%',
     height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    marginBottom: 20,
+    color: '#FFF',
     paddingHorizontal: 10,
+    borderRadius: 4, // Ajoute un rayon de bordure pour un champ d'entrée arrondi
+  },
+  buttonContainer: {
+    backgroundColor: '#9146FF', // Couleur violette de Twitch
+    paddingVertical: 15,
+    borderRadius: 4, // Ajoute un rayon de bordure pour un bouton arrondi
+  },
+  buttonText: {
+    textAlign: 'center',
+    color: '#FFFFFF',
+    fontWeight: '700',
+  },
+  errorMessage: {
+    color: '#FF0000',
+    marginBottom: 20,
   },
 });
