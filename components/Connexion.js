@@ -16,6 +16,7 @@ const Connexion = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [twitchUsername, setTwitchUsername] = useState('');
 
+
   const getUsernameAndUserId = async () => {
     const userId = await AsyncStorage.getItem('userId');
     const username = await AsyncStorage.getItem('username');
@@ -41,33 +42,26 @@ const Connexion = ({ navigation }) => {
   };
   
   
-  const handleSignup = () => {
+  const handleLoginOrSignup = () => {
     firebase
       .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        console.log('Utilisateur enregistré avec succès!');
-  
-        // Ajouter un document pour le nouvel utilisateur dans la collection 'test_users'
-        firebase
-          .firestore()
-          .collection('test_users')
-          .doc(userCredential.user.uid)
-          .set({
-            twitchUsername: twitchUsername,
-            email: email, // Ajouter l'adresse e-mail au document
-            // Ajoutez ici d'autres informations si nécessaire
-          })
-          .then(async () => { // Ajoutez le mot-clé async ici
-            // Enregistrez l'ID de l'utilisateur et le pseudo dans AsyncStorage
-            await AsyncStorage.setItem('userId', userCredential.user.uid);
-            await AsyncStorage.setItem('username', twitchUsername);
-            console.log('userId et username sauvegardés dans AsyncStorage :', userCredential.user.uid, twitchUsername); // Ajoutez cette ligne
+      .signInWithEmailAndPassword(email, password)
+      .then(async () => {
+        console.log("Connexion réussie");
+        const { userId, username } = await getUsernameAndUserId();
+        console.log('userId et username après connexion :', userId, username);
 
-          });
+        navigation.navigate("LiveScreen", {
+          userId: userId,
+          twitchUsername: username,
+        });
       })
       .catch((error) => {
-        console.log(error.message);
+        if (error.code === 'auth/user-not-found') {
+          handleSignup();
+        } else {
+          console.log(error.message);
+        }
       });
   };
   
@@ -95,6 +89,12 @@ const Connexion = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
+      <View style={styles.logoContainer}>
+        <Image
+          style={styles.logo}
+          source={require('./logo.png')} // Replace with the path to the Twitch logo image
+        />
+      </View>
      
       <View style={styles.formContainer}>
         <TextInput
@@ -127,9 +127,6 @@ const Connexion = ({ navigation }) => {
         <TouchableOpacity style={styles.buttonContainer} onPress={handleLogin}>
           <Text style={styles.buttonText}>CONNEXION</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonContainer} onPress={handleSignup}>
-          <Text style={styles.buttonText}>INSCRIPTION</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -137,34 +134,41 @@ const Connexion = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#3498db'
+    backgroundColor: '#6441A4', // nouvelle couleur de fond correspondant à la couleur de Twitch
+    justifyContent: 'center', // Center the content vertically
   },
   logoContainer: {
+    position: 'absolute', // Position the logo container absolutely
+    top: 40, // Add some spacing from the top
+    left: 0,
+    right: 0,
     alignItems: 'center',
-    flexGrow: 1,
-    justifyContent: 'center'
   },
   logo: {
-    width: 100,
-    height: 100
+    width: 150,
+    height: 100,
   },
-  formContainer: {},
+  formContainer: {
+    paddingHorizontal: 30, // Add horizontal padding for better input alignment
+  },
   input: {
     height: 40,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: 'rgba(255,255,255,0.1)',
     marginBottom: 20,
     color: '#FFF',
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    borderRadius: 4, // Add border radius for a rounded input field
   },
   buttonContainer: {
-    backgroundColor: '#2980b9',
-    paddingVertical: 15
+    backgroundColor: '#9146FF', // Twitch's purple color
+    paddingVertical: 15,
+    borderRadius: 4, // Add border radius for a rounded button
   },
   buttonText: {
     textAlign: 'center',
     color: '#FFFFFF',
-    fontWeight: '700'
-  }
+    fontWeight: '700',
+  },
 });
 
 export default Connexion;
