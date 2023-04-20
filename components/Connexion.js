@@ -75,7 +75,7 @@ const Connexion = ({ navigation }) => {
             const { userId, username } = await getUsernameAndUserId(); // Récupérez l'ID de l'utilisateur et le pseudo
             console.log('userId et username après connexion :', userId, username); // Ajoutez cette ligne
 
-            navigation.navigate("LiveScreen", {
+            navigation.navigate("AlaUne", {
                 userId: userId,
                 twitchUsername: username,
             });
