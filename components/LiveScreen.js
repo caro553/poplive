@@ -13,13 +13,13 @@ const { width } = Dimensions.get('window');
 const LiveScreen = ({ route, navigation }) => {
   const twitchUsername = "Sardoche";
   
-  const [userProfileImage, setUserProfileImage] = useState('');
   const [isLive, setIsLive] = useState(false);
   const [streamTitle, setStreamTitle] = useState('');
   const [viewerCount, setViewerCount] = useState(0);
-  const [streamThumbnailUrl, setStreamThumbnailUrl] = useState('');
   const clientId = 'i34nc3xu598asoajw481awags63pnl';
   const clientSecret = 'cbm6qiv3n5hizeqxbz7kdimrvyzr4c';
+  const [userProfileImage, setUserProfileImage] = useState(null);
+  const [streamThumbnailUrl, setStreamThumbnailUrl] = useState(null);
 
   
 
@@ -106,14 +106,20 @@ const LiveScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.profileImageContainer}>
-        {userProfileImage ? (
-          <Image
-            source={{ uri: userProfileImage }}
-            style={styles.profileImage}
-          />
-        ) : (
-          <Text>Chargement...</Text>
-        )}
+{userProfileImage !== null && (
+  <Image
+    source={{ uri: userProfileImage }}
+    style={styles.profileImage}
+  />
+)}
+
+{streamThumbnailUrl !== null && (
+  <Image
+    source={{ uri: streamThumbnailUrl }}
+    style={styles.streamThumbnail}
+  />
+)}
+
         <View style={styles.streamInfoContainer}>
           {isLive ? (
             <>

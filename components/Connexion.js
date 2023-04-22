@@ -33,11 +33,12 @@ const Connexion = ({ navigation }) => {
       const userData = userDoc.data();
       await AsyncStorage.setItem('userId', user.uid);
       await AsyncStorage.setItem('username', userData.twitchUsername);
-  
+      await AsyncStorage.setItem('isPremium', userData.isPremium ? 'true' : 'false'); // Ajoutez cette ligne
+
       return { userId: user.uid, username: userData.twitchUsername };
       
     }
-  
+    console.log("Retour depuis getUsernameAndUserId :", { userId, username });
     return { userId, username };
   };
   
@@ -49,7 +50,7 @@ const Connexion = ({ navigation }) => {
       .then(async () => {
         console.log("Connexion réussie");
         const { userId, username } = await getUsernameAndUserId();
-        console.log('userId et username après connexion :', userId, username);
+        console.log("Valeurs après getUsernameAndUserId dans handleLoginOrSignup :", userId, username);
 
         navigation.navigate("LiveScreen", {
           userId: userId,
@@ -124,7 +125,7 @@ const Connexion = ({ navigation }) => {
   value={twitchUsername}
   onChangeText={setTwitchUsername}
 />
-        <TouchableOpacity style={styles.buttonContainer} onPress={handleLogin}>
+<TouchableOpacity style={styles.buttonContainer} onPress={handleLoginOrSignup}>
           <Text style={styles.buttonText}>CONNEXION</Text>
         </TouchableOpacity>
       </View>

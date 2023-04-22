@@ -4,7 +4,6 @@ import 'firebase/compat/firestore';
 import 'firebase/compat/database';
 
 
-
 const firebaseConfig = {
   apiKey: "AIzaSyCCSiKrrvo0pWnQI_pIkxeD3DnZPBQxF6o",
   authDomain: "poplive-4d383.firebaseapp.com",
@@ -26,8 +25,20 @@ firebase.auth().signInAnonymously()
   .catch((error) => {
     console.error('Error signing in anonymously:', error);
   });
+  
 
 const auth = firebase.auth();
+
+// Ajoutez la fonction updateUserToPremium ici
+export const updateUserToPremium = async (userId) => {
+  try {
+    await firebase.firestore().collection('test_users').doc(userId).update({
+      isPremium: true,
+    });
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour de l\'utilisateur en premium:', error);
+  }
+};
 
 export { auth };
 export default firebase;

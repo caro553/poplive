@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "react-native";
 import { Animated } from "react-native";
 import { SafeAreaView } from "react-native";
+import Abonnement from './Abonnement';
 
 export default function TopBar() {
   const navigation = useNavigation();
@@ -121,6 +122,19 @@ export default function TopBar() {
                 />
                 <Text style={styles.menuItemText}>Page 3</Text>
               </TouchableOpacity>
+              <TouchableOpacity
+  style={styles.menuItem}
+  onPress={() => navigation.navigate("Abonnement")}
+>
+  <Ionicons
+    name="ios-medal"
+    size={24}
+    color="black"
+    style={styles.menuIcon}
+  />
+  <Text style={styles.menuItemText}>Premium</Text>
+</TouchableOpacity>
+
             </SafeAreaView>
           </View>
         </TouchableWithoutFeedback>
@@ -179,12 +193,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#18181B",
     position: "absolute",
     left: 0,
-    top: 0,
+    top: 92, // Ajoutez la marge en haut ici
     bottom: 0,
     width: "40%",
     zIndex: 2,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
+  
   menuItem: {
     flexDirection: "row",
     alignItems: "center",
