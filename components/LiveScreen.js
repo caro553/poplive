@@ -11,7 +11,6 @@ import {
 const { width } = Dimensions.get('window');
 
 const LiveScreen = ({ route, navigation }) => {
-  const twitchUsername = "Sardoche";
   
   const [isLive, setIsLive] = useState(false);
   const [streamTitle, setStreamTitle] = useState('');
@@ -20,11 +19,43 @@ const LiveScreen = ({ route, navigation }) => {
   const clientSecret = 'cbm6qiv3n5hizeqxbz7kdimrvyzr4c';
   const [userProfileImage, setUserProfileImage] = useState(null);
   const [streamThumbnailUrl, setStreamThumbnailUrl] = useState(null);
-
-  
-
+  const twitchUsername = route.params?.twitchUsername || '';
+  const [oauthToken, setOAuthToken] = useState(null);
 
   useEffect(() => {
+    if (!twitchUsername || !oauthToken) {
+      return;
+    }
+  
+    console.log('useEffect for checking if user is live called');
+  
+    async function checkIfUserIsLive(username) {
+      // ... Le reste du code de la fonction checkIfUserIsLive ...
+    }
+  
+    async function fetchUserProfileImage(username) {
+      // ... Le reste du code de la fonction fetchUserProfileImage ...
+    }
+  
+    checkIfUserIsLive(twitchUsername)
+      .then(() => {
+        console.log('checkIfUserIsLive called');
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la vérification de l\'état du stream:', error);
+      });
+
+    fetchUserProfileImage(twitchUsername)
+      .then(() => {
+        console.log('fetchUserProfileImage called');
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la récupération de l\'image de profil de l\'utilisateur:', error);
+      });
+  }, [twitchUsername, oauthToken]);
+
+  useEffect(() => {
+    console.log('useEffect called');
     async function getOAuthToken(clientId, clientSecret) {
       const response = await fetch(
         `https://id.twitch.tv/oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials&scope=user:read:email`,
@@ -41,67 +72,15 @@ const LiveScreen = ({ route, navigation }) => {
       return data.access_token;
     }
 
-    
-    const fetchData = async () => {
-      const oauthToken = await getOAuthToken(clientId, clientSecret);
-
-      const fetchOptions = {
-        headers: {
-          'Client-ID': clientId,
-          'Authorization': `Bearer ${oauthToken}`,
-        },
-      };
-
-      if (!twitchUsername) {
-        return;
-      }
-
-      const checkIfUserIsLive = async (username) => {
-        const streamData = await fetch(
-          `https://api.twitch.tv/helix/streams?user_login=${username}`,
-          fetchOptions
-        );
-
-        if (!streamData.ok) {
-          console.error(`Erreur lors de la récupération des données de stream de l'utilisateur ${username}`);
-          return;
-        }
-
-        const data = await streamData.json();
-        setIsLive(data.data.length > 0);
-
-        if (data.data.length > 0) {
-          setStreamTitle(data.data[0].title);
-          setViewerCount(data.data[0].viewer_count);
-          setStreamThumbnailUrl(data.data[0].thumbnail_url);
-        }
-      };
-      await checkIfUserIsLive(twitchUsername);
-  
-      if (!twitchUsername || !isLive) {
-        return;
-      }
-      
-      const fetchUserProfileImage = async (username) => {
-        const userData = await fetch(
-          `https://api.twitch.tv/helix/users?login=${username}`,
-          fetchOptions
-        );
-  
-        if (!userData.ok) {
-          console.error(`Erreur lors de la récupération des données de l'utilisateur ${username}`);
-          return;
-        }
-  
-        const data = await userData.json();
-        setUserProfileImage(data.data[0].profile_image_url);
-      };
-  
-      await fetchUserProfileImage(twitchUsername);
-    };
-
-    fetchData();
-  }, [twitchUsername]);
+    getOAuthToken(clientId, clientSecret)
+      .then((token) => {
+        setOAuthToken(token);
+        console.log('OAuth token:', token);
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la récupération du jeton OAuth:', error);
+      });
+  }, []);
 
   return (
     <View style={styles.container}>

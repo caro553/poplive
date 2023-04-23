@@ -48,7 +48,6 @@ export default function Inscription({ navigation }) {
                                 // Ajoutez ici d'autres informations si nécessaire
                             })
                             .then(() => {
-                                saveUsername();
                                 navigation.navigate('AlaUne', { // Modifiez cette ligne
                                     twitchUsername: pseudo,
                                 });

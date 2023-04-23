@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import firebase from "./firebaseConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { auth } from './firebaseConfig.js';
 
 const Connexion = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -18,73 +19,66 @@ const Connexion = ({ navigation }) => {
 
 
   const getUsernameAndUserId = async () => {
-    const userId = await AsyncStorage.getItem('userId');
-    const username = await AsyncStorage.getItem('username');
-    console.log('userId et username récupérés depuis AsyncStorage :', userId, username); // Ajoutez cette ligne
-
-    if (!username || !userId) {
-      const user = firebase.auth().currentUser;
-      const userDoc = await firebase
-        .firestore()
-        .collection('test_users')
-        .doc(user.uid)
-        .get();
+    const user = firebase.auth().currentUser;
   
-      const userData = userDoc.data();
-      await AsyncStorage.setItem('userId', user.uid);
-      await AsyncStorage.setItem('username', userData.twitchUsername);
-      await AsyncStorage.setItem('isPremium', userData.isPremium ? 'true' : 'false'); // Ajoutez cette ligne
-
-      return { userId: user.uid, username: userData.twitchUsername };
-      
+    if (!user) {
+      throw new Error("User not found");
     }
-    console.log("Retour depuis getUsernameAndUserId :", { userId, username });
-    return { userId, username };
+  
+    const userDoc = await firebase
+      .firestore()
+      .collection("test_users")
+      .doc(user.uid)
+      .get();
+  
+    const userData = userDoc.data();
+    await AsyncStorage.setItem("userId", user.uid);
+    await AsyncStorage.setItem("username", userData.twitchUsername);
+    await AsyncStorage.setItem("isPremium", userData.isPremium ? "true" : "false");
+  
+    console.log("Retour depuis getUsernameAndUserId :", {
+      userId: user.uid,
+      username: userData.twitchUsername,
+    });
+    return { userId: user.uid, username: userData.twitchUsername };
+  };
+  
+  const saveUsername = async (userId, username) => { // Ajoutez 'username' comme paramètre
+    await AsyncStorage.setItem('userId', userId);
+    await AsyncStorage.setItem('username', username); // Utilisez 'username' au lieu de 'pseudo'
   };
   
   
-  const handleLoginOrSignup = () => {
+  
+  
+  const handleLogin = async () => {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(async () => {
+      .then(async (userCredential) => {
         console.log("Connexion réussie");
-        const { userId, username } = await getUsernameAndUserId();
-        console.log("Valeurs après getUsernameAndUserId dans handleLoginOrSignup :", userId, username);
-
-        navigation.navigate("LiveScreen", {
-          userId: userId,
-          twitchUsername: username,
-        });
+        const user = userCredential.user;
+        getUsernameAndUserId()
+          .then((result) => {
+            console.log(
+              `userId et username récupérés depuis AsyncStorage : ${result.userId} ${result.username}`
+            );
+            navigation.navigate("AlaUne", {
+              userId: result.userId,
+              username: result.username,
+            });
+          })
+          .catch((error) => {
+            console.log("Erreur lors de la récupération de l'userId et du username :", error);
+          });
       })
       .catch((error) => {
-        if (error.code === 'auth/user-not-found') {
-          handleSignup();
-        } else {
-          console.log(error.message);
-        }
+        console.log(error);
+        setErrorMessage(error.message);
       });
   };
   
   
-  const handleLogin = () => {
-    firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(async () => { // Ajoutez le mot-clé async ici
-            console.log("Connexion réussie");
-            const { userId, username } = await getUsernameAndUserId(); // Récupérez l'ID de l'utilisateur et le pseudo
-            console.log('userId et username après connexion :', userId, username); // Ajoutez cette ligne
-
-            navigation.navigate("AlaUne", {
-                userId: userId,
-                twitchUsername: username,
-            });
-        })
-        .catch((error) => {
-            console.log(error.message);
-        });
-};
   
 
   return (
@@ -125,9 +119,10 @@ const Connexion = ({ navigation }) => {
   value={twitchUsername}
   onChangeText={setTwitchUsername}
 />
-<TouchableOpacity style={styles.buttonContainer} onPress={handleLoginOrSignup}>
-          <Text style={styles.buttonText}>CONNEXION</Text>
-        </TouchableOpacity>
+<TouchableOpacity style={styles.buttonContainer} onPress={handleLogin}>
+  <Text style={styles.buttonText}>CONNEXION</Text>
+</TouchableOpacity>
+
       </View>
     </View>
   );
