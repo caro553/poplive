@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Button} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native';
 
@@ -17,6 +17,12 @@ export default function HomeScreen({ navigation  }) {
         <TouchableOpacity style={[styles.signupButton, { marginBottom: 20 } ]} onPress={() => navigation.navigate('Inscription')}>
           <Text style={styles.buttonText}>S'INSCRIRE</Text>
         </TouchableOpacity>
+    
+              <Button
+                onPress={() => navigation.navigate('FAQScreen')}
+                title="FAQ"
+              />
+
       </View>
     </LinearGradient>
   );

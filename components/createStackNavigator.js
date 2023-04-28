@@ -5,7 +5,7 @@ import LiveScreen from './LiveScreen';
 import Bestof from './Bestof';
 import Compte from './Compte';
 import Connexion from './Connexion';
-
+import FAQScreen from './FAQScreen';
 
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
@@ -23,8 +23,7 @@ export default function App() {
         <Stack.Screen name="Compte" component={Compte} />
         <Stack.Screen name="Connexion" component={Connexion} />
         <Stack.Screen name="Inscription" component={Inscription} />
-
-
+        <Stack.Screen name="FAQ" component={FAQScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
