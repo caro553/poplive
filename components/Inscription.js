@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet,Image,TouchableOpacity, ScrollView,KeyboardAvoidingView, } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import firebase from 'firebase/compat/app';
 import 'firebase/auth';
 import { auth } from './firebaseConfig.js';
@@ -60,9 +61,13 @@ export default function Inscription({ navigation }) {
     
   
     return (
-        <View style={styles.container}>
-            <Text>Inscription</Text>
-            <Text>Email :</Text>
+
+      <ScrollView style={styles.scrollView}>
+            <LinearGradient colors={['#624F9C', '#714F9B', '#814E9A', '#8B4D99', '#8B4D99', '#8E4D98', '#C24E97', '#E55599', '#F08479', '#FABE4B', '#F3E730']} style={styles.container}>
+        <View style={styles.logoContainer}>
+        <Image source={require('./logo.png')} style={styles.logo} />
+        </View>
+            <Text style={styles.Text}>Email</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Entrez votre adresse e-mail"
@@ -73,7 +78,7 @@ export default function Inscription({ navigation }) {
                 autoCorrect={false}
                 secureTextEntry={false} // assurez-vous que cette propriété est définie sur false
             />
-            <Text>Mot de passe :</Text>
+            <Text style={styles.Text}>Mot de passe</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Entrez votre mot de passe"
@@ -83,7 +88,7 @@ export default function Inscription({ navigation }) {
                 autoCapitalize="none"
                 autoCorrect={false}
             />
-            <Text>Pseudo :</Text>
+            <Text style={styles.Text}>Pseudo</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Entrez votre pseudo"
@@ -93,46 +98,108 @@ export default function Inscription({ navigation }) {
                 autoCorrect={false}
             />
             {errorMessage ? <Text style={styles.errorMessage}>{errorMessage}</Text> : null}
-            <Button title="S'inscrire" onPress={handleSignUp} />
-        </View>
+
+            <TouchableOpacity style={styles.roundButton} onPress={handleSignUp}>
+  <Text style={styles.buttonText}>S'INSCRIRE</Text>
+</TouchableOpacity>
+
+</LinearGradient>
+</ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#6441a5',
-    paddingHorizontal: 20,
-  },
-  input: {
-    width: '100%',
-    height: 50,
-    backgroundColor: '#fff',
-    borderColor: '#ccc',
-    borderWidth: 1,
-    marginBottom: 20,
-    paddingHorizontal: 15,
-    borderRadius: 25,
-  },
-  errorMessage: {
-    color: '#fff',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  button: {
-    width: '100%',
-    height: 50,
-    backgroundColor: '#fff',
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#7f00ff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+
+        paddingHorizontal: 20,
+      },
+      logoContainer: {
+        marginBottom: 30,
+      },
+      container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#6441a5',
+        paddingHorizontal: 20,
+      },
+      logoContainer: {
+        marginBottom: 30,
+      },
+      logo: {
+        width: 620,
+        height: 445,
+        resizeMode: 'contain',
+      },
+      title: {
+        fontSize: 28,
+        color: '#fff',
+        fontWeight: 'bold',
+        marginBottom: 20,
+        textAlign: 'center',
+      },
+        
+      errorMessage: {
+        color: '#fff',
+        textAlign: 'center',
+        marginBottom: 20,
+        fontSize: 16,
+      },
+
+      Text: {
+        color:'#fff',
+        fontWeight: 'bold',
+        fontSize: 16,
+      },
+      title: {
+        fontSize: 28,
+        color: '#fff',
+        fontWeight: 'bold',
+        marginBottom: 20,
+        textAlign: 'center',
+      },
+      input: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#fff',
+        borderColor: '#ccc',
+        borderWidth: 1,
+        marginBottom: 20,
+        paddingHorizontal: 15,
+        borderRadius: 25,
+        fontSize: 16,
+        paddingLeft: 20,
+      },
+      errorMessage: {
+        color: '#fff',
+        textAlign: 'center',
+        marginBottom: 20,
+        fontSize: 16,
+      },
+      buttonContainer: {
+        marginTop: 30,
+        width: '80%',
+        alignItems: 'center',
+      },
+      roundButton: {
+        color: '#4B388E',
+        width: 250,
+        height: 50,
+        backgroundColor: '#fff',
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+        fontWeight: 'bold',
+        fontSize: 16,
+      },
+      buttonText:{
+        color: '#4B388E',
+        fontWeight: 'bold',
+        fontSize: 16,
+      },
 });
 

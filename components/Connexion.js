@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   StatusBar,
-  Image
+  Image,  ScrollView, KeyboardAvoidingView,
 } from 'react-native';
 import firebase from "./firebaseConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -116,78 +116,133 @@ const Connexion = ({ navigation }) => {
   
 
   return (
+
+    <ScrollView style={styles.scrollView}>
     <View style={styles.container}>
+       <View style={styles.logoContainer}>
+        <Image source={require('./logo.png')} style={styles.logo} />
+        </View>
       <StatusBar barStyle="light-content" />
      
       <View style={styles.formContainer}>
+      <Text style={[styles.Text, {marginLeft:135, }]}>Email</Text>
         <TextInput
           style={styles.input}
-          placeholder="Email"
-          placeholderTextColor="rgba(255,255,255,0.7)"
+          placeholder="Entrez votre adresse e-mail"
           keyboardType="email-address"
           autoCapitalize="none"
           autoCorrect={false}
           value={email}
           onChangeText={setEmail}
         />
+         <Text style={[styles.Text, {marginLeft:110, }]}>Mot de passe</Text>
         <TextInput
+        
           style={styles.input}
-          placeholder="Mot de passe"
-          placeholderTextColor="rgba(255,255,255,0.7)"
+          placeholder="Entrez votre mot de passe"
           secureTextEntry
           value={password}
           onChangeText={setPassword}
         />
+         <Text style={[styles.Text, {marginLeft:135, }]}>Pseudo</Text>
       <TextInput
   style={styles.input}
-  placeholder="Nom d'utilisateur Twitch"
-  placeholderTextColor="rgba(255,255,255,0.7)"
+  placeholder="Entrez votre pseudo"
   autoCapitalize="none"
   autoCorrect={false}
   value={twitchUsername}
   onChangeText={setTwitchUsername}
 />
-        <TouchableOpacity style={styles.buttonContainer} onPress={handleLogin}>
-          <Text style={styles.buttonText}>CONNEXION</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonContainer} onPress={handleSignup}>
+        <TouchableOpacity style={[styles.signupButton, { marginTop: 20, marginBottom: 10,marginLeft:35, }]} onPress={handleSignup}> 
           <Text style={styles.buttonText}>INSCRIPTION</Text>
         </TouchableOpacity>
       </View>
+      <TouchableOpacity style={[styles.signupButton, { marginBottom: 20 } ]} onPress={handleLogin}>
+          <Text style={styles.buttonText}>CONNEXION</Text>
+        </TouchableOpacity>
     </View>
+    </ScrollView>
+
   );
 };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#3498db'
-  },
-  logoContainer: {
     alignItems: 'center',
-    flexGrow: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    backgroundColor: '#6441a5',
+    paddingHorizontal: 20,
+    fontFamily: 'Calibri, Arial, sans-serif', 
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#6441a5',
   },
   logo: {
-    width: 100,
-    height: 100
+    width: 620,
+    height: 445,
+    resizeMode: 'contain',
   },
-  formContainer: {},
+
+  Text: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginLeft:100,
+  },
+
   input: {
-    height: 40,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    marginBottom: 20,
-    color: '#FFF',
-    paddingHorizontal: 10
+    width:322,
+    height: 52,
+    backgroundColor: '#fff',
+    borderColor: '#ccc',
+    borderWidth: 1,
+    marginBottom: 15,
+    borderRadius: 25,
+    fontSize: 16,
   },
-  buttonContainer: {
-    backgroundColor: '#2980b9',
-    paddingVertical: 15
-  },
-  buttonText: {
+  errorMessage: {
+    color: '#fff',
     textAlign: 'center',
-    color: '#FFFFFF',
-    fontWeight: '700'
-  }
+    marginBottom: 20,
+    fontSize: 16,
+  },
+
+
+
+  buttonContainer: {
+    marginTop: 30,
+    width: '80%',
+    alignItems: 'center',
+  },
+
+  buttonText:{
+    color: '#4B388E',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+
+
+  signupButton: {
+    color: '#4B388E',
+    width: 250,
+    height: 50,
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  signupButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 });
 
 export default Connexion;
+ 
