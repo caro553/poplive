@@ -78,12 +78,11 @@ const LiveScreen = ({ route, navigation }) => {
     
         // Vérifiez si l'utilisateur existe déjà dans la liste des utilisateurs
         if (!users.hasOwnProperty(username)) {
-          // Ajoutez l'utilisateur à la liste des utilisateurs s'il n'existe pas déjà
-          setUsers((prevState) => ({
-            ...prevState,
-            [username]: { userId },
-          }));
+          // Ajoutez l'utilisateur à Firestore s'il n'existe pas déjà
+          const userRef = firebase.firestore().collection('test_users').doc(userId);
+          await userRef.set({ userId, username });
         }
+        
     
         return { username, userId };
       } catch (error) {
@@ -95,30 +94,25 @@ const LiveScreen = ({ route, navigation }) => {
     async function storeLiveStreamInfo(userId, streamData) {
       try {
         const userRef = firebase.firestore().collection('test_users').doc(userId);
-        await userRef.set(streamData, { merge: true });
+    
+        // Ajouter des informations supplémentaires
+        const additionalData = {
+          profileImage: userProfileImage,
+          streamTitle: streamTitle,
+          viewerCount: viewerCount,
+          streamThumbnailUrl: streamThumbnailUrl,
+        };
+    
+        await userRef.set({ ...streamData, ...additionalData }, { merge: true });
       } catch (error) {
         console.error('Error storing stream information to Firestore:', error);
       }
     }
     
-    async function loadLiveStreamInfo(username) {
-      try {
-        const isLive = await AsyncStorage.getItem(`${username}:isLive`);
-        if (isLive === 'true') {
-          const streamTitle = await AsyncStorage.getItem(`${username}:streamTitle`);
-          const viewerCount = parseInt(await AsyncStorage.getItem(`${username}:viewerCount`), 10);
-          const streamThumbnailUrl = await AsyncStorage.getItem(`${username}:streamThumbnailUrl`);
-    
-          // Utilisez ces informations pour afficher les détails de la diffusion en direct
-        }
-      } catch (error) {
-        console.error('Error loading live stream information from AsyncStorage:', error);
-      }
-    }
     
   
     
-    async function checkIfUserIsLive(username) {
+    async function checkIfUserIsLive(username, userId) {
       const response = await fetch(
         `https://api.twitch.tv/helix/streams?user_login=${username}`,
         {
@@ -142,7 +136,15 @@ const LiveScreen = ({ route, navigation }) => {
         setStreamThumbnailUrl(
           data.data[0].thumbnail_url.replace('{width}', '640').replace('{height}', '360'),
         );
-    
+      
+        // Stocker les informations de stream dans Firestore
+        const streamData = {
+          isLive: true,
+          streamTitle: data.data[0].title,
+          viewerCount: data.data[0].viewer_count,
+          streamThumbnailUrl: data.data[0].thumbnail_url.replace('{width}', '640').replace('{height}', '360'),
+        };
+        storeLiveStreamInfo(userId, streamData);
       
       } else {
         setIsLive(false);
@@ -152,6 +154,7 @@ const LiveScreen = ({ route, navigation }) => {
         await AsyncStorage.removeItem(`${username}:viewerCount`);
         await AsyncStorage.removeItem(`${username}:streamThumbnailUrl`);
       }
+      
     }
     async function updateUser(username, updatedInfo) {
       const usersJson = await AsyncStorage.getItem('users');
@@ -201,15 +204,15 @@ async function loadAllUsers() {
 }
     
     
-    getUsernameAndUserId().then(({ username }) => {
-      setTwitchUsername(username);
-      console.log("username récupéré depuis AsyncStorage :", username);
-  
-      if (!oauthToken) {
-        return;
-      }
-  
-      checkIfUserIsLive(username)
+getUsernameAndUserId().then(({ username, userId }) => {
+  setTwitchUsername(username);
+  console.log("username récupéré depuis AsyncStorage :", username);
+
+  if (!oauthToken) {
+    return;
+  }
+
+  checkIfUserIsLive(username, userId)
       
         .then(() => {
       
@@ -232,51 +235,21 @@ async function loadAllUsers() {
     });
   }, [oauthToken]);
   
-  
 
+  // REVOIR LE USERNAME QUI EST PAS BON 
+  
   return (
     <View style={styles.container}>
-      <View style={styles.profileImageContainer}>
-        {userProfileImage !== null && (
-          <Image
-            source={{ uri: userProfileImage }}
-            style={styles.profileImage}
-          />
-        )}
-  
-        <View style={styles.streamContainer}>
-          <View style={styles.streamInfoContainer}>
-            {isLive ? (
-              <>
-                <Text style={styles.streamTitle}>{streamTitle}</Text>
-                <Text style={styles.viewerCount}>Nombre de vues: {viewerCount}</Text>
-              </>
-            ) : (
-              <Text>L'utilisateur n'est pas en direct.</Text>
-            )}
-          </View>
-  
-          <View style={styles.streamThumbnailContainer}>
-            {streamThumbnailUrl !== null && (
-              <Image
-                source={{ uri: streamThumbnailUrl }}
-                style={styles.streamThumbnail}
-              />
-            )}
-          </View>
-        </View>
-      </View>
-  
       {Object.entries(users).map(([username, userInfo]) => (
         <View key={username} style={styles.userContainer}>
-          <Text style={styles.username}>{username}</Text>
+          <Text style={styles.username}>{username}</Text> 
           {userInfo.profileImage && (
             <Image
               source={{ uri: userInfo.profileImage }}
               style={styles.profileImage}
             />
           )}
-          {userInfo.isLive ? (
+          {userInfo.isLive && (
             <>
               <Text style={styles.streamTitle}>{userInfo.streamTitle}</Text>
               <Text style={styles.viewerCount}>
@@ -289,17 +262,10 @@ async function loadAllUsers() {
                 />
               )}
             </>
-          ) : (
-            <Text>L'utilisateur n'est pas en direct.</Text>
           )}
         </View>
       ))}
-      <TouchableOpacity
-        style={styles.logoutButton}
-        onPress={() => navigation.navigate('Connexion')}
-      >
-        <Text style={styles.logoutButtonText}>Déconnexion</Text>
-      </TouchableOpacity>
+     
     </View>
   );
   
@@ -311,46 +277,39 @@ async function loadAllUsers() {
                 alignItems: 'center',
                 justifyContent: 'center',
               },
-              profileImageContainer: {
-                flexDirection: 'row',
+              streamerRectangle: {
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
+                borderWidth: 1,
+                borderColor: '#ccc',
+                borderRadius: 10,
+                padding: 15,
+                margin: 10,
+              },
+              username: {
+                fontSize: 18,
+                fontWeight: 'bold',
+                marginBottom: 10,
               },
               profileImage: {
                 width: 50,
                 height: 50,
                 borderRadius: 25,
-                marginRight: 10,
-              },
-              streamContainer: {
-                flex: 1,
-                flexDirection: 'row',
-                alignItems: 'center',
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: '#ccc',
-                overflow: 'hidden',
-                margin: 10,
-              },
-              streamInfoContainer: {
-                flex: 2,
-                padding: 10,
+                marginBottom: 10,
               },
               streamTitle: {
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: 'bold',
                 marginBottom: 5,
               },
               viewerCount: {
                 marginBottom: 5,
               },
-              streamThumbnailContainer: {
-                flex: 1,
-                alignItems: 'flex-end',
-              },
               streamThumbnail: {
                 width: 100,
                 height: 60,
+                marginBottom: 10,
               },
               logoutButton: {
                 backgroundColor: '#3498db',
