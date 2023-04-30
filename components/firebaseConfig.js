@@ -39,6 +39,16 @@ export const updateUserToPremium = async (userId) => {
     console.error('Erreur lors de la mise à jour de l\'utilisateur en premium:', error);
   }
 };
+const storeLiveStreamInfo = async (userId, streamData) => {
+  try {
+    await firestore()
+      .collection('liveStreams')
+      .doc(userId)
+      .set(streamData);
+  } catch (error) {
+    console.error('Erreur lors de la sauvegarde des informations de stream en direct:', error);
+  }
+};
 
 export { auth };
 export default firebase;

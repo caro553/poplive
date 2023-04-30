@@ -58,6 +58,7 @@ const Connexion = ({ navigation }) => {
       .then(async (userCredential) => {
         console.log("Connexion réussie");
         const user = userCredential.user;
+        await AsyncStorage.setItem('username', twitchUsername);
         getUsernameAndUserId()
           .then((result) => {
             console.log(

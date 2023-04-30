@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import firebase from "./firebaseConfig";
 
 const { width } = Dimensions.get('window');
 
@@ -21,6 +22,22 @@ const LiveScreen = ({ route, navigation }) => {
   const [streamThumbnailUrl, setStreamThumbnailUrl] = useState(null);
   const [twitchUsername, setTwitchUsername] = useState('');
   const [oauthToken, setOAuthToken] = useState(null);
+  const [users, setUsers] = useState({});
+
+  useEffect(() => {
+    const usersRef = firebase.firestore().collection('test_users');
+  
+    const unsubscribe = usersRef.onSnapshot((querySnapshot) => {
+      const loadedUsers = {};
+      querySnapshot.forEach((doc) => {
+        loadedUsers[doc.id] = doc.data();
+      });
+      setUsers(loadedUsers);
+    });
+  
+    return () => unsubscribe();
+  }, []);
+  
 
   useEffect(() => {
     console.log('useEffect called');
@@ -59,13 +76,48 @@ const LiveScreen = ({ route, navigation }) => {
           throw new Error('Username or userId is not available in AsyncStorage');
         }
     
+        // Vérifiez si l'utilisateur existe déjà dans la liste des utilisateurs
+        if (!users.hasOwnProperty(username)) {
+          // Ajoutez l'utilisateur à la liste des utilisateurs s'il n'existe pas déjà
+          setUsers((prevState) => ({
+            ...prevState,
+            [username]: { userId },
+          }));
+        }
+    
         return { username, userId };
       } catch (error) {
         console.error('Error while getting username and userId from AsyncStorage:', error);
         throw error;
       }
     }
+    
+    async function storeLiveStreamInfo(userId, streamData) {
+      try {
+        const userRef = firebase.firestore().collection('test_users').doc(userId);
+        await userRef.set(streamData, { merge: true });
+      } catch (error) {
+        console.error('Error storing stream information to Firestore:', error);
+      }
+    }
+    
+    async function loadLiveStreamInfo(username) {
+      try {
+        const isLive = await AsyncStorage.getItem(`${username}:isLive`);
+        if (isLive === 'true') {
+          const streamTitle = await AsyncStorage.getItem(`${username}:streamTitle`);
+          const viewerCount = parseInt(await AsyncStorage.getItem(`${username}:viewerCount`), 10);
+          const streamThumbnailUrl = await AsyncStorage.getItem(`${username}:streamThumbnailUrl`);
+    
+          // Utilisez ces informations pour afficher les détails de la diffusion en direct
+        }
+      } catch (error) {
+        console.error('Error loading live stream information from AsyncStorage:', error);
+      }
+    }
+    
   
+    
     async function checkIfUserIsLive(username) {
       const response = await fetch(
         `https://api.twitch.tv/helix/streams?user_login=${username}`,
@@ -87,11 +139,34 @@ const LiveScreen = ({ route, navigation }) => {
         setIsLive(true);
         setStreamTitle(data.data[0].title);
         setViewerCount(data.data[0].viewer_count);
-        setStreamThumbnailUrl(data.data[0].thumbnail_url.replace('{width}', '640').replace('{height}', '360'));
+        setStreamThumbnailUrl(
+          data.data[0].thumbnail_url.replace('{width}', '640').replace('{height}', '360'),
+        );
+    
+      
       } else {
         setIsLive(false);
+        // Remove stream information from AsyncStorage
+        await AsyncStorage.removeItem(`${username}:isLive`);
+        await AsyncStorage.removeItem(`${username}:streamTitle`);
+        await AsyncStorage.removeItem(`${username}:viewerCount`);
+        await AsyncStorage.removeItem(`${username}:streamThumbnailUrl`);
       }
     }
+    async function updateUser(username, updatedInfo) {
+      const usersJson = await AsyncStorage.getItem('users');
+      const users = usersJson ? JSON.parse(usersJson) : {};
+    
+      users[username] = {
+        ...users[username],
+        ...updatedInfo,
+      };
+    
+      await AsyncStorage.setItem('users', JSON.stringify(users));
+    }
+    
+ 
+    
   
     async function fetchUserProfileImage(username) {
       const response = await fetch(
@@ -105,16 +180,27 @@ const LiveScreen = ({ route, navigation }) => {
       );
     
       if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des informations de l\'utilisateur');
+        throw new Error("Erreur lors de la récupération des informations de l'utilisateur");
       }
     
       const data = await response.json();
     
       if (data.data.length > 0) {
         setUserProfileImage(data.data[0].profile_image_url);
+    
+     
+      } else {
+        // Remove profile image URL from AsyncStorage
+        await AsyncStorage.removeItem(`${username}:profileImage`);
       }
     }
-  
+    // Ajoutez la fonction loadAllUsers après fetchUserProfileImage
+async function loadAllUsers() {
+  const usersJson = await AsyncStorage.getItem('users');
+  return usersJson ? JSON.parse(usersJson) : {};
+}
+    
+    
     getUsernameAndUserId().then(({ username }) => {
       setTwitchUsername(username);
       console.log("username récupéré depuis AsyncStorage :", username);
@@ -124,9 +210,12 @@ const LiveScreen = ({ route, navigation }) => {
       }
   
       checkIfUserIsLive(username)
+      
         .then(() => {
+      
           console.log("checkIfUserIsLive appelé");
         })
+        
         .catch((error) => {
           console.error("Erreur lors de la vérification de l'état du stream:", error);
         });
@@ -178,6 +267,33 @@ const LiveScreen = ({ route, navigation }) => {
         </View>
       </View>
   
+      {Object.entries(users).map(([username, userInfo]) => (
+        <View key={username} style={styles.userContainer}>
+          <Text style={styles.username}>{username}</Text>
+          {userInfo.profileImage && (
+            <Image
+              source={{ uri: userInfo.profileImage }}
+              style={styles.profileImage}
+            />
+          )}
+          {userInfo.isLive ? (
+            <>
+              <Text style={styles.streamTitle}>{userInfo.streamTitle}</Text>
+              <Text style={styles.viewerCount}>
+                Nombre de vues: {userInfo.viewerCount}
+              </Text>
+              {userInfo.streamThumbnailUrl && (
+                <Image
+                  source={{ uri: userInfo.streamThumbnailUrl }}
+                  style={styles.streamThumbnail}
+                />
+              )}
+            </>
+          ) : (
+            <Text>L'utilisateur n'est pas en direct.</Text>
+          )}
+        </View>
+      ))}
       <TouchableOpacity
         style={styles.logoutButton}
         onPress={() => navigation.navigate('Connexion')}
@@ -186,6 +302,7 @@ const LiveScreen = ({ route, navigation }) => {
       </TouchableOpacity>
     </View>
   );
+  
             }  
             const styles = StyleSheet.create({
               container: {
