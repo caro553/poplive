@@ -49,11 +49,14 @@ export default function Bestof() {
           )}>
 <Image source={{ uri: video.thumbnailUrl }} style={styles.videoImage} />
 <View style={styles.rectangle}>
+
   <Image style={styles.twitchImage} source={{ uri: video.thumbnail }} />
   <View style={styles.twitchTextContainer}>
     <Text numberOfLines={2} style={[styles.twitchTitle, { fontWeight: 'bold' }]}>{video.title}</Text>
     <Text style={styles.twitchChannel}>{video.channelTitle}</Text>
   </View>
+
+  
 </View>
           </TouchableOpacity>
         ))}
@@ -125,14 +128,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 twitchContainer: {
-  width: '90%',
-  height: '20%',
+  width: 390,
+  height: 100,
   backgroundColor: 'white',
   borderRadius: 30,
-  marginTop: 30,
+  marginTop: 10,
+  top:100,
   flexDirection: 'row',
-  alignItems: 'center',
-  alignSelf: 'center', // Ajouter cette ligne pour centrer horizontalement
+  alignItems: 'center', 
 },
 profileContainer: {
   width: 50,

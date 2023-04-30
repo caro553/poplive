@@ -1,74 +1,220 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import TopBar from './TopBar';
+import BottomBar from './BottomBar';
+import { View, Text, StyleSheet, ScrollView, Button, Modal, Image} from 'react-native';
 
 const FAQScreen = () => {
-return (
-    <ScrollView style={styles.scrollView}>
-<View style={styles.container}>
-<Text style={styles.title}>Foire Aux Questions</Text>
-<View style={styles.questionContainer}>
-<Text style={styles.question}>Quel est le but de cette application?</Text>
-<Text style={styles.answer}>
-Cette application est conçue pour fournir aux utilisateurs les dernières nouvelles et mises à jour dans le monde du stream et d'améliorer leur référencements.
-</Text>
-</View>
-<View style={styles.questionContainer}>
-<Text style={styles.question}>A quelle fréquence l'application est-elle mise à jour?</Text>
-<Text style={styles.answer}>
-L'application est mise à jour régulièrement, avec de nouveaux contenus ajoutés plusieurs fois par jour.
-</Text>
-</View>
-<View style={styles.questionContainer}>
-<Text style={styles.question}>
-Puis-je personnaliser l'application pour ne voir que les streams qui m'intéressent?
-</Text>
-<Text style={styles.answer}>
-a voir
-</Text>
-</View>
-<View style={styles.questionContainer}>
-<Text style={styles.question}>L'application est-elle gratuite ?</Text>
-<Text style={styles.answer}>
-Oui, l'application est entièrement gratuite à télécharger et à utiliser. Cependant du contenue premium est disponible pour améliorer le référencements de certains streameur.
-</Text>
-</View>
-<View style={styles.questionContainer}>
-<Text style={styles.question}>Est-ce immorale d'utiliser cette application pour me construire une plateforme ?</Text>
-<Text style={styles.answer}>
- Non, l'application permet seulement aux streamers victime de la sévérité de l'algorithmes d'avoir une visibilité et la chance de se faire connaître grâce a leurs contenues. 
- Sur Twitch, les algorithmes ont un impact important sur la visibilité des streamers. Malheureusement, certains streamers sont moins mis en avant que d'autres en raison de l'injustice des algorithmes 
- de recommandation et de la concurrence sur la plateforme. Les algorithmes de Twitch sont conçus pour recommander des streamers en fonction de leur popularité, de leur engagement et de la pertinence 
- de leur contenu pour les utilisateurs. Les streamers qui ont moins de followers ou qui ont des horaires de diffusion moins réguliers peuvent donc être moins visibles sur la plateforme. De plus, la 
- concurrence est féroce sur Twitch, avec des milliers de streamers en ligne en même temps, ce qui rend difficile la visibilité pour les streamers moins connus. Cette situation peut être frustrante 
- pour les streamers qui travaillent dur pour créer du contenu de qualité, mais qui ont du mal à atteindre une audience plus large.
-</Text>
-</View>
-<View style={styles.questionContainer}>
-<Text style={styles.question}>Est-ce légale d'utiliser cette application ?</Text>
-<Text style={styles.answer}>
- Oui, totalement, cette application permet seulement d'avoir un meilleur référencement et plus de visibilité, ce n'est en aucun cas une application de boosting où de faux spectateurs. Les utilisateurs de cette
- application sont tous humains. 
-</Text>
-</View>
-<View style={styles.questionContainer}>
-<Text style={styles.question}>Que m'offre l'option premium ?</Text>
-<Text style={styles.answer}>
- a voir. 
-</Text>
-</View>
+  const [modalVisible, setModalVisible] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const handleMouseEnter = () => {
+    setHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+  };
+
+  return (
+    <View style={{height:1500,backgroundColor: '#6441a5',}}>
+      <ScrollView style={styles.scrollView}>
+    <View style={styles.container}>
+    <View style={styles.topBar}>
+    <TopBar />
+
+    <Image source={require('./faq_img.png')} style={styles.icon2} />
+
+
+    <View style={styles.nouscontacter}>
+      <Button title="Nous contacter"
+
+    ></Button>
 
 </View>
-</ScrollView>
-);
+
+      <View style={styles.buttonContainer}>
+        <View style={{width: '95%', top:240,height:50, borderRadius: 100, backgroundColor: 'white'}}>
+          <Button 
+            title="Quel est le but de cette application ?" 
+            onPress={() => setModalVisible(true)}
+            color="black"
+          />
+              <Image source={require('./triangle.png')} style={styles.icon} />
+        </View>
+
+      </View>
+  
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modal}>
+            <Text style={styles.modalTitle}>Quel est le but de cette application ?</Text>
+            <Text style={styles.modalText}>Cette application est conçue pour fournir aux utilisateurs les dernières nouvelles et mises à jour dans le monde du stream et d'améliorer leur référencements.</Text>
+            <Button title="Fermer" onPress={() => setModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
+      
+      
+      
+
+
+
+
+            
+      <View style={styles.buttonContainer}>
+        <View style={{width: '95%', top:260,height:50, borderRadius: 100, backgroundColor: 'white'}}>
+          <Button 
+            title="Quel est le but de cette application ?" 
+            onPress={() => setModalVisible(true)}
+            color="black"
+          />
+              <Image source={require('./triangle.png')} style={styles.icon} />
+        </View>
+
+      </View>
+  
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modal}>
+            <Text style={styles.modalTitle}>Quel est le but de cette application ?</Text>
+            <Text style={styles.modalText}>Cette application est conçue pour fournir aux utilisateurs les dernières nouvelles et mises à jour dans le monde du stream et d'améliorer leur référencements.</Text>
+            <Button title="Fermer" onPress={() => setModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
+      
+
+            
+      <View style={styles.buttonContainer}>
+        <View style={{width: '95%', top:280,height:50, borderRadius: 100, backgroundColor: 'white'}}>
+          <Button 
+            title="Quel est le but de cette application ?" 
+            onPress={() => setModalVisible(true)}
+            color="black"
+          />
+              <Image source={require('./triangle.png')} style={styles.icon} />
+        </View>
+
+      </View>
+  
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modal}>
+            <Text style={styles.modalTitle}>Quel est le but de cette application ?</Text>
+            <Text style={styles.modalText}>Cette application est conçue pour fournir aux utilisateurs les dernières nouvelles et mises à jour dans le monde du stream et d'améliorer leur référencements.</Text>
+            <Button title="Fermer" onPress={() => setModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
+
+
+
+
+      <View style={styles.buttonContainer}>
+        <View style={{width: '95%', top:300,height:50, borderRadius: 100, backgroundColor: 'white'}}>
+          <Button 
+            title="Quel est le but de cette application ?" 
+            onPress={() => setModalVisible(true)}
+            color="black"
+          />
+              <Image source={require('./triangle.png')} style={styles.icon} />
+        </View>
+
+      </View>
+  
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modal}>
+            <Text style={styles.modalTitle}>Quel est le but de cette application ?</Text>
+            <Text style={styles.modalText}>Cette application est conçue pour fournir aux utilisateurs les dernières nouvelles et mises à jour dans le monde du stream et d'améliorer leur référencements.</Text>
+            <Button title="Fermer" onPress={() => setModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
+      
+      </View>
+
+
+
+    </View>
+    <View  style={{top:500,}}>
+    <BottomBar></BottomBar>
+    </View>
+  </ScrollView>
+  </View>
+  );
 };
 
+
 const styles = StyleSheet.create({
-    container: {
+  nouscontacter: {
+    /* Ajouter une hauteur et une largeur pour l'élément */
+    height: 50,
+    width: 200,
+    top:220,
+    left: 100,
+  },
+  icon: {
+    width: 30,
+    height: 30,
+    left: 340,
+    bottom:30,
+  },
+  icon2: {
+    width: 278,
+    height: 153,
+    top: 100,
+    left: 60,
+    alignItems: 'center',
+    justifyContent:'center',
+    position:'absolute',
+  },
+    modal: {
+      backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    elevation: 5,
+    },
+    modalContainer: {
       flex: 1,
-      backgroundColor: '#6C63FF', // violet
-      paddingHorizontal: 30,
-      paddingTop: 50,
-      paddingBottom: 20,
+      backgroundColor: 'rgba(0,0,0,0.5)',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    modalTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginBottom: 10,
+    },
+    modalText: {
+      fontSize: 16,
+      marginBottom: 20,
+    },
+
+    
+    button: {
+      width: '60%',
+      borderRadius: 20,
+
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
+      bottom: 50,
+      left: '20%'
+    },
+    buttonImage: {
+      width: 30,
+      height: 30,
+      marginRight: 10,
+    },
+
+    container: {
+      flex: 1, 
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#6441a5',
+      height: '100%',
     },
     title: {
       fontSize: 32,
@@ -91,6 +237,21 @@ const styles = StyleSheet.create({
       lineHeight: 28,
       color: '#fff', // blanc
     },
+    button: {
+      width: '60%',
+      borderRadius: 20,
+      backgroundColor: '#fff',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+    },
+    buttonImage: {
+      width: 30,
+      height: 30,
+      marginRight: 10,
+    },
+   
   });
+
 
 export default FAQScreen;

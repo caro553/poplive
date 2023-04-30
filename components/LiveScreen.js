@@ -249,9 +249,13 @@ useEffect(() => {
           </View>
         )}
       </View>
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.logoutButtonText}>Déconnexion</Text>
-      </TouchableOpacity>
+
+
+
+
+
+
+
       <StreamerList />
       <View style={styles.bottomBar}>
         <BottomBar />

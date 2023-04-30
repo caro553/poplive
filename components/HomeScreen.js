@@ -18,10 +18,10 @@ export default function HomeScreen({ navigation  }) {
           <Text style={styles.buttonText}>S'INSCRIRE</Text>
         </TouchableOpacity>
     
-              <Button
-                onPress={() => navigation.navigate('FAQScreen')}
-                title="FAQ"
-              />
+        <Button
+          title="FAQ"
+          onPress={() => navigation.navigate('FAQ')}
+        />
 
       </View>
     </LinearGradient>

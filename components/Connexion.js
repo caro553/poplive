@@ -157,6 +157,7 @@ const Connexion = ({ navigation }) => {
           <Text style={styles.buttonText}>INSCRIPTION</Text>
         </TouchableOpacity>
       </View>
+      
       <TouchableOpacity style={[styles.signupButton, { marginBottom: 20 } ]} onPress={handleLogin}>
           <Text style={styles.buttonText}>CONNEXION</Text>
         </TouchableOpacity>

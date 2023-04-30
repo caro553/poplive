@@ -38,7 +38,7 @@ export default function TopBar() {
         <TouchableOpacity onPress={toggleMenu}>
           <Ionicons
             name="menu"
-            size={24}
+            size={50}
             color="white"
             style={styles.menuIcon}
           />
@@ -52,47 +52,92 @@ export default function TopBar() {
         >
           <Ionicons
             name="person"
-            size={24}
+            size={50}
             color="white"
             style={styles.profileIcon}
           />
         </TouchableOpacity>
       </View>
+
       <Modal
         animationType="fade"
         visible={showMenu}
         transparent={true}
         onRequestClose={toggleMenu}
       >
+
         <TouchableOpacity style={styles.menuOverlay} onPress={toggleMenu}>
           <View style={styles.menuContainer}>
-            <TouchableOpacity onPress={handlePage1} style={styles.menuItem}>
-              <Ionicons
-                name="ios-home"
-                size={24}
-                color="black"
-                style={styles.menuIcon}
-              />
-              <Text style={styles.menuText}>Page 1</Text>
+          <Image source={require('./logo.png')} style={styles.logo1} />
+          <Image source={require('./couronne.png')} style={styles.couronne} />
+          <Image source={require('./demonslayer.jpg')} style={styles.logoducomte} />
+          <Text style={styles.nomcompte} > NomDuCompte</Text>
+          <Text style={styles.pseudo} > @pseudoducompte</Text>
+
+
+
+
+          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Compte")}>
+              <Image source={require('./acceuil.png')} style={styles.logo} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={handlePage2} style={styles.menuItem}>
-              <Ionicons
-                name="ios-rocket"
-                size={24}
-                color="black"
-                style={styles.menuIcon}
-              />
-              <Text style={styles.menuText}>Page 2</Text>
+            <Text style={styles.textMenu} > Compte</Text>
+
+
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Compte")}>
+              <Image source={require('./acceuil.png')} style={styles.logo} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={handlePage3} style={styles.menuItem}>
-              <Ionicons
-                name="ios-settings"
-                size={24}
-                color="black"
-                style={styles.menuIcon}
-              />
-              <Text style={styles.menuText}>Page 3</Text>
+            <Text style={styles.textMenu} > Profil</Text>
+
+
+
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("AlaUne")}>
+              <Image source={require('./acceuil.png')} style={styles.logo} />
             </TouchableOpacity>
+            <Text style={styles.textMenu}> Premium </Text>
+
+
+
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("LiveScreen")}>
+              <Image source={require('./direct.png')} style={styles.logo} />
+            </TouchableOpacity>
+            <Text style={styles.textMenu}> Favoris </Text>
+            
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("LiveScreen")}>
+              <Image source={require('./comment.png')} style={styles.logo} />
+            </TouchableOpacity>
+            <Text style={styles.textMenu}> Commentaire </Text>
+
+
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("LiveScreen")}>
+              <Image source={require('./direct.png')} style={styles.logo} />
+            </TouchableOpacity>
+            <Text style={styles.textMenu}> Live </Text>
+
+
+
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Bestof")}>
+              <Image source={require('./video.png')} style={styles.logo} />
+            </TouchableOpacity>    
+            <Text style={styles.textMenu}> Best-Of </Text>
+
+
+
+
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('FAQ')}>
+              <Image source={require('./faq.png')} style={styles.logo} />
+            </TouchableOpacity>
+              <Text style={styles.textMenu}> FAQ </Text>
+
+
+
+
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("AlaUne")}>
+              <Image source={require('./acceuil.png')} style={styles.logo} />
+            </TouchableOpacity>
+            <Text style={styles.textMenu}> A la une </Text>
+
+
+
           </View>
         </TouchableOpacity>
       </Modal>
@@ -105,7 +150,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#6441a5",
-    height: 64,
+    height: 50,
     paddingHorizontal: 16,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
@@ -146,20 +191,24 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   menuContainer: {
-    backgroundColor: "white",
-    padding: 20,
+    backgroundColor: "#483D8B",
+    padding: 10,
     borderRadius: 10,
     shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    width:250,
+    height:'100%',
+    marginRight:170,
   },
 
   menuItem: {
     fontSize: 18,
     fontWeight: "bold",
-    marginVertical: 20,
+    marginVertical: 10,
+    right:170,
   },
   menuItemText: {
     marginLeft: 16,
@@ -167,8 +216,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   logo: {
-    height: 100,
+    height: 90,
     resizeMode: "contain",
+    top:50,
   },
   menuOverlay: {
     position: "absolute",
@@ -181,7 +231,38 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  menuText: {
-    fontSize: 16,
+
+  textMenu:{
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    bottom:15,
+    left:75,
+  },
+  logoducomte:{
+    width:90,
+    height:90,
+    borderRadius: 100,
+    top:30,
+  },
+  logo1:{
+    width:150,
+    height:150,
+    left:35,
+  },
+  nomcompte:{
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    top:35,
+  },
+  pseudo:{
+    top:35,
+  },
+  couronne:{
+    width:35,
+    height:35,
+    top:25,
+    left:30,
   },
 });
