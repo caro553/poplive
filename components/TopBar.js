@@ -78,45 +78,45 @@ export default function TopBar() {
 
 
           <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Compte")}>
-              <Image source={require('./acceuil.png')} style={styles.logo} />
+              <Image source={require('./acceuil.png')} style={styles.logomenu} />
             </TouchableOpacity>
             <Text style={styles.textMenu} > Compte</Text>
 
 
             <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Compte")}>
-              <Image source={require('./acceuil.png')} style={styles.logo} />
+              <Image source={require('./acceuil.png')} style={styles.logomenu} />
             </TouchableOpacity>
             <Text style={styles.textMenu} > Profil</Text>
 
 
 
             <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("AlaUne")}>
-              <Image source={require('./acceuil.png')} style={styles.logo} />
+              <Image source={require('./acceuil.png')} style={styles.logomenu} />
             </TouchableOpacity>
             <Text style={styles.textMenu}> Premium </Text>
 
 
 
             <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("LiveScreen")}>
-              <Image source={require('./direct.png')} style={styles.logo} />
+              <Image source={require('./direct.png')} style={styles.logomenu} />
             </TouchableOpacity>
             <Text style={styles.textMenu}> Favoris </Text>
             
             <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("LiveScreen")}>
-              <Image source={require('./comment.png')} style={styles.logo} />
+              <Image source={require('./comment.png')} style={styles.logomenu} />
             </TouchableOpacity>
             <Text style={styles.textMenu}> Commentaire </Text>
 
 
             <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("LiveScreen")}>
-              <Image source={require('./direct.png')} style={styles.logo} />
+              <Image source={require('./direct.png')} style={styles.logomenu} />
             </TouchableOpacity>
             <Text style={styles.textMenu}> Live </Text>
 
 
 
             <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Bestof")}>
-              <Image source={require('./video.png')} style={styles.logo} />
+              <Image source={require('./video.png')} style={styles.logomenu} />
             </TouchableOpacity>    
             <Text style={styles.textMenu}> Best-Of </Text>
 
@@ -218,6 +218,10 @@ const styles = StyleSheet.create({
   logo: {
     height: 90,
     resizeMode: "contain",
+  },
+  logomenu:{
+    height: 60,
+    resizeMode: "contain",
     top:50,
   },
   menuOverlay: {
@@ -236,7 +240,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
-    bottom:15,
+
     left:75,
   },
   logoducomte:{

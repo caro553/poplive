@@ -95,7 +95,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 100, // Ajout de la marge supérieure
   },
-  
+      //fake twitch live
+      twitchContainer:{
+        width: 390,
+        height: 100,
+        backgroundColor: 'white',
+        borderRadius: 30,
+        marginTop: 10,
+        top:90,
+        flexDirection: 'row',
+        alignItems: 'center',
+        },
   video: {
     width: '100%',
     aspectRatio: 2,

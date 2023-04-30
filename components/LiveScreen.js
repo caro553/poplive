@@ -249,11 +249,56 @@ useEffect(() => {
           </View>
         )}
       </View>
+      <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
+          <Image source={require('./icontwitch1.png')} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Text style={styles.twitchTitle}>Wig on Twitch</Text>
+            <Text style={styles.twitchDate}>7h de live du lundi 8 au dimanche 14 </Text>
+            
+            <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
+          </View>
+        </TouchableOpacity>
 
 
 
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
+          <Image source={require('./icontwitch1.png')} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Text style={styles.twitchTitle}>Wig on Twitch</Text>
+            <Text style={styles.twitchDate}>7h de live du lundi 8 au dimanche 14 </Text>
+            
+            <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
+          </View>
+        </TouchableOpacity>
 
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
+          <Image source={require('./icontwitch1.png')} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Text style={styles.twitchTitle}>Wig on Twitch</Text>
+            <Text style={styles.twitchDate}>7h de live du lundi 8 au dimanche 14 </Text>
+            
+            <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
+          </View>
+        </TouchableOpacity>
 
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
+          <Image source={require('./icontwitch1.png')} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Text style={styles.twitchTitle}>Wig on Twitch</Text>
+            <Text style={styles.twitchDate}>7h de live du lundi 8 au dimanche 14 </Text>
+            
+            <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.twitchContainer} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=r67zVQK7zE0')}>
+          <Image source={require('./icontwitch1.png')} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Text style={styles.twitchTitle}>Wig on Twitch</Text>
+            <Text style={styles.twitchDate}>7h de live du lundi 8 au dimanche 14 </Text>
+            
+            <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
+          </View>
+        </TouchableOpacity>
 
 
       <StreamerList />
@@ -297,6 +342,19 @@ useEffect(() => {
                 height: 100,
                 overflow: 'hidden',
               },
+
+              //fake twitch live
+              twitchContainer:{
+              width: 390,
+              height: 100,
+              backgroundColor: 'white',
+              borderRadius: 30,
+              marginTop: 10,
+              top:90,
+              flexDirection: 'row',
+              alignItems: 'center',
+              },
+
               innerContainer: {
                 flexDirection: 'row',
                 alignItems: 'center',
