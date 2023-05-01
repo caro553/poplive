@@ -24,6 +24,18 @@ const Abonnement = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (user) {
+      const docRef = firebase.firestore().collection('test_users').doc(user.uid);
+      const unsubscribe = docRef.onSnapshot((doc) => {
+        setIsPremium(doc.data().isPremium);
+      });
+
+      return () => unsubscribe();
+    }
+  }, [user]);
+  
+
   const handleUpgrade = async () => {
     if (user) {
       const docRef = firebase.firestore().collection('test_users').doc(user.uid);

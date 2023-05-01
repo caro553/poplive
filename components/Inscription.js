@@ -1,72 +1,76 @@
 import React, { useState } from 'react';
 import {
-    StyleSheet,
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    StatusBar,
-    Image,
-    Button
-  } from 'react-native';
-  import firebase from 'firebase/compat/app';
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StatusBar,
+  Image,
+} from 'react-native';
+import firebase from 'firebase/compat/app';
 import 'firebase/auth';
 import { auth } from './firebaseConfig.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Inscription({ navigation }) {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [pseudo, setPseudo] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    
-    const saveUsername = async (userId) => {
-        await AsyncStorage.setItem('username', pseudo);
-        await AsyncStorage.setItem('userId', userId);
-    };
-    
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-    const handleSignUp = () => {
-        auth.createUserWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                // Add user's pseudo to their profile
-                userCredential.user.updateProfile({
-                    displayName: pseudo,
-                })
-                    .then(() => {
-                        saveUsername(userCredential.user.uid); // Ajoutez l'ID de l'utilisateur ici
-                        console.log('Utilisateur créé avec succès');
-                        
-                        // Ajouter un document pour le nouvel utilisateur dans la collection 'test_users'
-                        firebase
-                            .firestore()
-                            .collection('test_users')
-                            .doc(userCredential.user.uid)
-                            .set({
-                                email: email,
-                                twitchUsername: pseudo,
-                                // Ajoutez ici d'autres informations si nécessaire
-                            })
-                            .then(() => {
-                                navigation.navigate('AlaUne', { // Modifiez cette ligne
-                                    twitchUsername: pseudo,
-                                });
-                            })
-                            .catch((error) => {
-                                console.log("Erreur lors de l'ajout de l'utilisateur à la collection test_users :", error);
-                            });
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            })
-            .catch(error => {
-                console.log(error);
-                setErrorMessage(error.message);
-            });
-    }
-    
-  
+  const saveUsername = async (userId) => {
+    await AsyncStorage.setItem('username', firstName + ' ' + lastName);
+    await AsyncStorage.setItem('userId', userId);
+  };
+
+  const handleSignUp = () => {
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        // Add user's full name to their profile
+        userCredential.user
+          .updateProfile({
+            displayName: firstName + ' ' + lastName,
+          })
+          .then(() => {
+            saveUsername(userCredential.user.uid); // Ajoutez l'ID de l'utilisateur ici
+            console.log('Utilisateur créé avec succès');
+
+            // Ajouter un document pour le nouvel utilisateur dans la collection 'test_users'
+            firebase
+              .firestore()
+              .collection('test_users')
+              .doc(userCredential.user.uid)
+              .set({
+                email: email,
+                firstName: firstName,
+                lastName: lastName,
+                // Ajoutez ici d'autres informations si nécessaire
+              })
+              .then(() => {
+                navigation.navigate('AlaUne', {
+                  fullName: firstName + ' ' + lastName,
+                });
+              })
+              .catch((error) => {
+                console.log(
+                  "Erreur lors de l'ajout de l'utilisateur à la collection test_users :",
+                  error
+                );
+              });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+        setErrorMessage(error.message);
+      });
+  };
+
     return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -97,14 +101,23 @@ export default function Inscription({ navigation }) {
           onChangeText={setPassword}
         />
         <TextInput
-          style={styles.input}
-          placeholder="Pseudo"
-          placeholderTextColor="rgba(255,255,255,0.7)"
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={pseudo}
-          onChangeText={setPseudo}
-        />
+      style={styles.input}
+      placeholder="Prénom"
+      placeholderTextColor="rgba(255,255,255,0.7)"
+      autoCapitalize="words"
+      autoCorrect={false}
+      value={firstName}
+      onChangeText={setFirstName}
+    />
+    <TextInput
+      style={styles.input}
+      placeholder="Nom"
+      placeholderTextColor="rgba(255,255,255,0.7)"
+      autoCapitalize="words"
+      autoCorrect={false}
+      value={lastName}
+      onChangeText={setLastName}
+    />
         {errorMessage ? (
           <Text style={styles.errorMessage}>{errorMessage}</Text>
         ) : null}

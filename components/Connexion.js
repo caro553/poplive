@@ -33,22 +33,48 @@ const Connexion = ({ navigation }) => {
       .get();
   
     const userData = userDoc.data();
-    await AsyncStorage.setItem('userId', user.uid);
-    await AsyncStorage.setItem('username', userData.username);
-    await AsyncStorage.setItem('isPremium', userData.isPremium ? 'true' : 'false');
-    setIsPremium(userData.isPremium);
+    
+    // Vérifiez si les valeurs de username et userId sont définies
+    if (userData.username && user.uid) {
+      await AsyncStorage.setItem('userId', user.uid);
+      await AsyncStorage.setItem('username', userData.username);
+      await AsyncStorage.setItem('isPremium', userData.isPremium ? 'true' : 'false');
+      setIsPremium(userData.isPremium);
+    } else {
+      console.error('Username or userId is undefined');
+    }
   
     console.log('Retour depuis getUsernameAndUserId :', {
       userId: user.uid,
       username: userData.username,
       isPremium: userData.isPremium,
     });
-    
-    return {
-      userId: user.uid,
-      username: userData.username,
-      isPremium: userData.isPremium,
-    };
+    return { userId: user.uid, username: userData.username };
+  };
+  
+  const showTwitchUsernamePrompt = (userId, username) => {
+    Alert.prompt(
+      "Nom d'utilisateur Twitch",
+      'Veuillez entrer votre nom d\'utilisateur Twitch:',
+      [
+        {
+          text: 'Annuler',
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: (twitchUsername) => {
+            if (twitchUsername) {
+              setTwitchUsername(twitchUsername);
+              navigation.navigate('AlaUne', { userId, username });
+            } else {
+              setErrorMessage("Veuillez entrer votre nom d'utilisateur Twitch");
+            }
+          },
+        },
+      ],
+      'plain-text',
+    );
   };
   
 
@@ -57,45 +83,30 @@ const Connexion = ({ navigation }) => {
       if (user) {
         try {
           const { userId, username } = await getUsernameAndUserId();
-          navigation.navigate('AlaUne', { userId, username });
+          if (isPremium) {
+            showTwitchUsernamePrompt(userId, username);
+          } else {
+            navigation.navigate('AlaUne', { userId, username });
+          }
         } catch (error) {
-          console.log('Erreur lors de la récupération de l\'utilisateur :', error);
+          console.log("Erreur lors de la récupération de l'utilisateur :", error);
         }
       }
     });
-
+  
     return unsubscribe;
   }, [navigation]);
+  
 
   const handleLogin = async () => {
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
       console.log('Connexion réussie');
-      const { userId, username, isPremium } = await getUsernameAndUserId();
+      const { userId, username } = await getUsernameAndUserId();
+      const isUserPremium = await AsyncStorage.getItem('isPremium') === 'true';
   
-      if (isPremium) {
-        Alert.prompt(
-          'Nom d\'utilisateur Twitch',
-          'Veuillez entrer votre nom d\'utilisateur Twitch:',
-          [
-            {
-              text: 'Annuler',
-              style: 'cancel',
-            },
-            {
-              text: 'OK',
-              onPress: (twitchUsername) => {
-                if (twitchUsername) {
-                  setTwitchUsername(twitchUsername);
-                  navigation.navigate('AlaUne', { userId, username });
-                } else {
-                  setErrorMessage("Veuillez entrer votre nom d'utilisateur Twitch");
-                }
-              },
-            },
-          ],
-          'plain-text',
-        );
+      if (isUserPremium) {
+        showTwitchUsernamePrompt(userId, username); // Appelez la fonction ici
       } else {
         navigation.navigate('AlaUne', { userId, username });
       }
@@ -105,7 +116,7 @@ const Connexion = ({ navigation }) => {
     }
   };
   
-
+  
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -136,17 +147,6 @@ const Connexion = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
         />
-        {isPremium && (
-          <TextInput
-            style={styles.input}
-            placeholder="Nom d'utilisateur Twitch"
-            placeholderTextColor="rgba(255,255,255,0.7)"
-            autoCapitalize="none"
-            autoCorrect={false}
-            value={twitchUsername}
-            onChangeText={setTwitchUsername}
-          />
-        )}
         <TouchableOpacity style={styles.buttonContainer} onPress={handleLogin}>
           <Text style={styles.buttonText}>CONNEXION</Text>
         </TouchableOpacity>

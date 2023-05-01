@@ -24,6 +24,7 @@ const LiveScreen = ({ route, navigation }) => {
   const [twitchUsername, setTwitchUsername] = useState('');
   const [oauthToken, setOAuthToken] = useState(null);
   const [users, setUsers] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = firebase
@@ -99,21 +100,16 @@ const LiveScreen = ({ route, navigation }) => {
     
     async function storeLiveStreamInfo(userId, streamData) {
       try {
+        console.log("Storing streamData:", streamData);
         const userRef = firebase.firestore().collection('test_users').doc(userId);
     
-        // Ajouter des informations supplémentaires
-        const additionalData = {
-          profileImage: userProfileImage,
-          streamTitle: streamTitle,
-          viewerCount: viewerCount,
-          streamThumbnailUrl: streamThumbnailUrl,
-        };
-    
-        await userRef.set({ ...streamData, ...additionalData }, { merge: true });
+        await userRef.update({ ...streamData });
       } catch (error) {
-        console.error('Error storing stream information to Firestore:', error);
+        console.error('Error while storing live stream info:', error);
+        throw error;
       }
     }
+    
     
     async function updateUserIsLive(userId, isLive) {
       try {
@@ -135,12 +131,19 @@ const LiveScreen = ({ route, navigation }) => {
         }
       );
     
+      console.log("response status:", response.status);
+      console.log("response headers:", response.headers);
+    
       if (!response.ok) {
         throw new Error('Erreur lors de la récupération des informations de stream');
       }
     
       const data = await response.json();
-    
+      console.log("isLive:", data.data.length > 0);
+      console.log("streamTitle:", data.data[0].title);
+      console.log("viewerCount:", data.data[0].viewer_count);
+      console.log("streamThumbnailUrl:", data.data[0].thumbnail_url.replace('{width}', '640').replace('{height}', '360'));
+
       if (data.data.length > 0) {
         setIsLive(true);
         setStreamTitle(data.data[0].title);
@@ -225,39 +228,58 @@ async function loadAllUsers() {
 }
     
     
-getUsernameAndUserId().then(({ username, userId }) => {
-  setTwitchUsername(username);
-  console.log("username récupéré depuis AsyncStorage :", username);
+getUsernameAndUserId()
+  .then(({ username, userId }) => {
+    setTwitchUsername(username);
+    console.log("username récupéré depuis AsyncStorage :", username);
 
-  if (!oauthToken) {
-    return;
-  }
+    if (!oauthToken) {
+      return;
+    }
 
-  checkIfUserIsLive(username, userId)
-      
-        .then(() => {
-      
-          console.log("checkIfUserIsLive appelé");
-        })
-        
-        .catch((error) => {
-          console.error("Erreur lors de la vérification de l'état du stream:", error);
-        });
-  
-      fetchUserProfileImage(username)
-        .then(() => {
-          console.log("fetchUserProfileImage appelé");
-        })
-        .catch((error) => {
-          console.error("Erreur lors de la récupération de l'image de profil de l'utilisateur:", error);
-        });
-    }).catch((error) => {
-      console.error("Erreur lors de la récupération du nom d'utilisateur et de l'ID utilisateur :", error);
-    });
-  }, [oauthToken]);
+    checkIfUserIsLive(username, userId)
+      .then((isLive) => {
+        console.log("checkIfUserIsLive appelé");
+
+        fetchUserProfileImage(username)
+          .then((userProfileImage) => {
+            console.log("fetchUserProfileImage appelé");
+
+            if (isLive) {
+              const streamData = {
+                isLive,
+                profileImage: userProfileImage,
+                streamThumbnailUrl: streamThumbnailUrl.replace('{width}', '320').replace('{height}', '180'),
+                streamTitle,
+                viewerCount,
+              };
+              return storeLiveStreamInfo(userId, streamData);
+            } else {
+              const offlineData = {
+                isLive,
+                profileImage: userProfileImage,
+              };
+              return storeLiveStreamInfo(userId, offlineData);
+            }
+          })
+          .catch((error) => {
+            console.error("Erreur lors de la récupération de l'image de profil de l'utilisateur:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la vérification de l'état du stream:", error);
+      });
+  })
+  .catch((error) => {
+    console.error("Erreur lors de la récupération du nom d'utilisateur et de l'ID utilisateur :", error);
+  });
+
+}, [oauthToken]);
+
   
   return (
     <View style={styles.container}>
+      
       {Object.entries(users)
         .filter(([_, userInfo]) => userInfo.isLive)
         .map(([username, userInfo]) => (
