@@ -13,6 +13,7 @@ import firebase from "./firebaseConfig";
 const { width } = Dimensions.get('window');
 
 const LiveScreen = ({ route, navigation }) => {
+  console.log('LiveScreen component mounted');
   const [isLive, setIsLive] = useState(false);
   const [streamTitle, setStreamTitle] = useState('');
   const [viewerCount, setViewerCount] = useState(0);
@@ -25,18 +26,23 @@ const LiveScreen = ({ route, navigation }) => {
   const [users, setUsers] = useState({});
 
   useEffect(() => {
-    const usersRef = firebase.firestore().collection('test_users');
-  
-    const unsubscribe = usersRef.onSnapshot((querySnapshot) => {
-      const loadedUsers = {};
-      querySnapshot.forEach((doc) => {
-        loadedUsers[doc.id] = doc.data();
+    const unsubscribe = firebase
+      .firestore()
+      .collection('test_users')
+      .onSnapshot((querySnapshot) => {
+        const usersData = {};
+        querySnapshot.forEach((doc) => {
+          usersData[doc.id] = doc.data();
+        });
+        setUsers(usersData);
       });
-      setUsers(loadedUsers);
-    });
   
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+    };
   }, []);
+  
+  
   
 
   useEffect(() => {
@@ -109,8 +115,14 @@ const LiveScreen = ({ route, navigation }) => {
       }
     }
     
-    
-  
+    async function updateUserIsLive(userId, isLive) {
+      try {
+        const userRef = firebase.firestore().collection('test_users').doc(userId);
+        await userRef.update({ isLive });
+      } catch (error) {
+        console.error('Error updating user isLive status:', error);
+      }
+    }
     
     async function checkIfUserIsLive(username, userId) {
       const response = await fetch(
@@ -136,7 +148,7 @@ const LiveScreen = ({ route, navigation }) => {
         setStreamThumbnailUrl(
           data.data[0].thumbnail_url.replace('{width}', '640').replace('{height}', '360'),
         );
-      
+    
         // Stocker les informations de stream dans Firestore
         const streamData = {
           isLive: true,
@@ -145,17 +157,26 @@ const LiveScreen = ({ route, navigation }) => {
           streamThumbnailUrl: data.data[0].thumbnail_url.replace('{width}', '640').replace('{height}', '360'),
         };
         storeLiveStreamInfo(userId, streamData);
-      
+    
+        // Mettre à jour l'état isLive de l'utilisateur dans Firestore
+        updateUserIsLive(userId, true);
       } else {
         setIsLive(false);
-        // Remove stream information from AsyncStorage
-        await AsyncStorage.removeItem(`${username}:isLive`);
-        await AsyncStorage.removeItem(`${username}:streamTitle`);
-        await AsyncStorage.removeItem(`${username}:viewerCount`);
-        await AsyncStorage.removeItem(`${username}:streamThumbnailUrl`);
+    
+        // Mettre à jour l'état isLive de l'utilisateur dans Firestore
+        updateUserIsLive(userId, false);
+    
+        // Remove stream information from Firestore
+        const userRef = firebase.firestore().collection('test_users').doc(userId);
+        await userRef.update({
+          isLive: false,
+          streamTitle: firebase.firestore.FieldValue.delete(),
+          viewerCount: firebase.firestore.FieldValue.delete(),
+          streamThumbnailUrl: firebase.firestore.FieldValue.delete(),
+        });
       }
-      
     }
+    
     async function updateUser(username, updatedInfo) {
       const usersJson = await AsyncStorage.getItem('users');
       const users = usersJson ? JSON.parse(usersJson) : {};
@@ -235,95 +256,116 @@ getUsernameAndUserId().then(({ username, userId }) => {
     });
   }, [oauthToken]);
   
-
-  // REVOIR LE USERNAME QUI EST PAS BON 
-  
   return (
     <View style={styles.container}>
-      {Object.entries(users).map(([username, userInfo]) => (
-        <View key={username} style={styles.userContainer}>
-          <Text style={styles.username}>{username}</Text> 
-          {userInfo.profileImage && (
-            <Image
-              source={{ uri: userInfo.profileImage }}
-              style={styles.profileImage}
-            />
-          )}
-          {userInfo.isLive && (
-            <>
-              <Text style={styles.streamTitle}>{userInfo.streamTitle}</Text>
-              <Text style={styles.viewerCount}>
-                Nombre de vues: {userInfo.viewerCount}
-              </Text>
-              {userInfo.streamThumbnailUrl && (
-                <Image
-                  source={{ uri: userInfo.streamThumbnailUrl }}
-                  style={styles.streamThumbnail}
-                />
+      {Object.entries(users)
+        .filter(([_, userInfo]) => userInfo.isLive)
+        .map(([username, userInfo]) => (
+          <View key={username} style={styles.streamerRectangle}>
+            {userInfo.profileImage && (
+              <Image
+                source={{ uri: userInfo.profileImage }}
+                style={styles.profileImage}
+              />
+            )}
+            <View style={styles.middleContent}>
+              <Text style={styles.username}>{username}</Text>
+              {userInfo.isLive ? (
+                <>
+                  <Text style={styles.streamTitle}>{userInfo.streamTitle}</Text>
+                  <Text style={styles.viewerCount}>
+                    Nombre de vues: {userInfo.viewerCount}
+                  </Text>
+                </>
+              ) : (
+                <Text>L'utilisateur n'est pas en direct.</Text>
               )}
-            </>
-          )}
-        </View>
-      ))}
-     
+            </View>
+            {userInfo.isLive && userInfo.streamThumbnailUrl && (
+              <Image
+                source={{ uri: userInfo.streamThumbnailUrl }}
+                style={styles.streamThumbnail}
+              />
+            )}
+          </View>
+        ))}
+      <TouchableOpacity
+        style={styles.logoutButton}
+        onPress={() => navigation.navigate('Connexion')}
+      >
+        <Text style={styles.logoutButtonText}>Déconnexion</Text>
+      </TouchableOpacity>
     </View>
   );
   
-            }  
-            const styles = StyleSheet.create({
-              container: {
-                flex: 1,
-                backgroundColor: '#fff',
-                alignItems: 'center',
-                justifyContent: 'center',
-              },
-              streamerRectangle: {
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderWidth: 1,
-                borderColor: '#ccc',
-                borderRadius: 10,
-                padding: 15,
-                margin: 10,
-              },
-              username: {
-                fontSize: 18,
-                fontWeight: 'bold',
-                marginBottom: 10,
-              },
-              profileImage: {
-                width: 50,
-                height: 50,
-                borderRadius: 25,
-                marginBottom: 10,
-              },
-              streamTitle: {
-                fontSize: 16,
-                fontWeight: 'bold',
-                marginBottom: 5,
-              },
-              viewerCount: {
-                marginBottom: 5,
-              },
-              streamThumbnail: {
-                width: 100,
-                height: 60,
-                marginBottom: 10,
-              },
-              logoutButton: {
-                backgroundColor: '#3498db',
-                padding: 10,
-                borderRadius: 5,
-                marginTop: 20,
-              },
-              logoutButtonText: {
-                color: '#fff',
-                fontWeight: 'bold',
-                textAlign: 'center',
-              },
-            });
-            
+
+};
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  streamerRectangle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    padding: 10,
+    margin: 10,
+    width: width * 0.9,
+    height: 100,
+  },
+  leftContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  middleContent: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingLeft: 10,
+  },
+  rightContent: {
+    justifyContent: 'center',
+    paddingLeft: 10,
+  },
+  profileImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 10,
+  },
+  streamTitle: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    marginBottom: 3,
+  },
+  viewerCount: {
+    fontSize: 10,
+    marginBottom: 3,
+  },
+  streamThumbnail: {
+    width: 80,
+    height: 45,
+    marginLeft: 10,
+  },
+  logoutButton: {
+    backgroundColor: '#3498db',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  logoutButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+});
+
   
   export default LiveScreen;
   

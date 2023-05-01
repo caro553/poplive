@@ -90,7 +90,7 @@ export default function TopBar() {
 
 
 
-            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("AlaUne")}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Abonnement")}>
               <Image source={require('./acceuil.png')} style={styles.logomenu} />
             </TouchableOpacity>
             <Text style={styles.textMenu}> Premium </Text>
