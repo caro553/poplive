@@ -6,11 +6,11 @@ import {
   TextInput,
   TouchableOpacity,
   StatusBar,
-  Image
+  Image,
+  Alert,
 } from 'react-native';
-import firebase from "./firebaseConfig";
+import firebase from './firebaseConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Alert } from 'react-native';
 
 const Connexion = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -21,92 +21,91 @@ const Connexion = ({ navigation }) => {
 
   const getUsernameAndUserId = async () => {
     const user = firebase.auth().currentUser;
-
+  
     if (!user) {
-      throw new Error("User not found");
+      throw new Error('User not found');
     }
-
+  
     const userDoc = await firebase
       .firestore()
-      .collection("test_users")
+      .collection('test_users')
       .doc(user.uid)
       .get();
-
+  
     const userData = userDoc.data();
-    await AsyncStorage.setItem("userId", user.uid);
-    await AsyncStorage.setItem("username", userData.username);
-    await AsyncStorage.setItem("isPremium", userData.isPremium ? "true" : "false");
+    await AsyncStorage.setItem('userId', user.uid);
+    await AsyncStorage.setItem('username', userData.username);
+    await AsyncStorage.setItem('isPremium', userData.isPremium ? 'true' : 'false');
     setIsPremium(userData.isPremium);
-
-    console.log("Retour depuis getUsernameAndUserId :", {
+  
+    console.log('Retour depuis getUsernameAndUserId :', {
       userId: user.uid,
       username: userData.username,
       isPremium: userData.isPremium,
     });
-    return { userId: user.uid, username: userData.username };
+    
+    return {
+      userId: user.uid,
+      username: userData.username,
+      isPremium: userData.isPremium,
+    };
   };
   
+
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
         try {
           const { userId, username } = await getUsernameAndUserId();
-          navigation.navigate("AlaUne", { userId, username });
+          navigation.navigate('AlaUne', { userId, username });
         } catch (error) {
-          console.log("Erreur lors de la récupération de l'utilisateur :", error);
+          console.log('Erreur lors de la récupération de l\'utilisateur :', error);
         }
       }
     });
 
     return unsubscribe;
   }, [navigation]);
-  
-  const saveUsername = async (userId, username) => {
-    await AsyncStorage.setItem('userId', userId);
-    await AsyncStorage.setItem('username', username);
-  };
-  
+
   const handleLogin = async () => {
     try {
-      const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
-      console.log("Connexion réussie");
+      await firebase.auth().signInWithEmailAndPassword(email, password);
+      console.log('Connexion réussie');
+      const { userId, username, isPremium } = await getUsernameAndUserId();
   
-      // Vérifier si l'utilisateur est premium
-      const userDoc = await firebase.firestore().collection("test_users").doc(userCredential.user.uid).get();
-      const userData = userDoc.data();
-      const isPremium = userData?.isPremium || false;
-  
-      // Vérifier si un nom d'utilisateur Twitch a été saisi sans être premium
-      if (!isPremium && twitchUsername.trim().length > 0) {
-        Alert.alert('Erreur', 'Vous devez être premium pour ajouter votre nom d\'utilisateur Twitch.');
-        return;
+      if (isPremium) {
+        Alert.prompt(
+          'Nom d\'utilisateur Twitch',
+          'Veuillez entrer votre nom d\'utilisateur Twitch:',
+          [
+            {
+              text: 'Annuler',
+              style: 'cancel',
+            },
+            {
+              text: 'OK',
+              onPress: (twitchUsername) => {
+                if (twitchUsername) {
+                  setTwitchUsername(twitchUsername);
+                  navigation.navigate('AlaUne', { userId, username });
+                } else {
+                  setErrorMessage("Veuillez entrer votre nom d'utilisateur Twitch");
+                }
+              },
+            },
+          ],
+          'plain-text',
+        );
+      } else {
+        navigation.navigate('AlaUne', { userId, username });
       }
-  
-      if (isPremium && !twitchUsername) {
-        // Afficher un message d'erreur si l'utilisateur est premium mais n'a pas ajouté de nom d'utilisateur Twitch
-        Alert.alert('Erreur', 'Veuillez ajouter votre nom d\'utilisateur Twitch.');
-        return;
-      }
-  
-      getUsernameAndUserId()
-        .then((result) => {
-          console.log(
-            `userId et username récupérés depuis Firestore : ${result.userId} ${result.username}`
-          );
-          navigation.navigate("AlaUne", {
-            userId: result.userId,
-            username: result.username,
-          });
-        })
-        .catch((error) => {
-          console.log("Erreur lors de la récupération de l'userId et du username :", error);
-        });
     } catch (error) {
       console.log(error);
       setErrorMessage(error.message);
     }
   };
   
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -132,10 +131,12 @@ const Connexion = ({ navigation }) => {
           placeholder="Mot de passe"
           placeholderTextColor="rgba(255,255,255,0.7)"
           secureTextEntry
+          autoCapitalize="none"
+          autoCorrect={false}
           value={password}
           onChangeText={setPassword}
         />
-        {isPremium ? (
+        {isPremium && (
           <TextInput
             style={styles.input}
             placeholder="Nom d'utilisateur Twitch"
@@ -145,68 +146,64 @@ const Connexion = ({ navigation }) => {
             value={twitchUsername}
             onChangeText={setTwitchUsername}
           />
-        ) : (
-          <View>
-            <TextInput
-              style={styles.input}
-              placeholder="Nom d'utilisateur Twitch"
-              placeholderTextColor="rgba(255,255,255,0.7)"
-              autoCapitalize="none"
-              autoCorrect={false}
-              value={twitchUsername}
-              onChangeText={setTwitchUsername}
-            />
-            <Text style={styles.errorMessage}>
-              Vous devez être premium pour ajouter votre nom d'utilisateur Twitch.
-            </Text>
-          </View>
         )}
         <TouchableOpacity style={styles.buttonContainer} onPress={handleLogin}>
           <Text style={styles.buttonText}>CONNEXION</Text>
         </TouchableOpacity>
+        {errorMessage && (
+          <Text style={styles.errorMessage}>{errorMessage}</Text>
+        )}
       </View>
     </View>
   );
-  
 };
+
+// ... rest of the code (styles and export)
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#6441A4', // nouvelle couleur de fond correspondant à la couleur de Twitch
-    justifyContent: 'center', // Center the content vertically
-  },
-  logoContainer: {
-    position: 'absolute', // Position the logo container absolutely
-    top: 40, // Add some spacing from the top
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-  },
-  logo: {
-    width: 150,
-    height: 100,
-  },
-  formContainer: {
-    paddingHorizontal: 30, // Add horizontal padding for better input alignment
-  },
-  input: {
-    height: 40,
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    marginBottom: 20,
-    color: '#FFF',
-    paddingHorizontal: 10,
-    borderRadius: 4, // Add border radius for a rounded input field
-  },
-  buttonContainer: {
-    backgroundColor: '#9146FF', // Twitch's purple color
-    paddingVertical: 15,
-    borderRadius: 4, // Add border radius for a rounded button
-  },
-  buttonText: {
-    textAlign: 'center',
-    color: '#FFFFFF',
-    fontWeight: '700',
-  },
+container: {
+  flex: 1,
+  backgroundColor: '#6441A4',
+  justifyContent: 'center',
+},
+logoContainer: {
+  position: 'absolute',
+  top: 40,
+  left: 0,
+  right: 0,
+  alignItems: 'center',
+},
+logo: {
+  width: 150,
+  height: 100,
+},
+formContainer: {
+  paddingHorizontal: 30,
+},
+input: {
+  height: 40,
+  backgroundColor: 'rgba(255,255,255,0.1)',
+  marginBottom: 20,
+  color: '#FFF',
+  paddingHorizontal: 10,
+  borderRadius: 4,
+},
+buttonContainer: {
+  backgroundColor: '#9146FF',
+  paddingVertical: 15,
+  borderRadius: 4,
+},
+buttonText: {
+  textAlign: 'center',
+  color: '#FFFFFF',
+  fontWeight: '700',
+},
+errorMessage: {
+  color: 'red',
+  marginTop: 10,
+  textAlign: 'center',
+},
 });
 
 export default Connexion;
+
