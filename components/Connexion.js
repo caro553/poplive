@@ -18,30 +18,31 @@ const Connexion = ({ navigation }) => {
   const [twitchUsername, setTwitchUsername] = useState('');
 
 
-  const getUsernameAndUserId = async () => {
-    const user = firebase.auth().currentUser;
-  
-    if (!user) {
-      throw new Error("User not found");
-    }
-  
-    const userDoc = await firebase
-      .firestore()
-      .collection("test_users")
-      .doc(user.uid)
-      .get();
-  
-    const userData = userDoc.data();
-    await AsyncStorage.setItem("userId", user.uid);
-    await AsyncStorage.setItem("username", userData.twitchUsername);
-    await AsyncStorage.setItem("isPremium", userData.isPremium ? "true" : "false");
-  
-    console.log("Retour depuis getUsernameAndUserId :", {
-      userId: user.uid,
-      username: userData.twitchUsername,
-    });
-    return { userId: user.uid, username: userData.twitchUsername };
-  };
+const getUsernameAndUserId = async () => {
+  const user = firebase.auth().currentUser;
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const userDoc = await firebase
+    .firestore()
+    .collection("test_users")
+    .doc(user.uid)
+    .get();
+
+  const userData = userDoc.data();
+  await AsyncStorage.setItem("userId", user.uid);
+  await AsyncStorage.setItem("username", userData.username); // Utilisez 'username' au lieu de 'twitchUsername'
+  await AsyncStorage.setItem("isPremium", userData.isPremium ? "true" : "false");
+
+  console.log("Retour depuis getUsernameAndUserId :", {
+    userId: user.uid,
+    username: userData.username,
+  });
+  return { userId: user.uid, username: userData.username };
+};
+
   
   const saveUsername = async (userId, username) => { // Ajoutez 'username' comme paramètre
     await AsyncStorage.setItem('userId', userId);
@@ -57,12 +58,10 @@ const Connexion = ({ navigation }) => {
       .signInWithEmailAndPassword(email, password)
       .then(async (userCredential) => {
         console.log("Connexion réussie");
-        const user = userCredential.user;
-        await AsyncStorage.setItem('username', twitchUsername);
         getUsernameAndUserId()
           .then((result) => {
             console.log(
-              `userId et username récupérés depuis AsyncStorage : ${result.userId} ${result.username}`
+              `userId et username récupérés depuis Firestore : ${result.userId} ${result.username}`
             );
             navigation.navigate("AlaUne", {
               userId: result.userId,
