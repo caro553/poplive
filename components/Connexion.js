@@ -63,15 +63,17 @@ const Connexion = ({ navigation }) => {
         },
         {
           text: 'OK',
-          onPress: (twitchUsername) => {
+          onPress: async (twitchUsername) => {
             if (twitchUsername) {
               setTwitchUsername(twitchUsername);
+              await AsyncStorage.setItem('twitch_username', twitchUsername);
               navigation.navigate('AlaUne', { userId, username });
             } else {
               setErrorMessage("Veuillez entrer votre nom d'utilisateur Twitch");
             }
           },
         },
+        
       ],
       'plain-text',
     );
@@ -104,17 +106,20 @@ const Connexion = ({ navigation }) => {
       console.log('Connexion réussie');
       const { userId, username } = await getUsernameAndUserId();
       const isUserPremium = await AsyncStorage.getItem('isPremium') === 'true';
+      const twitchUsername = await AsyncStorage.getItem('twitch_username');
   
       if (isUserPremium) {
         showTwitchUsernamePrompt(userId, username); // Appelez la fonction ici
       } else {
-        navigation.navigate('AlaUne', { userId, username });
+        navigation.navigate('LiveScreen', { userId, username, twitchUsername });
       }
     } catch (error) {
       console.log(error);
       setErrorMessage(error.message);
     }
   };
+  
+  
   
   
   return (

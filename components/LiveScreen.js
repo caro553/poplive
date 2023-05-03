@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firebase from "./firebaseConfig";
-
+import TopBar from './TopBar';
+import BottomBar from './BottomBar';
 const { width } = Dimensions.get('window');
 
 const LiveScreen = ({ route, navigation }) => {
@@ -29,7 +30,7 @@ const LiveScreen = ({ route, navigation }) => {
   useEffect(() => {
     const unsubscribe = firebase
       .firestore()
-      .collection('test_users')
+      .collection("test_users")
       .onSnapshot((querySnapshot) => {
         const usersData = {};
         querySnapshot.forEach((doc) => {
@@ -78,25 +79,31 @@ const LiveScreen = ({ route, navigation }) => {
       try {
         const username = await AsyncStorage.getItem('username');
         const userId = await AsyncStorage.getItem('userId');
+        const twitch_username = await AsyncStorage.getItem('twitch_username');
     
-        if (!username || !userId) {
-          throw new Error('Username or userId is not available in AsyncStorage');
+        console.log('username:', username);
+        console.log('userId:', userId);
+        console.log('twitch_username:', twitch_username);
+    
+        if (!username || !userId || !twitch_username) {
+          throw new Error('Username, userId, or twitch_username is not available in AsyncStorage');
         }
     
         // Vérifiez si l'utilisateur existe déjà dans la liste des utilisateurs
         if (!users.hasOwnProperty(username)) {
           // Ajoutez l'utilisateur à Firestore s'il n'existe pas déjà
           const userRef = firebase.firestore().collection('test_users').doc(userId);
-          await userRef.set({ userId, username });
+          await userRef.set({ userId, twitch_username });
         }
-        
     
-        return { username, userId };
+        return { username, userId, twitch_username };
       } catch (error) {
         console.error('Error while getting username and userId from AsyncStorage:', error);
         throw error;
       }
     }
+    
+    
     
     async function storeLiveStreamInfo(userId, streamData) {
       try {
@@ -120,9 +127,9 @@ const LiveScreen = ({ route, navigation }) => {
       }
     }
     
-    async function checkIfUserIsLive(username, userId) {
+    async function checkIfUserIsLive(twitch_username, userId) {
       const response = await fetch(
-        `https://api.twitch.tv/helix/streams?user_login=${username}`,
+        `https://api.twitch.tv/helix/streams?user_login=${twitch_username}`,
         {
           headers: {
             'Client-ID': clientId,
@@ -229,16 +236,16 @@ async function loadAllUsers() {
     
     
 getUsernameAndUserId()
-  .then(({ username, userId }) => {
-    setTwitchUsername(username);
-    console.log("username récupéré depuis AsyncStorage :", username);
+  .then(({ username, userId, twitch_username }) => {
+    setTwitchUsername(twitch_username);
+    console.log("twitch_username récupéré depuis AsyncStorage :", twitch_username);
 
     if (!oauthToken) {
       return;
     }
-
-    checkIfUserIsLive(username, userId)
-      .then((isLive) => {
+    
+    checkIfUserIsLive(twitch_username, userId)
+    .then((isLive) => {
         console.log("checkIfUserIsLive appelé");
 
         fetchUserProfileImage(username)
@@ -277,49 +284,47 @@ getUsernameAndUserId()
 }, [oauthToken]);
 
   
-  return (
-    <View style={styles.container}>
-      
-      {Object.entries(users)
-        .filter(([_, userInfo]) => userInfo.isLive)
-        .map(([username, userInfo]) => (
-          <View key={username} style={styles.streamerRectangle}>
-            {userInfo.profileImage && (
-              <Image
-                source={{ uri: userInfo.profileImage }}
-                style={styles.profileImage}
-              />
-            )}
-            <View style={styles.middleContent}>
-              <Text style={styles.username}>{username}</Text>
-              {userInfo.isLive ? (
-                <>
-                  <Text style={styles.streamTitle}>{userInfo.streamTitle}</Text>
-                  <Text style={styles.viewerCount}>
-                    Nombre de vues: {userInfo.viewerCount}
-                  </Text>
-                </>
-              ) : (
-                <Text>L'utilisateur n'est pas en direct.</Text>
-              )}
-            </View>
-            {userInfo.isLive && userInfo.streamThumbnailUrl && (
-              <Image
-                source={{ uri: userInfo.streamThumbnailUrl }}
-                style={styles.streamThumbnail}
-              />
-            )}
-          </View>
-        ))}
-      <TouchableOpacity
-        style={styles.logoutButton}
-        onPress={() => navigation.navigate('Connexion')}
-      >
-        <Text style={styles.logoutButtonText}>Déconnexion</Text>
-      </TouchableOpacity>
+return (
+  <View style={styles.container}>
+    <View style={styles.topBar}>
+      <TopBar />
     </View>
-  );
-  
+    <BottomBar />
+    {Object.entries(users)
+      .filter(([_, userInfo]) => userInfo.isLive)
+      .map(([username, userInfo]) => (
+        <View key={username} style={styles.streamerRectangle}>
+          {userInfo.profileImage && (
+            <Image
+              source={{ uri: userInfo.profileImage }}
+              style={styles.profileImage}
+            />
+          )}
+         <View style={styles.middleContent}>
+  <Text style={styles.username}>{userInfo.twitch_username}</Text> 
+  {userInfo.isLive ? (
+    <>
+      <Text style={styles.streamTitle}>{userInfo.streamTitle}</Text>
+      <Text style={styles.viewerCount}>
+        Nombre de vues: {userInfo.viewerCount}
+      </Text>
+    </>
+  ) : (
+    <Text>L'utilisateur n'est pas en direct.</Text>
+  )}
+</View>
+
+          {userInfo.isLive && userInfo.streamThumbnailUrl && (
+            <Image
+              source={{ uri: userInfo.streamThumbnailUrl }}
+              style={styles.streamThumbnail}
+            />
+          )}
+        </View>
+      ))}
+
+  </View>
+);
 
 };
 
@@ -330,6 +335,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#6441A4', // nouvelle couleur de fond correspondant à la couleur de Twitch
   },
   streamerRectangle: {
     flexDirection: 'row',
@@ -341,7 +347,9 @@ const styles = StyleSheet.create({
     margin: 10,
     width: width * 0.9,
     height: 100,
+    backgroundColor: 'white', // L'arrière-plan du rectangle est maintenant tout blanc
   },
+  
   leftContent: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -385,6 +393,16 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  topBar: {
+    backgroundColor: '#5f5f5f',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
