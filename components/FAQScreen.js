@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import TopBar from './TopBar';
 import BottomBar from './BottomBar';
-import { View, Text, StyleSheet, ScrollView, Button, Modal, Image} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Button, Modal, Image, LinearGradient} from 'react-native';
 
 const FAQScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -21,27 +21,16 @@ const FAQScreen = () => {
     <View style={styles.topBar}>
     <TopBar />
 
-    <Image source={require('./faq_img.png')} style={styles.icon2} />
+  
 
 
     <View style={styles.nouscontacter}>
-      <Button title="Nous contacter"
+      <Button title="Nous contacter"></Button>
+    </View>
 
-    ></Button>
 
-</View>
 
-      <View style={styles.buttonContainer}>
-        <View style={{width: '95%', top:240,height:50, borderRadius: 100, backgroundColor: 'white'}}>
-          <Button 
-            title="Quel est le but de cette application ?" 
-            onPress={() => setModalVisible(true)}
-            color="black"
-          />
-              <Image source={require('./triangle.png')} style={styles.icon} />
-        </View>
-
-      </View>
+    
   
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalContainer}>
@@ -60,14 +49,14 @@ const FAQScreen = () => {
 
 
             
-      <View style={styles.buttonContainer}>
-        <View style={{width: '95%', top:260,height:50, borderRadius: 100, backgroundColor: 'white'}}>
+       <View style={styles.buttonContainer}>
+        <View style={{width: '95%', top:240,height:40, borderRadius: 100, backgroundColor: 'white'}}>
           <Button 
             title="Quel est le but de cette application ?" 
             onPress={() => setModalVisible(true)}
             color="black"
           />
-              <Image source={require('./triangle.png')} style={styles.icon} />
+              <Image source={require('./polygone.png')} style={styles.icon} />
         </View>
 
       </View>
@@ -85,13 +74,13 @@ const FAQScreen = () => {
 
             
       <View style={styles.buttonContainer}>
-        <View style={{width: '95%', top:280,height:50, borderRadius: 100, backgroundColor: 'white'}}>
+        <View style={{width: '95%', top:265,height:40, borderRadius: 100, backgroundColor: 'white'}}>
           <Button 
             title="Quel est le but de cette application ?" 
             onPress={() => setModalVisible(true)}
             color="black"
           />
-              <Image source={require('./triangle.png')} style={styles.icon} />
+              <Image source={require('./polygone.png')} style={styles.icon} />
         </View>
 
       </View>
@@ -110,13 +99,79 @@ const FAQScreen = () => {
 
 
       <View style={styles.buttonContainer}>
-        <View style={{width: '95%', top:300,height:50, borderRadius: 100, backgroundColor: 'white'}}>
+        <View style={{width: '95%', top:290,height:40, borderRadius: 100, backgroundColor: 'white'}}>
           <Button 
             title="Quel est le but de cette application ?" 
             onPress={() => setModalVisible(true)}
             color="black"
           />
-              <Image source={require('./triangle.png')} style={styles.icon} />
+               <Image source={require('./polygone.png')} style={styles.icon} />
+        </View>
+
+      </View>
+  
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modal}>
+            <Text style={styles.modalTitle}>Quel est le but de cette application ?</Text>
+            <Text style={styles.modalText}>Cette application est conçue pour fournir aux utilisateurs les dernières nouvelles et mises à jour dans le monde du stream et d'améliorer leur référencements.</Text>
+            <Button title="Fermer" onPress={() => setModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
+
+      <View style={styles.buttonContainer}>
+        <View style={{width: '95%', top:315,height:40, borderRadius: 100, backgroundColor: 'white'}}>
+          <Button 
+            title="Quel est le but de cette application ?" 
+            onPress={() => setModalVisible(true)}
+            color="black"
+          />
+               <Image source={require('./polygone.png')} style={styles.icon} />
+        </View>
+
+      </View>
+  
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modal}>
+            <Text style={styles.modalTitle}>Quel est le but de cette application ?</Text>
+            <Text style={styles.modalText}>Cette application est conçue pour fournir aux utilisateurs les dernières nouvelles et mises à jour dans le monde du stream et d'améliorer leur référencements.</Text>
+            <Button title="Fermer" onPress={() => setModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
+
+      <View style={styles.buttonContainer}>
+        <View style={{width: '95%', top:340,height:40, borderRadius: 100, backgroundColor: 'white'}}>
+          <Button 
+            title="Quel est le but de cette application ?" 
+            onPress={() => setModalVisible(true)}
+            color="black"
+          />
+               <Image source={require('./polygone.png')} style={styles.icon} />
+        </View>
+
+      </View>
+  
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modal}>
+            <Text style={styles.modalTitle}>Quel est le but de cette application ?</Text>
+            <Text style={styles.modalText}>Cette application est conçue pour fournir aux utilisateurs les dernières nouvelles et mises à jour dans le monde du stream et d'améliorer leur référencements.</Text>
+            <Button title="Fermer" onPress={() => setModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
+
+      <View style={styles.buttonContainer}>
+        <View style={{width: '95%', top:365,height:40, borderRadius: 100, backgroundColor: 'white'}}>
+          <Button 
+            title="Quel est le but de cette application ?" 
+            onPress={() => setModalVisible(true)}
+            color="black"
+          />
+               <Image source={require('./polygone.png')} style={styles.icon} />
         </View>
 
       </View>
@@ -146,6 +201,7 @@ const FAQScreen = () => {
 
 
 const styles = StyleSheet.create({
+
   nouscontacter: {
     /* Ajouter une hauteur et une largeur pour l'élément */
     height: 50,
