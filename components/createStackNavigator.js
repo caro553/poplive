@@ -6,6 +6,7 @@ import Bestof from './Bestof';
 import Compte from './Compte';
 import Connexion from './Connexion';
 import FAQScreen from './FAQScreen';
+import ProfilStreamer from './ProfilStreamer';
 
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
@@ -23,6 +24,8 @@ export default function App() {
         <Stack.Screen name="Compte" component={Compte} />
         <Stack.Screen name="Connexion" component={Connexion} />
         <Stack.Screen name="FAQ" component={FAQScreen} />
+        <Stack.Screen name="ProfilStreamer" component={ProfilStreamer} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

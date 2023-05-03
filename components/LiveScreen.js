@@ -11,9 +11,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import firebase from "./firebaseConfig";
 import TopBar from './TopBar';
 import BottomBar from './BottomBar';
+import { useNavigation } from '@react-navigation/native';
+
 const { width } = Dimensions.get('window');
 
-const LiveScreen = ({ route, navigation }) => {
+const LiveScreen = ({ route }) => {
   console.log('LiveScreen component mounted');
   const [isLive, setIsLive] = useState(false);
   const [streamTitle, setStreamTitle] = useState('');
@@ -26,6 +28,7 @@ const LiveScreen = ({ route, navigation }) => {
   const [oauthToken, setOAuthToken] = useState(null);
   const [users, setUsers] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const unsubscribe = firebase
@@ -293,36 +296,40 @@ return (
     {Object.entries(users)
       .filter(([_, userInfo]) => userInfo.isLive)
       .map(([username, userInfo]) => (
-        <View key={username} style={styles.streamerRectangle}>
-          {userInfo.profileImage && (
-            <Image
-              source={{ uri: userInfo.profileImage }}
-              style={styles.profileImage}
-            />
-          )}
-         <View style={styles.middleContent}>
-  <Text style={styles.username}>{userInfo.twitch_username}</Text> 
-  {userInfo.isLive ? (
-    <>
-      <Text style={styles.streamTitle}>{userInfo.streamTitle}</Text>
-      <Text style={styles.viewerCount}>
-        Nombre de vues: {userInfo.viewerCount}
-      </Text>
-    </>
-  ) : (
-    <Text>L'utilisateur n'est pas en direct.</Text>
-  )}
-</View>
+        <TouchableOpacity
+          key={username}
+          onPress={() => navigation.navigate("ProfilStreamer", { streamerUsername: userInfo.twitch_username, streamerData: userInfo })}
+          >
+          <View style={styles.streamerRectangle}>
+            {userInfo.profileImage && (
+              <Image
+                source={{ uri: userInfo.profileImage }}
+                style={styles.profileImage}
+              />
+            )}
+            <View style={styles.middleContent}>
+              <Text style={styles.username}>{userInfo.twitch_username}</Text>
+              {userInfo.isLive ? (
+                <>
+                  <Text style={styles.streamTitle}>{userInfo.streamTitle}</Text>
+                  <Text style={styles.viewerCount}>
+                    Nombre de vues: {userInfo.viewerCount}
+                  </Text>
+                </>
+              ) : (
+                <Text>L'utilisateur n'est pas en direct.</Text>
+              )}
+            </View>
 
-          {userInfo.isLive && userInfo.streamThumbnailUrl && (
-            <Image
-              source={{ uri: userInfo.streamThumbnailUrl }}
-              style={styles.streamThumbnail}
-            />
-          )}
-        </View>
+            {userInfo.isLive && userInfo.streamThumbnailUrl && (
+              <Image
+                source={{ uri: userInfo.streamThumbnailUrl }}
+                style={styles.streamThumbnail}
+              />
+            )}
+          </View>
+        </TouchableOpacity>
       ))}
-
   </View>
 );
 

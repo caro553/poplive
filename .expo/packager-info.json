@@ -1,1 +1,9 @@
-{}
+{
+  "expoServerNgrokUrl": "https://cn-pmz.caro-vkc.poplive.exp.direct",
+  "packagerNgrokUrl": "https://cn-pmz.caro-vkc.poplive.exp.direct",
+  "ngrokPid": 28740,
+  "expoServerPort": 19000,
+  "packagerPort": 19000,
+  "packagerPid": null,
+  "webpackServerPort": null
+}
