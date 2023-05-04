@@ -6,10 +6,13 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  TextInput,
+  ScrollView 
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firebase from "./firebaseConfig";
-
+import TopBar from './TopBar';
+import BottomBar from './BottomBar';
 const { width } = Dimensions.get('window');
 
 const LiveScreen = ({ route, navigation }) => {
@@ -24,22 +27,32 @@ const LiveScreen = ({ route, navigation }) => {
   const [twitchUsername, setTwitchUsername] = useState('');
   const [oauthToken, setOAuthToken] = useState(null);
   const [users, setUsers] = useState({});
+// Exemple d'enregistrement du nom d'utilisateur et de l'ID utilisateur dans AsyncStorage
+async function storeUsernameAndUserId(username, userId) {
+  try {
+    await AsyncStorage.setItem('username', username);
+    await AsyncStorage.setItem('userId', userId);
+  } catch (error) {
+    console.error("Error storing username and userId in AsyncStorage:", error);
+  }
+}
 
   useEffect(() => {
+    // Charge les informations des utilisateurs en direct
     const unsubscribe = firebase
       .firestore()
       .collection('test_users')
-      .onSnapshot((querySnapshot) => {
+      .where('isLive', '==', true)
+      .onSnapshot(snapshot => {
         const usersData = {};
-        querySnapshot.forEach((doc) => {
+        snapshot.forEach(doc => {
           usersData[doc.id] = doc.data();
         });
         setUsers(usersData);
       });
-  
-    return () => {
-      unsubscribe();
-    };
+
+    // Se désabonner lors de la fermeture du composant
+    return () => unsubscribe();
   }, []);
   
   
@@ -73,29 +86,26 @@ const LiveScreen = ({ route, navigation }) => {
   }, []);
 
   useEffect(() => {
-    async function getUsernameAndUserId() {
-      try {
-        const username = await AsyncStorage.getItem('username');
-        const userId = await AsyncStorage.getItem('userId');
-    
-        if (!username || !userId) {
-          throw new Error('Username or userId is not available in AsyncStorage');
-        }
-    
-        // Vérifiez si l'utilisateur existe déjà dans la liste des utilisateurs
-        if (!users.hasOwnProperty(username)) {
-          // Ajoutez l'utilisateur à Firestore s'il n'existe pas déjà
-          const userRef = firebase.firestore().collection('test_users').doc(userId);
-          await userRef.set({ userId, username });
-        }
-        
-    
-        return { username, userId };
-      } catch (error) {
-        console.error('Error while getting username and userId from AsyncStorage:', error);
-        throw error;
-      }
+    const getUsernameAndUserId = async () => {
+  try {
+    const userId = await AsyncStorage.getItem("userId");
+    const username = await AsyncStorage.getItem("username");
+
+    console.log("Données récupérées depuis AsyncStorage :");
+    console.log("userId :", userId);
+    console.log("username :", username);
+
+    if (!userId || !username) {
+      throw new Error("Username or userId is not available in AsyncStorage");
     }
+
+    return { userId, username };
+  } catch (error) {
+    console.error("Error while getting username and userId from AsyncStorage:", error);
+    throw error;
+  }
+};
+
     
     async function storeLiveStreamInfo(userId, streamData) {
       try {
@@ -114,6 +124,7 @@ const LiveScreen = ({ route, navigation }) => {
         console.error('Error storing stream information to Firestore:', error);
       }
     }
+    
     
     async function updateUserIsLive(userId, isLive) {
       try {
@@ -258,48 +269,60 @@ getUsernameAndUserId().then(({ username, userId }) => {
   
   return (
     <View style={styles.container}>
-      {Object.entries(users)
-        .filter(([_, userInfo]) => userInfo.isLive)
-        .map(([username, userInfo]) => (
-          <View key={username} style={styles.streamerRectangle}>
-            {userInfo.profileImage && (
-              <Image
-                source={{ uri: userInfo.profileImage }}
-                style={styles.profileImage}
-              />
-            )}
-            <View style={styles.middleContent}>
-              <Text style={styles.username}>{username}</Text>
-              {userInfo.isLive ? (
-                <>
-                  <Text style={styles.streamTitle}>{userInfo.streamTitle}</Text>
-                  <Text style={styles.viewerCount}>
-                    Nombre de vues: {userInfo.viewerCount}
-                  </Text>
-                </>
-              ) : (
-                <Text>L'utilisateur n'est pas en direct.</Text>
+        <View style={styles.topBar}>
+        <TopBar />
+      </View>
+            <BottomBar />
+      <ScrollView>
+        {Object.entries(users)
+          .filter(([_, userInfo]) => userInfo.isLive)
+          .map(([username, userInfo]) => (
+            <View key={username} style={styles.streamerRectangle}>
+              {userInfo.profileImage && (
+                <Image
+                  source={{ uri: userInfo.profileImage }}
+                  style={styles.profileImage}
+                />
+              )}
+              <View style={styles.middleContent}>
+                <Text style={styles.username}>{username}</Text>
+                {userInfo.isLive ? (
+                  <>
+                    <Text style={styles.streamTitle}>{userInfo.streamTitle}</Text>
+                    <Text style={styles.viewerCount}>
+                      Nombre de vues: {userInfo.viewerCount}
+                    </Text>
+                  </>
+                ) : (
+                  <Text>L'utilisateur n'est pas en direct.</Text>
+                )}
+              </View>
+              {userInfo.isLive && userInfo.streamThumbnailUrl && (
+                <Image
+                  source={{ uri: userInfo.streamThumbnailUrl }}
+                  style={styles.streamThumbnail}
+                />
               )}
             </View>
-            {userInfo.isLive && userInfo.streamThumbnailUrl && (
-              <Image
-                source={{ uri: userInfo.streamThumbnailUrl }}
-                style={styles.streamThumbnail}
-              />
-            )}
-          </View>
-        ))}
-      <TouchableOpacity
-        style={styles.logoutButton}
-        onPress={() => navigation.navigate('Connexion')}
-      >
-        <Text style={styles.logoutButtonText}>Déconnexion</Text>
-      </TouchableOpacity>
+          ))}
+      </ScrollView>
+      <View style={styles.bottomContainer}>
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={() => navigation.navigate('Connexion')}
+        >
+          <Text style={styles.logoutButtonText}>Déconnexion</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.updateUsernameButton}
+          onPress={() => navigation.navigate('ModifierUsername')}
+        >
+          <Text style={styles.updateUsernameButtonText}>Modifier mon nom d'utilisateur</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
-  
-
-};
+}
 
 
 const styles = StyleSheet.create({
@@ -308,6 +331,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#6441A4', // nouvelle couleur de fond correspondant à la couleur de Twitch
   },
   streamerRectangle: {
     flexDirection: 'row',
@@ -319,6 +343,7 @@ const styles = StyleSheet.create({
     margin: 10,
     width: width * 0.9,
     height: 100,
+    backgroundColor: '#fff',
   },
   leftContent: {
     alignItems: 'center',

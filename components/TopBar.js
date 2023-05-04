@@ -13,13 +13,18 @@ import { StatusBar } from "react-native";
 
 export default function TopBar() {
   const navigation = useNavigation();
+  const [profileImageTopBarUrl, setProfileImageTopBarUrl] = useState("");
+  const [topBarImageUrl, setTopBarImageUrl] = useState("");
 
   const [showMenu, setShowMenu] = useState(false);
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
-
+  const handleLoadTopBarImage = (url) => {
+    setTopBarImageUrl(url);
+  };
+  
   const handlePage1 = () => {
     // Ajouter l'action à effectuer lorsqu'on clique sur l'icône de la page 1
   };
@@ -44,7 +49,15 @@ export default function TopBar() {
           />
         </TouchableOpacity>
       </View>
-      <Image source={require("./logo.png")} style={styles.logo} />
+      <Image
+  source={
+    topBarImageUrl
+      ? { uri: topBarImageUrl }
+      : require("./logo.png")
+  }
+  style={styles.logo}
+/>
+
       <View style={styles.profileContainer}>
         <TouchableOpacity
           style={styles.logoContainer}
@@ -269,4 +282,11 @@ const styles = StyleSheet.create({
     top:25,
     left:30,
   },
+  topBarProfileImage: {
+    width: 35,
+    height: 35,
+    borderRadius: 17.5,
+    marginRight: 10,
+  },
+  
 });

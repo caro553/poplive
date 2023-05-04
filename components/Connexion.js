@@ -76,18 +76,6 @@ const Connexion = ({ navigation }) => {
       const userData = userDoc.data();
       const isPremium = userData?.isPremium || false;
   
-      // Vérifier si un nom d'utilisateur Twitch a été saisi sans être premium
-      if (!isPremium && twitchUsername.trim().length > 0) {
-        Alert.alert('Erreur', 'Vous devez être premium pour ajouter votre nom d\'utilisateur Twitch.');
-        return;
-      }
-  
-      if (isPremium && !twitchUsername) {
-        // Afficher un message d'erreur si l'utilisateur est premium mais n'a pas ajouté de nom d'utilisateur Twitch
-        Alert.alert('Erreur', 'Veuillez ajouter votre nom d\'utilisateur Twitch.');
-        return;
-      }
-  
       getUsernameAndUserId()
         .then((result) => {
           console.log(
@@ -106,6 +94,7 @@ const Connexion = ({ navigation }) => {
       setErrorMessage(error.message);
     }
   };
+  
   
   return (
     <View style={styles.container}>

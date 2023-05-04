@@ -142,6 +142,7 @@ if (!firebase.apps.length) {
     const url = await AsyncStorage.getItem("profileImageUrl");
     if (url) {
       setProfileImageUrl(url);
+      setProfileImageTopBarUrl(url); // Ajouter cette ligne
     }
   };
 
