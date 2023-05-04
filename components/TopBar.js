@@ -35,30 +35,18 @@ export default function TopBar() {
   return (
     <View style={styles.container}>
       <View style={styles.burgerContainer}>
-        <TouchableOpacity onPress={toggleMenu}>
-          <Ionicons
-            name="menu"
-            size={50}
-            color="white"
-            style={styles.menuIcon}
-          />
-        </TouchableOpacity>
-      </View>
-      <Image source={require("./logo.png")} style={styles.logo} />
-      <View style={styles.profileContainer}>
-        <TouchableOpacity
-          style={styles.logoContainer}
-          onPress={() => navigation.navigate("Compte")}
-        >
-          <Ionicons
-            name="person"
-            size={50}
-            color="white"
-            style={styles.profileIcon}
-          />
-        </TouchableOpacity>
-      </View>
-
+      <TouchableOpacity onPress={toggleMenu}>
+    <Ionicons
+      name="person"
+      size={50}
+      color="white"
+      style={styles.profileIcon}
+    />
+  </TouchableOpacity>
+  <View style={styles.logoContainer}>
+    <Image source={require("./logo_top_menu.png")} />
+  </View>
+  </View>
       <Modal
         animationType="fade"
         visible={showMenu}
@@ -68,7 +56,7 @@ export default function TopBar() {
 
         <TouchableOpacity style={styles.menuOverlay} onPress={toggleMenu}>
           <View style={styles.menuContainer}>
-          <Image source={require('./logo.png')} style={styles.logo1} />
+          <Image source={require('./logo_top_menu.png')} style={styles.logo1} />
           <Image source={require('./couronne.png')} style={styles.couronne} />
           <Image source={require('./demonslayer.jpg')} style={styles.logoducomte} />
           <Text style={styles.nomcompte} > NomDuCompte</Text>
@@ -78,15 +66,16 @@ export default function TopBar() {
 
 
           <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Compte")}>
-              <Image source={require('./acceuil.png')} style={styles.logomenu} />
+  
             </TouchableOpacity>
             <Text style={styles.textMenu} > Compte</Text>
 
 
             <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Compte")}>
               <Image source={require('./acceuil.png')} style={styles.logomenu} />
+              <Text style={styles.textMenu}> Profil</Text>
             </TouchableOpacity>
-            <Text style={styles.textMenu} > Profil</Text>
+
 
 
 
@@ -146,11 +135,23 @@ export default function TopBar() {
 }
 
 const styles = StyleSheet.create({
+
+  profileIcon: {
+    top:20,
+  },
+  logoContainer: {
+    flex: 1,
+    bottom:50,
+    left: 125,
+
+  },
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#6441a5",
-    height: 50,
+    backgroundColor: "#423083",
+    height: 78,
+    width:"100%",
+  
     paddingHorizontal: 16,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },

@@ -32,11 +32,9 @@ export default function Bestof() {
         <TopBar />
       </View>
 
-      <View style={styles.descriptionContainer} zIndex={0}>
-        <Text style={styles.descriptionText}>
+      <Text style={styles.title}>
           Best-OF
         </Text>
-      </View>
 
       <ScrollView style={styles.scrollView}>
         {videoData.map((video, index) => (
@@ -51,6 +49,9 @@ export default function Bestof() {
 <View style={styles.rectangle}>
   <Image style={styles.twitchImage} source={{ uri: video.thumbnail }} />
   <View style={styles.twitchTextContainer}>
+
+  <Text style={styles.name}>{video.channelTitle}</Text>
+
     <Text numberOfLines={2} style={[styles.twitchTitle, { fontWeight: 'bold' }]}>{video.title}</Text>
     <Text style={styles.twitchChannel}>{video.channelTitle}</Text>
   </View>
@@ -116,14 +117,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
   },
-  descriptionContainer: {
-    marginTop: 10,
-    paddingHorizontal: 20,
-  },
-  descriptionText: {
-    color: 'white',
-    textAlign: 'center',
-  },
+
 twitchContainer: {
   width: '90%',
   height: '20%',
@@ -143,18 +137,9 @@ profileContainer: {
   alignItems: 'center',
   marginRight: 10,
 },
-profileIcon: {
-  width: 30,
-  height: 30,
-},
-rectangleContainer: {
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginTop: 10,
-  overflow: 'hidden',
-},
-rectangle: {
+
+ 
+rectangle: { //interieur des recs blancs
   marginTop: 50,
   width: 170,
   height: 50,
@@ -173,8 +158,21 @@ icon: {
   height: 30,
 },
 videoImage: {
-  width: 70,
-  height: 70,
+  width: 160,
+  height: 99,
+  borderRadius: 20,
+},
+title:{
+  color:"white",
 },
 
+name:{
+  borderRadius: 3,
+  fontFamily: 'Calibri',
+  fontSize: 15,
+  textAlign: "center",
+  bottom:30,
+  fontWeight: "bold",
+  boxShadow: "0 0 4px rgba(75, 56, 142, 0.5",
+}
 });

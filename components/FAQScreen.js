@@ -16,10 +16,11 @@ const FAQScreen = () => {
 
   return (
     <View style={{height:1500,backgroundColor: '#6441a5',}}>
+       <TopBar />
       <ScrollView style={styles.scrollView}>
     <View style={styles.container}>
     <View style={styles.topBar}>
-    <TopBar />
+   
 
   
 
@@ -50,7 +51,7 @@ const FAQScreen = () => {
 
             
        <View style={styles.buttonContainer}>
-        <View style={{width: '95%', top:240,height:40, borderRadius: 100, backgroundColor: 'white'}}>
+        <View style={{width: '125%',right:35, top:240,height:40, borderRadius: 100, backgroundColor: 'white'}}>
           <Button 
             title="Quel est le but de cette application ?" 
             onPress={() => setModalVisible(true)}
@@ -74,7 +75,7 @@ const FAQScreen = () => {
 
             
       <View style={styles.buttonContainer}>
-        <View style={{width: '95%', top:265,height:40, borderRadius: 100, backgroundColor: 'white'}}>
+        <View style={{width: '125%',right:35, top:265,height:40, borderRadius: 100, backgroundColor: 'white'}}>
           <Button 
             title="Quel est le but de cette application ?" 
             onPress={() => setModalVisible(true)}
@@ -99,7 +100,7 @@ const FAQScreen = () => {
 
 
       <View style={styles.buttonContainer}>
-        <View style={{width: '95%', top:290,height:40, borderRadius: 100, backgroundColor: 'white'}}>
+        <View style={{width: '125%',right:35, top:290,height:40, borderRadius: 100, backgroundColor: 'white'}}>
           <Button 
             title="Quel est le but de cette application ?" 
             onPress={() => setModalVisible(true)}
@@ -121,7 +122,7 @@ const FAQScreen = () => {
       </Modal>
 
       <View style={styles.buttonContainer}>
-        <View style={{width: '95%', top:315,height:40, borderRadius: 100, backgroundColor: 'white'}}>
+        <View style={{width: '125%',right:35, top:315,height:40, borderRadius: 100, backgroundColor: 'white'}}>
           <Button 
             title="Quel est le but de cette application ?" 
             onPress={() => setModalVisible(true)}
@@ -143,7 +144,7 @@ const FAQScreen = () => {
       </Modal>
 
       <View style={styles.buttonContainer}>
-        <View style={{width: '95%', top:340,height:40, borderRadius: 100, backgroundColor: 'white'}}>
+        <View style={{width: '125%',right:35, top:340,height:40, borderRadius: 100, backgroundColor: 'white'}}>
           <Button 
             title="Quel est le but de cette application ?" 
             onPress={() => setModalVisible(true)}
@@ -165,7 +166,7 @@ const FAQScreen = () => {
       </Modal>
 
       <View style={styles.buttonContainer}>
-        <View style={{width: '95%', top:365,height:40, borderRadius: 100, backgroundColor: 'white'}}>
+        <View style={{width: '125%',right:35, top:365,height:40, borderRadius: 100, backgroundColor: 'white'}}>
           <Button 
             title="Quel est le but de cette application ?" 
             onPress={() => setModalVisible(true)}
@@ -191,10 +192,12 @@ const FAQScreen = () => {
 
 
     </View>
-    <View  style={{top:500,}}>
+    <View  style={{top:445,}}>
     <BottomBar></BottomBar>
     </View>
   </ScrollView>
+
+
   </View>
   );
 };
