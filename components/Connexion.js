@@ -33,16 +33,37 @@ const Connexion = ({ navigation }) => {
       .get();
   
     const userData = userDoc.data();
-    
+    console.log('Données récupérées depuis Firestore :', userData); // Ajoutez ce log
+  
     // Vérifiez si les valeurs de username et userId sont définies
-    if (userData.username && user.uid) {
+    if (userData && userData.username && user.uid) {
+      console.log('UserData exist and username and uid exist');
+    } else if (userData && !userData.username && user.uid) {
+      userData.username = 'Utilisateur inconnu';
+      console.warn('Le champ "username" est manquant dans les données Firestore');
+  
+      const isPremium = userData.isPremium; // Ajoute cette ligne
+  
       await AsyncStorage.setItem('userId', user.uid);
       await AsyncStorage.setItem('username', userData.username);
-      await AsyncStorage.setItem('isPremium', userData.isPremium ? 'true' : 'false');
-      setIsPremium(userData.isPremium);
+      await AsyncStorage.setItem('isPremium', isPremium ? 'true' : 'false');
+      setIsPremium(isPremium);
+  
+      console.log('Retour depuis getUsernameAndUserId :', {
+        userId: user.uid,
+        username: userData.username,
+        isPremium: isPremium,
+      });
+      return { userId: user.uid, username: userData.username };
     } else {
-      console.error('Username or userId is undefined');
+      console.error('UserData, username or userId is undefined');
+      console.log('Valeur de userData:', userData); // Ajoutez ce log
+      console.log('Valeur de username:', userData ? userData.username : 'undefined'); // Ajoutez ce log
+      console.log('Valeur de userId:', user.uid); // Ajoutez ce log
+      return {};
     }
+  
+  
   
     console.log('Retour depuis getUsernameAndUserId :', {
       userId: user.uid,
@@ -51,6 +72,7 @@ const Connexion = ({ navigation }) => {
     });
     return { userId: user.uid, username: userData.username };
   };
+  
   
   const showTwitchUsernamePrompt = (userId, username) => {
     Alert.prompt(
@@ -66,7 +88,37 @@ const Connexion = ({ navigation }) => {
           onPress: async (twitchUsername) => {
             if (twitchUsername) {
               setTwitchUsername(twitchUsername);
+              await AsyncStorage.setItem('userId', userId);
+              await AsyncStorage.setItem('username', username);
               await AsyncStorage.setItem('twitch_username', twitchUsername);
+              await AsyncStorage.setItem('isPremium', isPremium ? 'true' : 'false'); // utiliser isPremium
+              await addStreamer(userId, username, twitchUsername);
+                            
+              // Ajouter les informations du streamer dans Firebase
+              try {
+                const response = await fetch(`https://api.twitch.tv/helix/users?login=${twitchUsername}`, {
+                  headers: {
+                    'Client-ID': 'i34nc3xu598asoajw481awags63pnl',
+                    'Authorization': 'Bearer ' + 'cbm6qiv3n5hizeqxbz7kdimrvyzr4c',
+                  },
+                });
+                const result = await response.json();
+                console.log('Résultat de la requête Twitch API:', result);
+                const userData = result.data[0];
+                await firebase.firestore().collection('streamers').doc(userId).set({
+                  userId,
+                  username,
+                  isLive: false,
+                  profileImage: userData.profile_image_url,
+                  streamThumbnailUrl: '',
+                  streamTitle: '',
+                  viewerCount: 0,
+                });
+                
+              } catch (error) {
+                console.error("Erreur lors de l'ajout du streamer dans Firebase :", error);
+              }
+  
               navigation.navigate('AlaUne', { userId, username });
             } else {
               setErrorMessage("Veuillez entrer votre nom d'utilisateur Twitch");
@@ -78,6 +130,32 @@ const Connexion = ({ navigation }) => {
       'plain-text',
     );
   };
+
+  
+  const addStreamer = async (userId, username, twitchUsername) => {
+    try {
+      const response = await fetch(`https://api.twitch.tv/helix/users?login=${twitchUsername}`, {
+        headers: {
+          'Client-ID': 'i34nc3xu598asoajw481awags63pnl',
+          'Authorization': 'Bearer ' + 'cbm6qiv3n5hizeqxbz7kdimrvyzr4c',
+        },
+      });
+      const result = await response.json();
+      console.log('Résultat de la requête Twitch API:', result);
+      const userData = result.data[0];
+      await firebase.firestore().collection('streamers').doc(userId).set({
+        userId,
+        username,
+        isLive: false,
+        profileImage: userData.profile_image_url,
+        streamThumbnailUrl: '',
+        streamTitle: '',
+        viewerCount: 0,
+      });
+    } catch (error) {
+      console.error("Erreur lors de l'ajout du streamer dans Firebase :", error);
+    }
+  };
   
 
   useEffect(() => {
@@ -85,10 +163,12 @@ const Connexion = ({ navigation }) => {
       if (user) {
         try {
           const { userId, username } = await getUsernameAndUserId();
-          if (isPremium) {
-            showTwitchUsernamePrompt(userId, username);
-          } else {
-            navigation.navigate('AlaUne', { userId, username });
+          if (userId && username) { // Ajoutez cette vérification
+            if (isPremium) {
+              showTwitchUsernamePrompt(userId, username);
+            } else {
+              navigation.navigate('AlaUne', { userId, username });
+            }
           }
         } catch (error) {
           console.log("Erreur lors de la récupération de l'utilisateur :", error);
@@ -99,6 +179,7 @@ const Connexion = ({ navigation }) => {
     return unsubscribe;
   }, [navigation]);
   
+  
 
   const handleLogin = async () => {
     try {
@@ -107,11 +188,17 @@ const Connexion = ({ navigation }) => {
       const { userId, username } = await getUsernameAndUserId();
       const isUserPremium = await AsyncStorage.getItem('isPremium') === 'true';
       const twitchUsername = await AsyncStorage.getItem('twitch_username');
-  
-      if (isUserPremium) {
-        showTwitchUsernamePrompt(userId, username); // Appelez la fonction ici
+      console.log('Nom d\'utilisateur Twitch stocké:', twitchUsername);
+
+      if (userId && username) { // Ajoutez cette vérification
+        if (isUserPremium) {
+          showTwitchUsernamePrompt(userId, username);
+        } else {
+          console.log('Valeurs envoyées à LiveScreen:', { userId, username, twitchUsername });
+          navigation.navigate('LiveScreen', { userId, username, twitchUsername });
+        }
       } else {
-        navigation.navigate('LiveScreen', { userId, username, twitchUsername });
+        console.error('Username or userId is undefined');
       }
     } catch (error) {
       console.log(error);
@@ -119,6 +206,7 @@ const Connexion = ({ navigation }) => {
     }
   };
   
+
   
   
   

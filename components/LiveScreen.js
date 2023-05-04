@@ -6,6 +6,8 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  TextInput,
+  Button,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firebase from "./firebaseConfig";
@@ -28,8 +30,106 @@ const LiveScreen = ({ route }) => {
   const [oauthToken, setOAuthToken] = useState(null);
   const [users, setUsers] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [searchedUsername, setSearchedUsername] = useState('');
   const navigation = useNavigation();
+  const [streamers, setStreamers] = useState([]);
+  
 
+  async function checkIfUserIsLive(twitch_username) {
+    const response = await fetch(
+      `https://api.twitch.tv/helix/streams?user_login=${twitch_username}`,
+      {
+        headers: {
+          'Client-ID': clientId,
+          Authorization: `Bearer ${oauthToken}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Erreur lors de la récupération des informations de stream');
+    }
+
+    const data = await response.json();
+    return data.data.length > 0
+      ? {
+          isLive: true,
+          streamTitle: data.data[0].title,
+          viewerCount: data.data[0].viewer_count,
+        }
+      : { isLive: false };
+  }
+  
+  async function updateUserIsLive(userId, isLive) {
+    try {
+      const userRef = firebase.firestore().collection('test_users').doc(userId);
+      await userRef.update({ isLive });
+    } catch (error) {
+      console.error('Error updating user isLive status:', error);
+    }
+  }
+const fetchStreamers = async () => {
+  try {
+    const streamersData = await firebase.firestore().collection('streamers').get();
+    const streamersList = streamersData.docs.map(doc => {
+      return { ...doc.data(), id: doc.id };
+    });
+    setStreamers(streamersList);
+  } catch (error) {
+    console.error('Erreur lors de la récupération des streamers depuis Firebase:', error);
+  }
+};
+
+async function fetchTwitchUserProfile(username) {
+  const response = await fetch(
+    `https://api.twitch.tv/helix/users?login=${username}`,
+    {
+      headers: {
+        'Client-ID': clientId,
+        Authorization: `Bearer ${oauthToken}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Erreur lors de la récupération des informations de l'utilisateur");
+  }
+
+  const data = await response.json();
+  return data.data.length > 0 ? data.data[0] : null;
+}
+async function addNewStreamer(username) {
+  // Vérifiez si l'utilisateur existe déjà dans la liste des utilisateurs
+  const existingUser = Object.values(users).find(
+    (user) => user.twitch_username === username
+  );
+
+  if (!existingUser) {
+    // Générer un nouvel identifiant utilisateur
+    const userId = firebase.firestore().collection("test_users").doc().id;
+
+    // Ajoutez l'utilisateur à Firestore s'il n'existe pas déjà
+    const userRef = firebase.firestore().collection("test_users").doc(userId);
+    await userRef.set({ userId, twitch_username: username });
+  }
+
+  const liveInfo = await checkIfUserIsLive(username);
+
+  if (liveInfo.isLive) {
+    const streamData = {
+      isLive: liveInfo.isLive,
+      username: username, // Ajoutez cette ligne
+      streamTitle: liveInfo.streamTitle,
+      viewerCount: liveInfo.viewer_count,
+      profileImage: liveInfo.profileImage, // Ajoutez cette ligne
+      streamThumbnailUrl: liveInfo.streamThumbnailUrl, // Ajoutez cette ligne
+    };
+
+    await storeLiveStreamInfo(existingUser ? existingUser.userId : userId, streamData);
+    // Ajoutez les données du streamer à la liste des streamers
+    setStreamers((prevStreamers) => [...prevStreamers, { userId: existingUser ? existingUser.userId : userId, ...streamData }]);
+  }
+}
   useEffect(() => {
     const unsubscribe = firebase
       .firestore()
@@ -77,6 +177,8 @@ const LiveScreen = ({ route }) => {
 
   }, []);
 
+  
+
   useEffect(() => {
     async function getUsernameAndUserId() {
       try {
@@ -89,7 +191,8 @@ const LiveScreen = ({ route }) => {
         console.log('twitch_username:', twitch_username);
     
         if (!username || !userId || !twitch_username) {
-          throw new Error('Username, userId, or twitch_username is not available in AsyncStorage');
+          console.warn('Username, userId, or twitch_username is not available in AsyncStorage');
+          return null; // renvoie null si les données ne sont pas disponibles
         }
     
         // Vérifiez si l'utilisateur existe déjà dans la liste des utilisateurs
@@ -109,86 +212,82 @@ const LiveScreen = ({ route }) => {
     
     
     async function storeLiveStreamInfo(userId, streamData) {
-      try {
-        console.log("Storing streamData:", streamData);
-        const userRef = firebase.firestore().collection('test_users').doc(userId);
-    
-        await userRef.update({ ...streamData });
-      } catch (error) {
-        console.error('Error while storing live stream info:', error);
-        throw error;
-      }
+      const userRef = firebase.firestore().collection("test_users").doc(userId);
+      await userRef.update({
+        isLive: streamData.isLive,
+        username: streamData.username,
+        streamTitle: streamData.streamTitle,
+        viewerCount: streamData.viewerCount,
+        profileImage: streamData.profileImage, // Ajoutez cette ligne
+        streamThumbnailUrl: streamData.streamThumbnailUrl, // Ajoutez cette ligne
+      });
     }
-    
-    
-    async function updateUserIsLive(userId, isLive) {
-      try {
-        const userRef = firebase.firestore().collection('test_users').doc(userId);
-        await userRef.update({ isLive });
-      } catch (error) {
-        console.error('Error updating user isLive status:', error);
-      }
-    }
-    
-    async function checkIfUserIsLive(twitch_username, userId) {
-      const response = await fetch(
-        `https://api.twitch.tv/helix/streams?user_login=${twitch_username}`,
-        {
-          headers: {
-            'Client-ID': clientId,
-            Authorization: `Bearer ${oauthToken}`,
-          },
-        }
+       async function addNewStreamer(username) {
+      // Vérifiez si l'utilisateur existe déjà dans la liste des utilisateurs
+      const existingUser = Object.values(users).find(
+        (user) => user.twitch_username === username
       );
     
-      console.log("response status:", response.status);
-      console.log("response headers:", response.headers);
+      if (!existingUser) {
+        // Générer un nouvel identifiant utilisateur
+        const userId = firebase.firestore().collection("test_users").doc().id;
     
-      if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des informations de stream');
+        // Ajoutez l'utilisateur à Firestore s'il n'existe pas déjà
+        const userRef = firebase.firestore().collection("test_users").doc(userId);
+        await userRef.set({ userId, twitch_username: username });
       }
     
-      const data = await response.json();
-      console.log("isLive:", data.data.length > 0);
-      console.log("streamTitle:", data.data[0].title);
-      console.log("viewerCount:", data.data[0].viewer_count);
-      console.log("streamThumbnailUrl:", data.data[0].thumbnail_url.replace('{width}', '640').replace('{height}', '360'));
-
-      if (data.data.length > 0) {
-        setIsLive(true);
-        setStreamTitle(data.data[0].title);
-        setViewerCount(data.data[0].viewer_count);
-        setStreamThumbnailUrl(
-          data.data[0].thumbnail_url.replace('{width}', '640').replace('{height}', '360'),
-        );
+      const liveInfo = await checkIfUserIsLive(username);
     
-        // Stocker les informations de stream dans Firestore
+      if (liveInfo.isLive) {
         const streamData = {
-          isLive: true,
-          streamTitle: data.data[0].title,
-          viewerCount: data.data[0].viewer_count,
-          streamThumbnailUrl: data.data[0].thumbnail_url.replace('{width}', '640').replace('{height}', '360'),
+          isLive: liveInfo.isLive,
+          username: username, // Ajoutez cette ligne
+          streamTitle: liveInfo.streamTitle,
+          viewerCount: liveInfo.viewer_count,
+          profileImage: liveInfo.profileImage, // Ajoutez cette ligne
+          streamThumbnailUrl: liveInfo.streamThumbnailUrl, // Ajoutez cette ligne
         };
-        storeLiveStreamInfo(userId, streamData);
     
-        // Mettre à jour l'état isLive de l'utilisateur dans Firestore
-        updateUserIsLive(userId, true);
-      } else {
-        setIsLive(false);
+        await storeLiveStreamInfo(existingUser ? existingUser.userId : userId, streamData);
+        // Ajoutez les données du streamer à la liste des streamers
+        setStreamers((prevStreamers) => [...prevStreamers, { userId: existingUser ? existingUser.userId : userId, ...streamData }]);
+      }
+    }     
     
-        // Mettre à jour l'état isLive de l'utilisateur dans Firestore
-        updateUserIsLive(userId, false);
+        async function addNewStreamer(username) {
+      // Vérifiez si l'utilisateur existe déjà dans la liste des utilisateurs
+      const existingUser = Object.values(users).find(
+        (user) => user.twitch_username === username
+      );
     
-        // Remove stream information from Firestore
-        const userRef = firebase.firestore().collection('test_users').doc(userId);
-        await userRef.update({
-          isLive: false,
-          streamTitle: firebase.firestore.FieldValue.delete(),
-          viewerCount: firebase.firestore.FieldValue.delete(),
-          streamThumbnailUrl: firebase.firestore.FieldValue.delete(),
-        });
+      if (!existingUser) {
+        // Générer un nouvel identifiant utilisateur
+        const userId = firebase.firestore().collection("test_users").doc().id;
+    
+        // Ajoutez l'utilisateur à Firestore s'il n'existe pas déjà
+        const userRef = firebase.firestore().collection("test_users").doc(userId);
+        await userRef.set({ userId, twitch_username: username });
+      }
+    
+      const liveInfo = await checkIfUserIsLive(username);
+    
+      if (liveInfo.isLive) {
+        const streamData = {
+          isLive: liveInfo.isLive,
+          username: username, // Ajoutez cette ligne
+          streamTitle: liveInfo.streamTitle,
+          viewerCount: liveInfo.viewer_count,
+          profileImage: liveInfo.profileImage, // Ajoutez cette ligne
+          streamThumbnailUrl: liveInfo.streamThumbnailUrl, // Ajoutez cette ligne
+        };
+    
+        await storeLiveStreamInfo(existingUser ? existingUser.userId : userId, streamData);
+        // Ajoutez les données du streamer à la liste des streamers
+        setStreamers((prevStreamers) => [...prevStreamers, { userId: existingUser ? existingUser.userId : userId, ...streamData }]);
       }
     }
+   
     
     async function updateUser(username, updatedInfo) {
       const usersJson = await AsyncStorage.getItem('users');
@@ -205,39 +304,13 @@ const LiveScreen = ({ route }) => {
  
     
   
-    async function fetchUserProfileImage(username) {
-      const response = await fetch(
-        `https://api.twitch.tv/helix/users?login=${username}`,
-        {
-          headers: {
-            'Client-ID': clientId,
-            Authorization: `Bearer ${oauthToken}`,
-          },
-        }
-      );
-    
-      if (!response.ok) {
-        throw new Error("Erreur lors de la récupération des informations de l'utilisateur");
-      }
-    
-      const data = await response.json();
-    
-      if (data.data.length > 0) {
-        setUserProfileImage(data.data[0].profile_image_url);
-    
-     
-      } else {
-        // Remove profile image URL from AsyncStorage
-        await AsyncStorage.removeItem(`${username}:profileImage`);
-      }
+    async function loadAllUsers() {
+      const usersJson = await AsyncStorage.getItem('users');
+      return usersJson ? JSON.parse(usersJson) : {};
     }
-    // Ajoutez la fonction loadAllUsers après fetchUserProfileImage
-async function loadAllUsers() {
-  const usersJson = await AsyncStorage.getItem('users');
-  return usersJson ? JSON.parse(usersJson) : {};
-}
     
-    
+
+
 getUsernameAndUserId()
   .then(({ username, userId, twitch_username }) => {
     setTwitchUsername(twitch_username);
@@ -260,8 +333,10 @@ getUsernameAndUserId()
                 isLive,
                 profileImage: userProfileImage,
                 streamThumbnailUrl: streamThumbnailUrl.replace('{width}', '320').replace('{height}', '180'),
-                streamTitle,
-                viewerCount,
+                streamTitle: liveInfo.streamTitle,
+                viewerCount: liveInfo.viewer_count,
+                profileImage: userProfileImage, // Ajoutez cette ligne
+
               };
               return storeLiveStreamInfo(userId, streamData);
             } else {
@@ -271,6 +346,8 @@ getUsernameAndUserId()
               };
               return storeLiveStreamInfo(userId, offlineData);
             }
+            
+            
           })
           .catch((error) => {
             console.error("Erreur lors de la récupération de l'image de profil de l'utilisateur:", error);
@@ -286,7 +363,41 @@ getUsernameAndUserId()
 
 }, [oauthToken]);
 
-  
+useEffect(() => {
+  if (isLive) {
+    const intervalId = setInterval(() => {
+      Object.entries(users).forEach(async ([_, userInfo]) => {
+        if (userInfo.isLive) {
+          const streamData = await checkIfUserIsLive(userInfo.twitch_username);
+
+          if (streamData) {
+            const userRef = firebase
+              .firestore()
+              .collection('test_users')
+              .doc(userInfo.userId);
+            await userRef.update({
+              streamTitle: streamData.title,
+              viewerCount: streamData.viewer_count,
+            });
+          }
+        }
+      });
+    }, 10000);
+    return () => clearInterval(intervalId);
+  }
+}, [isLive, users, oauthToken]);
+
+useEffect(() => {
+  const getUsername = async () => {
+    const username = await AsyncStorage.getItem('twitch_username');
+    if (username) {
+      addNewStreamer(username);
+    }
+  };
+  getUsername();
+}, []);
+
+
 return (
   <View style={styles.container}>
     <View style={styles.topBar}>
@@ -297,9 +408,14 @@ return (
       .filter(([_, userInfo]) => userInfo.isLive)
       .map(([username, userInfo]) => (
         <TouchableOpacity
-          key={username}
-          onPress={() => navigation.navigate("ProfilStreamer", { streamerUsername: userInfo.twitch_username, streamerData: userInfo })}
-          >
+        key={username}
+        onPress={() => navigation.navigate("ProfilStreamer", { 
+          streamerUsername: userInfo.twitch_username, 
+          streamerData: userInfo,
+          streamerDescription: userInfo.description // Ajoutez cette ligne
+        })}
+      >
+      
           <View style={styles.streamerRectangle}>
             {userInfo.profileImage && (
               <Image
@@ -308,7 +424,7 @@ return (
               />
             )}
             <View style={styles.middleContent}>
-              <Text style={styles.username}>{userInfo.twitch_username}</Text>
+            <Text style={styles.username}>{username}</Text>
               {userInfo.isLive ? (
                 <>
                   <Text style={styles.streamTitle}>{userInfo.streamTitle}</Text>
