@@ -162,14 +162,9 @@ const Connexion = ({ navigation }) => {
     const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
         try {
-          const { userId, username } = await getUsernameAndUserId();
-          if (userId && username) { // Ajoutez cette vérification
-            if (isPremium) {
-              showTwitchUsernamePrompt(userId, username);
-            } else {
-              navigation.navigate('AlaUne', { userId, username });
-            }
-          }
+          const { userId, username, isUserPremium } = await getUsernameAndUserId();
+          setIsPremium(isUserPremium);
+          navigation.navigate("AlaUne", { userId, username });
         } catch (error) {
           console.log("Erreur lors de la récupération de l'utilisateur :", error);
         }
@@ -179,6 +174,11 @@ const Connexion = ({ navigation }) => {
     return unsubscribe;
   }, [navigation]);
   
+  
+  const saveUsername = async (userId, username) => {
+    await AsyncStorage.setItem('userId', userId);
+    await AsyncStorage.setItem('username', username);
+  };
   
 
   const handleLogin = async () => {
@@ -240,6 +240,34 @@ const Connexion = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
         />
+        {isPremium ? (
+         <TextInput
+         style={styles.input}
+         placeholder="Nom d'utilisateur Twitch"
+         placeholderTextColor="rgba(255,255,255,0.7)"
+         autoCapitalize="none"
+         autoCorrect={false}
+         value={twitchUsername}
+         onChangeText={setTwitchUsername}
+         editable={isPremium} // Ajoutez cette ligne pour rendre le champ modifiable uniquement pour les utilisateurs premium
+       />
+       
+        ) : (
+          <View>
+            <TextInput
+              style={styles.input}
+              placeholder="Nom d'utilisateur Twitch"
+              placeholderTextColor="rgba(255,255,255,0.7)"
+              autoCapitalize="none"
+              autoCorrect={false}
+              value={twitchUsername}
+              onChangeText={setTwitchUsername}
+            />
+            <Text style={styles.errorMessage}>
+              Vous devez être premium pour ajouter votre nom d'utilisateur Twitch.
+            </Text>
+          </View>
+        )}
         <TouchableOpacity style={styles.buttonContainer} onPress={handleLogin}>
           <Text style={styles.buttonText}>CONNEXION</Text>
         </TouchableOpacity>

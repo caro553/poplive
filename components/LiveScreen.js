@@ -184,25 +184,20 @@ async function addNewStreamer(username) {
       try {
         const username = await AsyncStorage.getItem('username');
         const userId = await AsyncStorage.getItem('userId');
-        const twitch_username = await AsyncStorage.getItem('twitch_username');
     
-        console.log('username:', username);
-        console.log('userId:', userId);
-        console.log('twitch_username:', twitch_username);
-    
-        if (!username || !userId || !twitch_username) {
-          console.warn('Username, userId, or twitch_username is not available in AsyncStorage');
-          return null; // renvoie null si les données ne sont pas disponibles
+        if (!username || !userId) {
+          throw new Error('Username or userId is not available in AsyncStorage');
         }
     
         // Vérifiez si l'utilisateur existe déjà dans la liste des utilisateurs
         if (!users.hasOwnProperty(username)) {
           // Ajoutez l'utilisateur à Firestore s'il n'existe pas déjà
           const userRef = firebase.firestore().collection('test_users').doc(userId);
-          await userRef.set({ userId, twitch_username });
+          await userRef.set({ userId, username });
         }
+        
     
-        return { username, userId, twitch_username };
+        return { username, userId };
       } catch (error) {
         console.error('Error while getting username and userId from AsyncStorage:', error);
         throw error;

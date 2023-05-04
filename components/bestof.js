@@ -31,12 +31,14 @@ export default function Bestof() {
       <View style={styles.topBar}>
         <TopBar />
       </View>
+      <View style={styles.titleContainer}>
+  <Text style={styles.titleText}>
+    Vidéos YOUTUBE de nos streamers
+  </Text>
+  <View style={styles.titleLine} />
+</View>
 
-      <View style={styles.descriptionContainer} zIndex={0}>
-        <Text style={styles.descriptionText}>
-          Best-OF
-        </Text>
-      </View>
+
 
       <ScrollView style={styles.scrollView}>
         {videoData.map((video, index) => (
@@ -47,14 +49,15 @@ export default function Bestof() {
             index === 3 ? 'https://youtu.be/Lvh28X0I4Jg' :
             'https://www.youtube.com/watch?v=defaultLink'
           )}>
-<Image source={{ uri: video.thumbnailUrl }} style={styles.videoImage} />
-<View style={styles.rectangle}>
-  <Image style={styles.twitchImage} source={{ uri: video.thumbnail }} />
-  <View style={styles.twitchTextContainer}>
-    <Text numberOfLines={2} style={[styles.twitchTitle, { fontWeight: 'bold' }]}>{video.title}</Text>
-    <Text style={styles.twitchChannel}>{video.channelTitle}</Text>
-  </View>
+<Image source={{ uri: video.thumbnailUrl }} style={[styles.videoImage, { marginLeft: 10 }]} />
+
+            <View style={styles.rectangle}>
+  <Text style={[styles.twitchChannel, { marginTop: -10 }]}>{video.channelTitle}</Text>
+  <Text numberOfLines={2} style={[styles.twitchTitle, styles.textCenter, { fontWeight: 'bold', marginBottom: -2 }]}>{video.title}</Text>
 </View>
+
+
+
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -66,55 +69,14 @@ export default function Bestof() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#6441A4', // couleur de fond
+    backgroundColor: '#6441A4',
   },
   topBar: {
     height: 50,
-    backgroundColor: '#5f5f5f', // couleur de la topbar
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  bottomBar: {
-    height: 50,
-    backgroundColor: '#5f5f5f', // couleur de la bottombar
-  },
-  videoContainer: {
-    width: '80%',
-    height: 160,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 100, // Ajout de la marge supérieure
-  },
-  
-  video: {
-    width: '100%',
-    aspectRatio: 2,
-  },
-  actionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  actionButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 80,
-    height: 30,
-   
-    borderRadius: 10,
-    marginHorizontal: 5,
-  },
-  icon: {
-    width: 30,
-    height: 30,
+    backgroundColor: '#5f5f5f',
   },
   descriptionContainer: {
     marginTop: 10,
@@ -123,58 +85,100 @@ const styles = StyleSheet.create({
   descriptionText: {
     color: 'white',
     textAlign: 'center',
+    fontSize: 24, // taille de police augmentée
+    fontWeight: 'bold', // police en gras
+    marginBottom: 20, // ajout de marge inférieure
   },
-twitchContainer: {
-  width: '90%',
-  height: '20%',
-  backgroundColor: 'white',
-  borderRadius: 30,
-  marginTop: 30,
-  flexDirection: 'row',
-  alignItems: 'center',
-  alignSelf: 'center', // Ajouter cette ligne pour centrer horizontalement
-},
-profileContainer: {
-  width: 50,
-  height: 50,
-  backgroundColor: 'white',
-  borderRadius: 10,
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginRight: 10,
-},
-profileIcon: {
-  width: 30,
-  height: 30,
-},
-rectangleContainer: {
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginTop: 10,
-  overflow: 'hidden',
-},
-rectangle: {
-  marginTop: 50,
-  width: 170,
-  height: 50,
-  backgroundColor: 'white',
-  borderRadius: 10,
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginHorizontal: 5,
-},
-rectangleText: {
-  overflow: 'hidden', // Ajouter cette ligne pour cacher le texte qui dépasse
-  textAlign: 'center',
-},
-icon: {
-  width: 30,
-  height: 30,
-},
-videoImage: {
-  width: 70,
-  height: 70,
-},
+  scrollView: {
+    paddingBottom: 50, // ajout de marge inférieure pour éviter que le texte soit coupé
+  },
+  twitchContainer: {
+    width: '90%',
+    height: '20%',
+    backgroundColor: 'white',
+    borderRadius: 30,
+    marginTop: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center', // Ajouter cette ligne pour centrer horizontalement
+  },
+  twitchImage: {
+    width: 70,
+    height: 70,
+    borderRadius: 35, // ajout de border radius pour arrondir l'image
+  },
+  twitchTextContainer: {
+    flex: 1,
+    marginLeft: 10,
+    marginTop: 1,
+  },
+  twitchTitle: {
+    fontSize: 14,
+    flex: 1,
+    flexWrap: 'wrap',
+    marginLeft: 10,
+    marginTop: 1, //ajout de marginTop
+  },
+  
+  rectangleText: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    overflow: 'hidden',
+    paddingHorizontal: 5,
+  },
+  
+  twitchChannel: {
+    textAlign: 'center',
+    fontSize: 12,
+  },
+  videoImage: {
+    width: 120,
+    height: 80,
+    borderRadius: 10, // modification de la valeur du borderRadius
+  },
 
+  rectangle: {
+    marginTop: 50,
+    width: 170,
+    height: 50,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  profileContainer: {
+    width: 50,
+    height: 50,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  rectangleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    overflow: 'hidden',
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  titleText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  titleLine: {
+    height: 2,
+    width: '100%',
+    backgroundColor: '#FF2E63',
+    marginLeft: 10,
+    borderRadius: 1,
+  }
+  
 });
