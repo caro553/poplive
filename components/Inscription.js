@@ -27,7 +27,29 @@ export default function Inscription({ navigation }) {
         await AsyncStorage.setItem('prenom', prenom);  // Sauvegarder le prénom
         await AsyncStorage.setItem('nom', nom);  // Sauvegarder le no
     };
-    
+    const updateUserInformation = async (newPseudo, newPrenom, newNom) => {
+      const userId = await AsyncStorage.getItem('userId');
+      
+      // Mettre à jour Firestore
+      firebase
+          .firestore()
+          .collection('test_users')
+          .doc(userId)
+          .update({
+              twitchUsername: newPseudo,
+              prenom: newPrenom,
+              nom: newNom,
+          })
+          .catch((error) => {
+              console.log("Erreur lors de la mise à jour de l'utilisateur dans Firestore :", error);
+          });
+  
+      // Mettre à jour AsyncStorage
+      await AsyncStorage.setItem('username', newPseudo);
+      await AsyncStorage.setItem('prenom', newPrenom);
+      await AsyncStorage.setItem('nom', newNom);
+  }
+  
 
     const handleSignUp = () => {
         auth.createUserWithEmailAndPassword(email, password)
