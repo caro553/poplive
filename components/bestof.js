@@ -31,34 +31,41 @@ export default function Bestof() {
       <View style={styles.topBar}>
         <TopBar />
       </View>
-
+      <View style={styles.titleContainer}>
+  <Text style={styles.titleText}>
+    Vidéos YOUTUBE de nos streamers
+  </Text>
+  <View style={styles.titleLine} />
+</View>
       <Text style={styles.title}>
           Best-OF
         </Text>
-
-      <ScrollView style={styles.scrollView}>
-        {videoData.map((video, index) => (
-          <TouchableOpacity key={index} style={styles.twitchContainer} onPress={() => Linking.openURL(
-            index === 0 ? 'https://www.youtube.com/watch?v=t4Nq3dz4VTg' :
-            index === 1 ? 'https://www.youtube.com/watch?v=yLqTBlJ3cSg' :
-            index === 2 ? 'https://www.youtube.com/watch?v=https://youtu.be/CmgyUYCibwA' :
-            index === 3 ? 'https://youtu.be/Lvh28X0I4Jg' :
-            'https://www.youtube.com/watch?v=defaultLink'
-          )}>
-<Image source={{ uri: video.thumbnailUrl }} style={styles.videoImage} />
-<View style={styles.rectangle}>
-  <Image style={styles.twitchImage} source={{ uri: video.thumbnail }} />
-  <View style={styles.twitchTextContainer}>
-
-  <Text style={styles.name}>{video.channelTitle}</Text>
-
-    <Text numberOfLines={2} style={[styles.twitchTitle, { fontWeight: 'bold' }]}>{video.title}</Text>
-    <Text style={styles.twitchChannel}>{video.channelTitle}</Text>
-  </View>
-</View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+        <ScrollView style={styles.scrollView}>
+  {videoData.map((video, index) => (
+    <TouchableOpacity key={index} style={styles.twitchContainer} onPress={() => Linking.openURL(
+      index === 0 ? 'https://www.youtube.com/watch?v=t4Nq3dz4VTg' :
+      index === 1 ? 'https://www.youtube.com/watch?v=yLqTBlJ3cSg' :
+      index === 2 ? 'https://youtu.be/CmgyUYCibwA' :
+      index === 3 ? 'https://youtu.be/Lvh28X0I4Jg' :
+      'https://www.youtube.com/watch?v=defaultLink'
+    )}>
+      <Image source={{ uri: video.thumbnailUrl }} style={styles.videoImage} />
+      <View style={styles.rectangle}>
+        <Image style={styles.twitchImage} source={{ uri: video.thumbnail }} />
+        <View style={styles.twitchTextContainer}>
+          <Text style={styles.name}>{video.channelTitle}</Text>
+          <Text numberOfLines={2} style={[styles.twitchTitle, { fontWeight: 'bold' }]}>{video.title}</Text>
+          <Text style={styles.twitchChannel}>{video.channelTitle}</Text>
+        </View>
+      </View>
+      <View style={styles.rectangle}>
+        <Text style={[styles.twitchChannel, { marginTop: -10 }]}>{video.channelTitle}</Text>
+        <Text numberOfLines={2} style={[styles.twitchTitle, styles.textCenter, { fontWeight: 'bold', marginBottom: -2 }]}>{video.title}</Text>
+        <Image source={{ uri: video.thumbnailUrl }} style={[styles.videoImage, { marginLeft: 10 }]} />
+      </View>
+    </TouchableOpacity>
+  ))}
+</ScrollView>
 
       {/* Ajout de la bottombar */}
       <View style={styles.bottomBar}>
@@ -67,55 +74,14 @@ export default function Bestof() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#6441A4', // couleur de fond
+    backgroundColor: '#6441A4',
   },
   topBar: {
     height: 50,
-    backgroundColor: '#5f5f5f', // couleur de la topbar
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  bottomBar: {
-    height: 50,
-    backgroundColor: '#5f5f5f', // couleur de la bottombar
-  },
-  videoContainer: {
-    width: '80%',
-    height: 160,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 100, // Ajout de la marge supérieure
-  },
-  
-  video: {
-    width: '100%',
-    aspectRatio: 2,
-  },
-  actionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  actionButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 80,
-    height: 30,
-   
-    borderRadius: 10,
-    marginHorizontal: 5,
-  },
-  icon: {
-    width: 30,
-    height: 30,
+    backgroundColor: '#5f5f5f',
   },
 
 twitchContainer: {

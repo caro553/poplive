@@ -1,76 +1,99 @@
 import React, { useState } from 'react';
 import {
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StatusBar,
-  Image,
-} from 'react-native';
-import firebase from 'firebase/compat/app';
+    StyleSheet,
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    StatusBar,
+    Image,
+    Button
+  } from 'react-native';
+  import firebase from 'firebase/compat/app';
 import 'firebase/auth';
 import { auth } from './firebaseConfig.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Inscription({ navigation }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-
-  const saveUsername = async (userId) => {
-    await AsyncStorage.setItem('username', firstName + ' ' + lastName);
-    await AsyncStorage.setItem('userId', userId);
-  };
-
-  const handleSignUp = () => {
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        // Add user's full name to their profile
-        userCredential.user
-          .updateProfile({
-            displayName: firstName + ' ' + lastName,
-          })
-          .then(() => {
-            saveUsername(userCredential.user.uid); // Ajoutez l'ID de l'utilisateur ici
-            console.log('Utilisateur créé avec succès');
-
-            // Ajouter un document pour le nouvel utilisateur dans la collection 'test_users'
-            firebase
-              .firestore()
-              .collection('test_users')
-              .doc(userCredential.user.uid)
-              .set({
-                email: email,
-                firstName: firstName,
-                lastName: lastName,
-                // Ajoutez ici d'autres informations si nécessaire
-              })
-              .then(() => {
-                navigation.navigate('AlaUne', {
-                  fullName: firstName + ' ' + lastName,
-                });
-              })
-              .catch((error) => {
-                console.log(
-                  "Erreur lors de l'ajout de l'utilisateur à la collection test_users :",
-                  error
-                );
-              });
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [pseudo, setPseudo] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [prenom, setPrenom] = useState('');  // Ajout de l'état prénom
+    const [nom, setNom] = useState('');  // Ajout de l'état nom
+    const saveUsername = async (userId) => {
+        await AsyncStorage.setItem('username', pseudo);
+        await AsyncStorage.setItem('userId', userId);
+        await AsyncStorage.setItem('prenom', prenom);  // Sauvegarder le prénom
+        await AsyncStorage.setItem('nom', nom);  // Sauvegarder le no
+    };
+    const updateUserInformation = async (newPseudo, newPrenom, newNom) => {
+      const userId = await AsyncStorage.getItem('userId');
+      
+      // Mettre à jour Firestore
+      firebase
+          .firestore()
+          .collection('test_users')
+          .doc(userId)
+          .update({
+              twitchUsername: newPseudo,
+              prenom: newPrenom,
+              nom: newNom,
           })
           .catch((error) => {
-            console.log(error);
+              console.log("Erreur lors de la mise à jour de l'utilisateur dans Firestore :", error);
           });
-      })
-      .catch((error) => {
-        console.log(error);
-        setErrorMessage(error.message);
-      });
-  };
+  
+      // Mettre à jour AsyncStorage
+      await AsyncStorage.setItem('username', newPseudo);
+      await AsyncStorage.setItem('prenom', newPrenom);
+      await AsyncStorage.setItem('nom', newNom);
+  }
+  
 
+    const handleSignUp = () => {
+        auth.createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Add user's pseudo to their profile
+                userCredential.user.updateProfile({
+                    displayName: pseudo,
+                })
+                    .then(() => {
+                        saveUsername(userCredential.user.uid); // Ajoutez l'ID de l'utilisateur ici
+                        console.log('Utilisateur créé avec succès');
+                        
+                        // Ajouter un document pour le nouvel utilisateur dans la collection 'test_users'
+                        firebase
+                            .firestore()
+                            .collection('test_users')
+                            .doc(userCredential.user.uid)
+                            .set({
+                                email: email,
+                                twitchUsername: pseudo,
+                                prenom: prenom,  // Ajouter le prénom à la base de données
+                                nom: nom,  // Ajouter le nom à la base de données
+                                // Ajoutez ici d'autres informations si nécessaire
+                            })
+                            .then(() => {
+                                navigation.navigate('AlaUne', { // Modifiez cette ligne
+                                    twitchUsername: pseudo,
+                                });
+                            })
+                            .catch((error) => {
+                                console.log("Erreur lors de l'ajout de l'utilisateur à la collection test_users :", error);
+                            });
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            })
+            .catch(error => {
+                console.log(error);
+                setErrorMessage(error.message);
+            });
+    }
+    
+  
     return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -100,24 +123,33 @@ export default function Inscription({ navigation }) {
           value={password}
           onChangeText={setPassword}
         />
+           <TextInput
+          style={styles.input}
+          placeholder="Prénom"
+          placeholderTextColor="rgba(255,255,255,0.7)"
+          autoCapitalize="none"
+          autoCorrect={false}
+          value={prenom}
+          onChangeText={setPrenom}
+        />
         <TextInput
-      style={styles.input}
-      placeholder="Prénom"
-      placeholderTextColor="rgba(255,255,255,0.7)"
-      autoCapitalize="words"
-      autoCorrect={false}
-      value={firstName}
-      onChangeText={setFirstName}
-    />
-    <TextInput
-      style={styles.input}
-      placeholder="Nom"
-      placeholderTextColor="rgba(255,255,255,0.7)"
-      autoCapitalize="words"
-      autoCorrect={false}
-      value={lastName}
-      onChangeText={setLastName}
-    />
+          style={styles.input}
+          placeholder="Nom"
+          placeholderTextColor="rgba(255,255,255,0.7)"
+          autoCapitalize="none"
+          autoCorrect={false}
+          value={nom}
+          onChangeText={setNom}
+        />
+         <TextInput
+          style={styles.input}
+          placeholder="Pseudo"
+          placeholderTextColor="rgba(255,255,255,0.7)"
+          autoCapitalize="none"
+          autoCorrect={false}
+          value={pseudo}
+          onChangeText={setPseudo}
+        />
         {errorMessage ? (
           <Text style={styles.errorMessage}>{errorMessage}</Text>
         ) : null}

@@ -31,9 +31,13 @@ export default function Compte() {
   const [username, setUsername] = useState("");
   const [data, setData] = useState([]);
   const [bio, setBio] = useState("");
-  const [nom, setnom] = useState("");
-  const [prenom, setprenom] = useState("");
-  const [email, setEmail] = useState("");
+  const [nom, setnom] = useState(async () => await AsyncStorage.getItem('nom') || "");
+  const [prenom, setprenom] = useState(async () => await AsyncStorage.getItem('prenom') || "");
+  const [email, setEmail] = useState(async () => await AsyncStorage.getItem('email') || "");
+  const [loading, setLoading] = useState(true);
+
+  const [profileImageTopBarUrl, setProfileImageTopBarUrl] = useState("");
+
   const handleLogout = async () => {
     try {
       await firebase.auth().signOut();
@@ -42,6 +46,28 @@ export default function Compte() {
       console.error('Error during logout:', error);
     }
   };
+  const loadNom = async () => {
+    const storedNom = await AsyncStorage.getItem('nom');
+    if (storedNom) {
+        setnom(storedNom);
+    }
+};
+
+const loadPrenom = async () => {
+    const storedPrenom = await AsyncStorage.getItem('prenom');
+    if (storedPrenom) {
+        setprenom(storedPrenom);
+    }
+};
+
+
+const loadEmail = async () => {
+    const storedEmail = await AsyncStorage.getItem('email');
+    if (storedEmail) {
+        setEmail(storedEmail);
+    }
+};
+
 const nomRef = useRef(null);
   const handleNomChange = () => {
     console.log('handleNomChange called');
@@ -54,50 +80,32 @@ const nomRef = useRef(null);
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
-  useEffect(() => {
-    const userId = firebase.auth().currentUser.uid;
-    console.log("User ID:", userId);
-    const userRef = firebase.database().ref(`users/${userId}`);
-    console.log("Data from Firebase:", data);
+useEffect(() => {
+  const user = firebase.auth().currentUser;
+  const userId = user.uid;
+  const userEmail = user.email;
+  setEmail(userEmail);
 
-    const handleData = (snapshot) => {
-      const data = snapshot.val();
-      console.log("Data from Firebase:", data);
-    
-      if (data) {
-        setNom(data.nom || "");
-        setPrenom(data.prenom || "");
-      } else {
-        setnom("");
-        setprenom("");
-      }
-    };
-    const saveUserData = async (nom, prenom) => {
-      try {
-        const userId = firebase.auth().currentUser.uid;
-        await firebase.database().ref(`users/${userId}`).set({
-          nom,
-          prenom,
-        });
-        console.log('User data saved successfully');
-      } catch (error) {
-        console.error('Error saving user data:', error);
-      }
-    };
-                                                                                                                                                                                                                                                                                 
-    
-    (async () => {
-      const savedImage = await AsyncStorage.getItem("profileImage");
-      if (savedImage) {
-        setProfileImageUrl(savedImage);
-      }
-    })();
-    userRef.on('value', handleData);
+  const userRef = firebase.database().ref(`users/${userId}`);
 
-    return () => {
-      userRef.off('value', handleData);
-    };
-  }, []);
+  const handleData = (snapshot) => {
+    const data = snapshot.val();
+
+    if (data) {
+      setnom(data.nom || "");
+      setprenom(data.prenom || "");
+      setEmail(data.email || "");
+    }
+
+    setLoading(false);
+  };
+
+  userRef.on('value', handleData);
+
+  return () => {
+    userRef.off('value', handleData);
+  };
+}, []);
   const handleBioChange = (newBio) => {
     setBio(newBio);
     AsyncStorage.setItem('bio', newBio); // sauvegarder la bio dans le stockage local
@@ -154,8 +162,11 @@ if (!firebase.apps.length) {
 
   useEffect(() => {
     loadProfileImage();
-    loadUsername(); // Appel de la fonction loadUsername ici
-  }, []);
+    loadUsername();
+    loadNom();
+    loadPrenom();
+    loadEmail();
+}, []);
 
   const removeImage = async () => {
     await AsyncStorage.removeItem("profileImage");
@@ -176,7 +187,7 @@ if (!firebase.apps.length) {
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
-        <TopBar />
+      <TopBar profileImage={profileImageTopBarUrl} />
       </View>
       <KeyboardAwareScrollView
   contentContainerStyle={styles.keyboardAwareScrollView}
@@ -221,27 +232,30 @@ if (!firebase.apps.length) {
           />
         </View>
         <View style={styles.fieldContainer}>
-  <TextInput
-    style={[styles.input, styles.whiteBackground]}
-    value={`Nom: ${nom}`}
-    editable={false}
-  />
+    <TextInput
+        style={[styles.input, styles.whiteBackground]}
+        value={`Nom: ${nom}`}
+        editable={false}
+    />
 </View>
+
+<View style={styles.fieldContainer}>
+    <TextInput
+        style={[styles.input, styles.whiteBackground]}
+        value={`Prénom: ${prenom}`}
+        editable={false}
+    />
+</View>
+
 
 <View style={styles.fieldContainer}>
   <TextInput
     style={[styles.input, styles.whiteBackground]}
-    value={`Prénom: ${prenom}`}
+    value={`Email: ${email}`}
     editable={false}
   />
 </View>
 
-<View style={styles.fieldContainer}>
-  <TextInput
-    style={[styles.input, styles.whiteBackground]}
-    value="Email: Entrez votre email ici"
-  />
-</View>
       </View>
       {/* Add your custom icon */}
     <TouchableOpacity style={styles.customIconContainer}>

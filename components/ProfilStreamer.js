@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 
 const ProfilStreamer = ({ route }) => {
-  const { streamerUsername, streamerData, streamerDescription, streamerGame } = route.params;
+  const { streamerUsername, streamerData, streamerDescription } = route.params;
   const [userDescription, setUserDescription] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const clientId = 'i34nc3xu598asoajw481awags63pnl';
@@ -10,6 +10,8 @@ const ProfilStreamer = ({ route }) => {
   const [gameInfo, setGameInfo] = useState(null);
   const [streamerId, setStreamerId] = useState(null);
   const [currentGameId, setCurrentGameId] = useState(null);
+  const [gameId, setGameId] = useState(null);
+  const [gameCategory, setGameCategory] = useState(null);
 
 
 
@@ -76,7 +78,9 @@ const ProfilStreamer = ({ route }) => {
     if (!response.ok) {
       throw new Error("Erreur lors de la récupération des informations sur le jeu en cours");
     }
-  
+    setCurrentGameId(data.data[0].game_id);
+    setGameId(data.data[0].game_id); // stockez également l'ID de la catégorie
+    
     const data = await response.json();
     console.log("fetchCurrentGame data:", data);
   
@@ -109,8 +113,34 @@ const ProfilStreamer = ({ route }) => {
     if (data.data.length > 0) {
       setGameInfo(data.data[0]);
       console.log("Game info:", data.data[0]);
+  console.log("Game box art URL:", data.data[0].box_art_url);
     } else {
       setGameInfo(null);
+    }
+  }
+  async function fetchGameCategory(gameId, oauthToken) {
+    const response = await fetch(
+      `https://api.twitch.tv/helix/games?id=${gameId}`,
+      {
+        headers: {
+          'Client-ID': clientId,
+          Authorization: `Bearer ${oauthToken}`,
+        },
+      }
+    );
+  
+    if (!response.ok) {
+      throw new Error("Erreur lors de la récupération des informations sur la catégorie");
+    }
+  
+    const data = await response.json();
+    console.log("fetchGameCategory data:", data);
+  
+    if (data.data.length > 0) {
+      setGameCategory(data.data[0].name); // stockez le nom de la catégorie
+      console.log("Game category:", data.data[0].name);
+    } else {
+      setGameCategory(null);
     }
   }
   
@@ -141,14 +171,16 @@ useEffect(() => {
 
 useEffect(() => {
   async function fetchGameDetails() {
-    if (currentGameId) { // vérifier si currentGameId est différent de null
+    if (currentGameId) {
       console.log("fetchGameInfo is called");
       const oauthToken = await getOAuthToken(clientId, clientSecret);
       await fetchGameInfo(currentGameId, oauthToken);
+      await fetchGameCategory(currentGameId, oauthToken); // récupérez les informations sur la catégorie
     }
   }
   fetchGameDetails();
 }, [currentGameId]);
+
 
 
   
@@ -172,15 +204,23 @@ useEffect(() => {
           style={styles.profileImage}
         />
       )}
+      {gameCategory && (
+  <View style={styles.categoryContainer}>
+    <Text style={styles.categoryText}>{gameCategory}</Text>
+  </View>
+)}
+
       {gameInfo && gameInfo.box_art_url && (
         <View>
           <Text style={styles.gameTitle}>Jeu en cours:</Text>
+          {console.log("Rendering game box art with URL:", gameInfo.box_art_url.replace('{width}', '285').replace('{height}', '380'))}
           <Image
-            source={{
-              uri: gameInfo.box_art_url.replace('{width}', '285').replace('{height}', '380'),
-            }}
-            style={styles.gameImage}
-          />
+  source={{
+    uri: `${gameInfo.box_art_url.replace('{width}', '285').replace('{height}', '380')}`,
+  }}
+  style={styles.gameImage}
+/>
+
         </View>
       )}
       <Text style={styles.description}>{streamerDescription}</Text>
@@ -189,6 +229,7 @@ useEffect(() => {
       {/* Utilisez les informations du streamerData pour afficher le contenu du profil */}
     </View>
   );
+
   
 
 };
@@ -225,6 +266,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
   },  
+  categoryContainer: {
+    backgroundColor: '#FF2E63',
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    alignSelf: 'flex-start',
+    marginVertical: 5,
+    marginRight: 5,
+  },
+  categoryText: {
+    color: 'white',
+    fontSize: 12,
+  },
+  
 });
 
 export default ProfilStreamer;

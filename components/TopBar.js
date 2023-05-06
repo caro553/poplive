@@ -11,7 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "react-native";
 
-export default function TopBar() {
+export default function TopBar({ profileImage }) {
   const navigation = useNavigation();
 
   const [showMenu, setShowMenu] = useState(false);
@@ -48,22 +48,25 @@ export default function TopBar() {
   </View>
   </View>
       <Modal
-        animationType="fade"
-        visible={showMenu}
-        transparent={true}
-        onRequestClose={toggleMenu}
-      >
-
-        <TouchableOpacity style={styles.menuOverlay} onPress={toggleMenu}>
-          <View style={styles.menuContainer}>
-          <Image source={require('./logo_top_menu.png')} style={styles.logo1} />
-          <Image source={require('./couronne.png')} style={styles.couronne} />
-          <Image source={require('./demonslayer.jpg')} style={styles.logoducomte} />
-          <Text style={styles.nomcompte} > NomDuCompte</Text>
-          <Text style={styles.pseudo} > @pseudoducompte</Text>
-
-
-
+  animationType="fade"
+  visible={showMenu}
+  transparent={true}
+  onRequestClose={toggleMenu}
+>
+  <TouchableOpacity style={styles.menuOverlay} onPress={toggleMenu}>
+    <View style={styles.menuContainer}>
+      <Image source={require('./logo.png')} style={styles.logo1} />
+      <Image source={require('./couronne.png')} style={styles.couronne} />
+      {profileImage ? (
+  <Image source={{ uri: profileImage }} style={styles.logoducomte} />
+) : (
+  <Ionicons 
+    name="person"
+    size={50}
+    color="grey"
+    style={styles.logoducomte}
+  />
+)}
 
           <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Compte")}>
   
