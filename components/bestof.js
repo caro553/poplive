@@ -11,7 +11,7 @@ export default function Bestof() {
 
   useEffect(() => {
     async function fetchVideoData() {
-      const videoIds = ['t4Nq3dz4VTg', 'yLqTBlJ3cSg', 'CmgyUYCibwA', 'Lvh28X0I4Jg']; // Remplacez par les IDs des vidéos YouTube souhaitées
+      const videoIds = ['OYThhaHdJKo', 'kGee1PRy-so', 'wvDAyt1h6rM', 'jWraTbrf_kY','6UCMmsoa1eI','YoZ1aehyZ3I']; // Remplacez par les IDs des vidéos YouTube souhaitées
       const apiKey = 'AIzaSyDvjinFVOfL1Dwxlt4UY_9s99gCIuKtyGY'; // Remplacez par votre clé API YouTube
       const promises = videoIds.map(async (id) => {
         const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?id=${id}&key=${apiKey}&part=snippet&fields=items(snippet(thumbnails(default),title,channelTitle,description))`);
@@ -22,7 +22,7 @@ export default function Bestof() {
       const data = await Promise.all(promises);
       setVideoData(data);
     }
-    fetchVideoData();
+    fetchVideoData(); 
   }, []);
 
   return (
@@ -33,36 +33,32 @@ export default function Bestof() {
       </View>
       <View style={styles.titleContainer}>
   <Text style={styles.titleText}>
-    Vidéos YOUTUBE de nos streamers
+    Vidéos youtube de nos streamers
   </Text>
   <View style={styles.titleLine} />
 </View>
-      <Text style={styles.title}>
-          Best-OF
-        </Text>
         <ScrollView style={styles.scrollView}>
   {videoData.map((video, index) => (
-    <TouchableOpacity key={index} style={styles.twitchContainer} onPress={() => Linking.openURL(
-      index === 0 ? 'https://www.youtube.com/watch?v=t4Nq3dz4VTg' :
-      index === 1 ? 'https://www.youtube.com/watch?v=yLqTBlJ3cSg' :
-      index === 2 ? 'https://youtu.be/CmgyUYCibwA' :
-      index === 3 ? 'https://youtu.be/Lvh28X0I4Jg' :
-      'https://www.youtube.com/watch?v=defaultLink'
-    )}>
+  <TouchableOpacity key={index} style={styles.twitchContainer} onPress={() => Linking.openURL(
+    index === 0 ? `https://www.youtube.com/watch?v=${videoIds[0]}` :
+    index === 1 ? `https://www.youtube.com/watch?v=${videoIds[1]}` :
+    index === 2 ? `https://www.youtube.com/watch?v=${videoIds[2]}` :
+    index === 3 ? `https://www.youtube.com/watch?v=${videoIds[3]}` :
+    index === 4 ? `https://www.youtube.com/watch?v=${videoIds[4]}` :
+    index === 5 ? `https://www.youtube.com/watch?v=${videoIds[5]}` :
+    'https://www.youtube.com/watch?v=defaultLink'
+  )}>
+  
       <Image source={{ uri: video.thumbnailUrl }} style={styles.videoImage} />
       <View style={styles.rectangle}>
         <Image style={styles.twitchImage} source={{ uri: video.thumbnail }} />
         <View style={styles.twitchTextContainer}>
           <Text style={styles.name}>{video.channelTitle}</Text>
           <Text numberOfLines={2} style={[styles.twitchTitle, { fontWeight: 'bold' }]}>{video.title}</Text>
-          <Text style={styles.twitchChannel}>{video.channelTitle}</Text>
+          <Text style={styles.twitchDate}>30 avril 2023</Text>
         </View>
       </View>
-      <View style={styles.rectangle}>
-        <Text style={[styles.twitchChannel, { marginTop: -10 }]}>{video.channelTitle}</Text>
-        <Text numberOfLines={2} style={[styles.twitchTitle, styles.textCenter, { fontWeight: 'bold', marginBottom: -2 }]}>{video.title}</Text>
-        <Image source={{ uri: video.thumbnailUrl }} style={[styles.videoImage, { marginLeft: 10 }]} />
-      </View>
+
     </TouchableOpacity>
   ))}
 </ScrollView>
@@ -85,8 +81,9 @@ const styles = StyleSheet.create({
   },
 
 twitchContainer: {
+  marginTop:90,
   width: '90%',
-  height: '20%',
+  height: '15%',
   backgroundColor: 'white',
   borderRadius: 30,
   marginTop: 30,
@@ -95,6 +92,7 @@ twitchContainer: {
   alignSelf: 'center', // Ajouter cette ligne pour centrer horizontalement
 },
 profileContainer: {
+
   width: 50,
   height: 50,
   backgroundColor: 'white',
@@ -128,17 +126,28 @@ videoImage: {
   height: 99,
   borderRadius: 20,
 },
-title:{
-  color:"white",
-},
 
+titleText: {
+  marginTop:40,
+  textTransform: 'uppercase',
+  color:'white',
+  fontSize: 20,
+  fontWeight: 'bold',
+  textAlign: "center",
+  marginBottom:10,
+},
 name:{
   borderRadius: 3,
-  fontFamily: 'Calibri',
-  fontSize: 15,
+  fontSize: 13,
   textAlign: "center",
   bottom:30,
   fontWeight: "bold",
-  boxShadow: "0 0 4px rgba(75, 56, 142, 0.5",
-}
+
+},
+twitchDate:{
+  borderRadius: 3,
+  fontSize: 13,
+  textAlign: "center",
+  fontWeight: "bold",
+},
 });
