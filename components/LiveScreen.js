@@ -71,10 +71,12 @@ const LiveScreen = ({ route }) => {
       isLive: streamData.isLive,
       username: streamData.username,
       streamTitle: streamData.streamTitle,
-      viewerCount: streamData.viewerCount || 0, // Ajoutez une valeur par défaut si viewerCount est undefined
+      viewerCount: streamData.viewerCount || 0,
       profileImage: streamData.profileImage,
       streamThumbnailUrl: streamData.streamThumbnailUrl,
+      description: streamData.description, // Ajoutez cette ligne
     });
+    
   }
   
   
@@ -148,8 +150,14 @@ async function fetchTwitchUserProfile(username) {
   }
 
   const data = await response.json();
-  return data.data.length > 0 ? data.data[0] : null;
+  return data.data.length > 0
+    ? {
+        ...data.data[0],
+        description: data.data[0].description, // Ajoutez cette ligne pour inclure la description
+      }
+    : null;
 }
+
 async function addNewStreamer(username) {
   // Vérifiez si l'utilisateur existe déjà dans la liste des utilisateurs
   const existingUser = Object.values(users).find(
@@ -170,12 +178,14 @@ async function addNewStreamer(username) {
   if (liveInfo.isLive) {
     const streamData = {
       isLive: liveInfo.isLive,
-      username: username, // Ajoutez cette ligne
+      username: username,
       streamTitle: liveInfo.streamTitle,
       viewerCount: liveInfo.viewer_count,
-      profileImage: liveInfo.profileImage, // Ajoutez cette ligne
-      streamThumbnailUrl: liveInfo.streamThumbnailUrl, // Ajoutez cette ligne
+      profileImage: liveInfo.profileImage,
+      streamThumbnailUrl: liveInfo.streamThumbnailUrl,
+      description: liveInfo.description, // Ajoutez cette ligne
     };
+    
 
     await storeLiveStreamInfo(existingUser ? existingUser.userId : userId, streamData);
     // Ajoutez les données du streamer à la liste des streamers
