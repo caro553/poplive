@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
+import { WebView } from 'react-native-webview';
+import Video from 'react-native-video';
+import Controls from 'react-native-video-controls';
 
 const ProfilStreamer = ({ route }) => {
   console.log('Route params:', route.params);
@@ -18,9 +21,45 @@ const ProfilStreamer = ({ route }) => {
   const [gameId, setGameId] = useState(null);
   const [gameCategory, setGameCategory] = useState(null);
   const [gameCategoryImage, setGameCategoryImage] = useState(null);
+  const [streamUrl, setStreamUrl] = useState(null);
 
 
 
+  async function fetchStreamUrl(streamerId, oauthToken) {
+    const response = await fetch(
+      `https://api.twitch.tv/helix/streams?user_id=${streamerId}`,
+      {
+        headers: {
+          'Client-ID': clientId,
+          Authorization: `Bearer ${oauthToken}`,
+        },
+      }
+    );
+  
+    if (!response.ok) {
+      throw new Error('Erreur lors de la récupération des informations sur le flux');
+    }
+  
+    const data = await response.json();
+    console.log('fetchStreamUrl data:', data);
+  
+    if (data.data.length > 0 && data.data[0].type === 'live') {
+      setStreamUrl(`https://usher.ttvnw.net/api/channel/hls/${username}.m3u8?token=${data.data[0].token}&sig=${data.data[0].sig}`);
+    } else {
+      setStreamUrl(null);
+    }
+  }
+  
+  useEffect(() => {
+    async function fetchStreamData() {
+      if (streamerId) {
+        console.log('fetchStreamUrl is called');
+        const oauthToken = await getOAuthToken(clientId, clientSecret);
+        await fetchStreamUrl(streamerId, oauthToken);
+      }
+    }
+    fetchStreamData();
+  }, [streamerId]);
   async function fetchUserDescription(twitchUsername, oauthToken) {
     const response = await fetch(
       `https://api.twitch.tv/helix/users?login=${twitchUsername}`,
@@ -211,7 +250,7 @@ useEffect(() => {
   }
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{username}</Text>
+      <Text style={styles.title}></Text>
       {profileImage && (
         <>
           <Image
@@ -222,24 +261,42 @@ useEffect(() => {
         </>
       )}
   
-      <Text style={styles.description}>
+     
+  
+  
+      {/* Ajoutez la WebView pour afficher le live Twitch du streamer */}
+      <View style={styles.twitchStreamContainer}>
+  <WebView
+    style={styles.twitchStream}
+    source={{ uri: `https://player.twitch.tv/?channel=${username}&parent=yourapp.com` }}
+    allowsInlineMediaPlayback
+    startInLoadingState
+    referrerPolicy="no-referrer-when-downgrade"
+  />
+</View>
+
+<Text style={styles.description}>
         {userDescription}
       </Text>
-  
-      {/* Ajoutez cette section pour afficher l'image de la catégorie */}
+
+      {/* Affichez l'image de la catégorie et le nom de la catégorie */}
       <Text>Catégorie en cours :</Text>
-{gameCategoryImage && (
-  <>
-    <Image
-      source={{ uri: gameCategoryImage }}
-      style={styles.categoryImage}
-    />
-    {console.log("Displaying game category image URL:", gameCategoryImage)}
-  </>
-)}
+      {gameCategoryImage && (
+        <>
+          <Image
+            source={{ uri: gameCategoryImage }}
+            style={styles.categoryImage}
+          />
+          {console.log("Displaying game category image URL:", gameCategoryImage)}
+        </>
+      )}
+      {gameCategory && (
+        <Text style={styles.gameCategory}>{gameCategory}</Text>
+      )}
+  
       {/* Utilisez les informations du streamerData pour afficher le contenu du profil */}
     </View>
-  );
+  );  
 };
 
 const styles = StyleSheet.create({
@@ -253,11 +310,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   profileImage: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    marginBottom: 10,
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    position: 'absolute',
+    zIndex: 1,
+    top: 170
   },
+  
   description: {
     fontSize: 14,
     textAlign: 'center',
@@ -297,8 +357,32 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   categoryText: {
-    color: 'white',
+    color: 'black',
     fontSize: 12,
+  },
+  gameCategory: {
+    fontSize: 10,
+    color: 'black',
+    fontStyle: 'italic',
+    marginRight: 10,
+  },
+  twitchStream: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  twitchStreamContainer: {
+    width: '100%',
+    height: 300,
+    top: -220
+  },
+  streamBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: -1,
   },
   
 });
