@@ -19,37 +19,12 @@ export default function Inscription({ navigation }) {
     const [password, setPassword] = useState('');
     const [pseudo, setPseudo] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [prenom, setPrenom] = useState('');  // Ajout de l'état prénom
-    const [nom, setNom] = useState('');  // Ajout de l'état nom
+    
     const saveUsername = async (userId) => {
         await AsyncStorage.setItem('username', pseudo);
         await AsyncStorage.setItem('userId', userId);
-        await AsyncStorage.setItem('prenom', prenom);  // Sauvegarder le prénom
-        await AsyncStorage.setItem('nom', nom);  // Sauvegarder le no
     };
-    const updateUserInformation = async (newPseudo, newPrenom, newNom) => {
-      const userId = await AsyncStorage.getItem('userId');
-      
-      // Mettre à jour Firestore
-      firebase
-          .firestore()
-          .collection('test_users')
-          .doc(userId)
-          .update({
-              twitchUsername: newPseudo,
-              prenom: newPrenom,
-              nom: newNom,
-          })
-          .catch((error) => {
-              console.log("Erreur lors de la mise à jour de l'utilisateur dans Firestore :", error);
-          });
-  
-      // Mettre à jour AsyncStorage
-      await AsyncStorage.setItem('username', newPseudo);
-      await AsyncStorage.setItem('prenom', newPrenom);
-      await AsyncStorage.setItem('nom', newNom);
-  }
-  
+    
 
     const handleSignUp = () => {
         auth.createUserWithEmailAndPassword(email, password)
@@ -70,8 +45,6 @@ export default function Inscription({ navigation }) {
                             .set({
                                 email: email,
                                 twitchUsername: pseudo,
-                                prenom: prenom,  // Ajouter le prénom à la base de données
-                                nom: nom,  // Ajouter le nom à la base de données
                                 // Ajoutez ici d'autres informations si nécessaire
                             })
                             .then(() => {
@@ -123,25 +96,7 @@ export default function Inscription({ navigation }) {
           value={password}
           onChangeText={setPassword}
         />
-           <TextInput
-          style={styles.input}
-          placeholder="Prénom"
-          placeholderTextColor="rgba(255,255,255,0.7)"
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={prenom}
-          onChangeText={setPrenom}
-        />
         <TextInput
-          style={styles.input}
-          placeholder="Nom"
-          placeholderTextColor="rgba(255,255,255,0.7)"
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={nom}
-          onChangeText={setNom}
-        />
-         <TextInput
           style={styles.input}
           placeholder="Pseudo"
           placeholderTextColor="rgba(255,255,255,0.7)"
