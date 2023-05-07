@@ -5,7 +5,7 @@ import HomeScreen from "./components/HomeScreen";
 import SettingsScreen from "./components/SettingsScreen";
 import AlaUne from "./components/AlaUne";
 import LiveScreen from "./components/LiveScreen";
-import Bestof from "./components/bestof";
+import Bestof from "./components/Bestof";
 import Compte from "./components/Compte";
 import Connexion from "./components/Connexion";
 import Inscription from "./components/Inscription";
