@@ -198,12 +198,13 @@ useEffect(() => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Profil du streamer: {streamerUsername}</Text>
-      {streamerData.profileImage && (
+      {userDescription.profileImage && (
         <Image
-          source={{ uri: streamerData.profileImage }}
+          source={{ uri: userDescription.profileImage }}
           style={styles.profileImage}
         />
       )}
+
       {gameCategory && (
   <View style={styles.categoryContainer}>
     <Text style={styles.categoryText}>{gameCategory}</Text>

@@ -12,9 +12,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import firebase from "./firebaseConfig";
 import TopBar from './TopBar';
 import BottomBar from './BottomBar';
+import { useNavigation } from '@react-navigation/native'; // Ajoutez cette ligne en haut
+
 const { width } = Dimensions.get('window');
 
-const LiveScreen = ({ route, navigation }) => {
+const LiveScreen = ({ route }) => {
   console.log('LiveScreen component mounted');
   const [isLive, setIsLive] = useState(false);
   const [streamTitle, setStreamTitle] = useState('');
@@ -26,6 +28,7 @@ const LiveScreen = ({ route, navigation }) => {
   const [twitchUsername, setTwitchUsername] = useState('');
   const [oauthToken, setOAuthToken] = useState(null);
   const [users, setUsers] = useState({});
+  const navigation = useNavigation();
 
   useEffect(() => {
     const unsubscribe = firebase
@@ -266,36 +269,42 @@ getUsernameAndUserId().then(async ({ username, userId }) => {
       <BottomBar />
       <ScrollView>
       {Object.entries(users)
-        .filter(([_, userInfo]) => userInfo.isLive)
-        .map(([username, userInfo]) => (
-          <View key={username} style={styles.streamerRectangle}>
-            {userInfo.profileImage && (
-              <Image
-                source={{ uri: userInfo.profileImage }}
-                style={styles.profileImage}
-              />
-            )}
-            <View style={styles.middleContent}>
-              <Text style={styles.username}>{username}</Text>
-              {userInfo.isLive ? (
-                <>
-                  <Text style={styles.streamTitle}>{userInfo.streamTitle}</Text>
-                  <Text style={styles.viewerCount}>
-                    Nombre de vues: {userInfo.viewerCount}
-                  </Text>
-                </>
-              ) : (
-                <Text>L'utilisateur n'est pas en direct.</Text>
-              )}
-            </View>
-            {userInfo.isLive && userInfo.streamThumbnailUrl && (
-              <Image
-                source={{ uri: userInfo.streamThumbnailUrl }}
-                style={styles.streamThumbnail}
-              />
-            )}
-          </View>
-        ))}
+  .filter(([_, userInfo]) => userInfo.isLive)
+  .map(([_, userInfo]) => (
+    <TouchableOpacity
+      key={userInfo.username}
+      onPress={() => navigation.navigate('ProfilStreamer', { username: userInfo.username })}
+    >
+      <View style={styles.streamerRectangle}>
+        {userInfo.profileImage && (
+          <Image
+            source={{ uri: userInfo.profileImage }}
+            style={styles.profileImage}
+          />
+        )}
+        <View style={styles.middleContent}>
+          <Text style={styles.username}>{userInfo.username}</Text>
+          {userInfo.isLive ? (
+            <>
+              <Text style={styles.streamTitle}>{userInfo.streamTitle}</Text>
+              <Text style={styles.viewerCount}>
+                Nombre de vues: {userInfo.viewerCount}
+              </Text>
+            </>
+          ) : (
+            <Text>L'utilisateur n'est pas en direct.</Text>
+          )}
+        </View>
+        {userInfo.isLive && userInfo.streamThumbnailUrl && (
+          <Image
+            source={{ uri: userInfo.streamThumbnailUrl }}
+            style={styles.streamThumbnail}
+          />
+        )}
+      </View>
+    </TouchableOpacity>
+  ))}
+
       <TouchableOpacity
         style={styles.logoutButton}
         onPress={() => navigation.navigate('Connexion')}
