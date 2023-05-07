@@ -2,8 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 
 const ProfilStreamer = ({ route }) => {
-  const { streamerUsername, streamerData, streamerDescription } = route.params;
-  const [userDescription, setUserDescription] = useState(null);
+  console.log('Route params:', route.params);
+  const { username, profileImage } = route.params.userInfo;
+  console.log('Received user data in ProfilStreamer:', {
+    username,
+    profileImage,
+  });
+   const [userDescription, setUserDescription] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const clientId = 'i34nc3xu598asoajw481awags63pnl';
   const clientSecret = 'cbm6qiv3n5hizeqxbz7kdimrvyzr4c';
@@ -12,6 +17,7 @@ const ProfilStreamer = ({ route }) => {
   const [currentGameId, setCurrentGameId] = useState(null);
   const [gameId, setGameId] = useState(null);
   const [gameCategory, setGameCategory] = useState(null);
+  const [gameCategoryImage, setGameCategoryImage] = useState(null);
 
 
 
@@ -111,12 +117,13 @@ const ProfilStreamer = ({ route }) => {
     console.log("fetchGameInfo data:", data);
   
     if (data.data.length > 0) {
-      setGameInfo(data.data[0]);
-      console.log("Game info:", data.data[0]);
-  console.log("Game box art URL:", data.data[0].box_art_url);
+      setUserDescription(data.data[0]); // Modifiez cette ligne pour stocker toutes les informations du streamer
     } else {
-      setGameInfo(null);
+      setUserDescription({
+        description: "La description n'est pas disponible",
+      });
     }
+    
   }
   async function fetchGameCategory(gameId, oauthToken) {
     const response = await fetch(
@@ -139,22 +146,28 @@ const ProfilStreamer = ({ route }) => {
     if (data.data.length > 0) {
       setGameCategory(data.data[0].name); // stockez le nom de la catégorie
       console.log("Game category:", data.data[0].name);
+      const imageUrlTemplate = data.data[0].box_art_url;
+      const imageUrl = imageUrlTemplate.replace('{width}', '100').replace('{height}', '100');
+      setGameCategoryImage(imageUrl); // stockez l'image de la catégorie avec l'URL réelle
+      console.log("Game category image URL:", imageUrl);      
     } else {
       setGameCategory(null);
+      setGameCategoryImage(null);
     }
   }
+  
   
  useEffect(() => {
   async function fetchData() {
     try {
       const oauthToken = await getOAuthToken(clientId, clientSecret);
-      await fetchUserDescription(streamerUsername, oauthToken);
+      await fetchUserDescription(username, oauthToken);
     } catch (error) {
       console.error("Erreur lors de la récupération de la description de l'utilisateur:", error);
     }
   }
   fetchData();
-}, [streamerUsername]);
+}, [username]);
 
   
   // Ajoutez ces deux useEffect après le premier useEffect
@@ -172,6 +185,7 @@ useEffect(() => {
 useEffect(() => {
   async function fetchGameDetails() {
     if (currentGameId) {
+      console.log("currentGameId:", currentGameId);
       console.log("fetchGameInfo is called");
       const oauthToken = await getOAuthToken(clientId, clientSecret);
       await fetchGameInfo(currentGameId, oauthToken);
@@ -180,6 +194,7 @@ useEffect(() => {
   }
   fetchGameDetails();
 }, [currentGameId]);
+
 
 
 
@@ -194,45 +209,38 @@ useEffect(() => {
       </View>
     );
   }
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Profil du streamer: {streamerUsername}</Text>
-      {userDescription.profileImage && (
-        <Image
-          source={{ uri: userDescription.profileImage }}
-          style={styles.profileImage}
-        />
-      )}
-
-      {gameCategory && (
-  <View style={styles.categoryContainer}>
-    <Text style={styles.categoryText}>{gameCategory}</Text>
-  </View>
-)}
-
-      {gameInfo && gameInfo.box_art_url && (
-        <View>
-          <Text style={styles.gameTitle}>Jeu en cours:</Text>
-          {console.log("Rendering game box art with URL:", gameInfo.box_art_url.replace('{width}', '285').replace('{height}', '380'))}
+      <Text style={styles.title}>Profil du streamer: {username}</Text>
+      {profileImage && (
+        <>
           <Image
-  source={{
-    uri: `${gameInfo.box_art_url.replace('{width}', '285').replace('{height}', '380')}`,
-  }}
-  style={styles.gameImage}
-/>
-
-        </View>
+            source={{ uri: profileImage }}
+            style={styles.profileImage}
+          />
+          {console.log('Profile image URL:', profileImage)}
+        </>
       )}
-      <Text style={styles.description}>{streamerDescription}</Text>
-      <Text>Concernant {streamerUsername} :</Text>
-      <Text style={styles.description}>{streamerDescription}</Text>
+  
+      <Text>Concernant {username} :</Text>
+      <Text style={styles.description}>
+        {userDescription}
+      </Text>
+  
+      {/* Ajoutez cette section pour afficher l'image de la catégorie */}
+      <Text>Catégorie en cours :</Text>
+{gameCategoryImage && (
+  <>
+    <Image
+      source={{ uri: gameCategoryImage }}
+      style={styles.categoryImage}
+    />
+    {console.log("Displaying game category image URL:", gameCategoryImage)}
+  </>
+)}
       {/* Utilisez les informations du streamerData pour afficher le contenu du profil */}
     </View>
   );
-
-  
-
 };
 
 const styles = StyleSheet.create({
@@ -262,6 +270,13 @@ const styles = StyleSheet.create({
     height: 190,
     marginBottom: 10,
   },
+  categoryImage: {
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
+    marginBottom: 10,
+  },
+  
   gameTitle: {
     fontSize: 16,
     fontWeight: 'bold',

@@ -29,6 +29,7 @@ const LiveScreen = ({ route }) => {
   const [oauthToken, setOAuthToken] = useState(null);
   const [users, setUsers] = useState({});
   const navigation = useNavigation();
+  const [gameCategory, setGameCategory] = useState(null);
 
   useEffect(() => {
     const unsubscribe = firebase
@@ -52,7 +53,30 @@ const LiveScreen = ({ route }) => {
 
   useEffect(() => {
     console.log('useEffect called');
-
+    async function fetchGameCategory(gameId) {
+      const response = await fetch(
+        `https://api.twitch.tv/helix/games?id=${gameId}`,
+        {
+          headers: {
+            'Client-ID': clientId,
+            Authorization: `Bearer ${oauthToken}`,
+          },
+        }
+      );
+    
+      if (!response.ok) {
+        throw new Error("Erreur lors de la récupération de la catégorie du jeu");
+      }
+    
+      const data = await response.json();
+    
+      if (data.data.length > 0) {
+        return data.data[0].name;
+      } else {
+        throw new Error("Erreur lors de la récupération de la catégorie du jeu");
+      }
+    }
+    
     async function getOAuthToken(clientId, clientSecret) {
       const response = await fetch(
         `https://id.twitch.tv/oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials&scope=user:read:email`,
@@ -147,13 +171,13 @@ const LiveScreen = ({ route }) => {
     
       const data = await response.json();
     
-      if (data.data.length > 0) {
-        setIsLive(true);
-        setStreamTitle(data.data[0].title);
-        setViewerCount(data.data[0].viewer_count);
-        setStreamThumbnailUrl(
-          data.data[0].thumbnail_url.replace('{width}', '640').replace('{height}', '360'),
-        );
+     if (data.data.length > 0) {
+    setIsLive(true);
+    setStreamTitle(data.data[0].title);
+    setViewerCount(data.data[0].viewer_count);
+    setStreamThumbnailUrl(
+      data.data[0].thumbnail_url.replace('{width}', '640').replace('{height}', '360'),
+    );
     
         // Stocker les informations de stream dans Firestore
         const streamData = {
@@ -272,10 +296,16 @@ getUsernameAndUserId().then(async ({ username, userId }) => {
   .filter(([_, userInfo]) => userInfo.isLive)
   .map(([_, userInfo]) => (
     <TouchableOpacity
-      key={userInfo.username}
-      onPress={() => navigation.navigate('ProfilStreamer', { username: userInfo.username })}
-    >
-      <View style={styles.streamerRectangle}>
+    key={userInfo.username}
+    onPress={() => {
+      console.log('Navigating to ProfilStreamer with user data:', {
+        userInfo,
+      });
+  
+      navigation.navigate('ProfilStreamer', { userInfo });
+    }}
+  >   
+     <View style={styles.streamerRectangle}>
         {userInfo.profileImage && (
           <Image
             source={{ uri: userInfo.profileImage }}
