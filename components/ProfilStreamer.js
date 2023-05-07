@@ -211,7 +211,7 @@ useEffect(() => {
   }
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Profil du streamer: {username}</Text>
+      <Text style={styles.title}>{username}</Text>
       {profileImage && (
         <>
           <Image
@@ -222,7 +222,6 @@ useEffect(() => {
         </>
       )}
   
-      <Text>Concernant {username} :</Text>
       <Text style={styles.description}>
         {userDescription}
       </Text>
@@ -263,8 +262,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     paddingHorizontal: 15,
-    backgroundColor: '#6441A4', // nouvelle couleur de fond correspondant à la couleur de Twitch
+    backgroundColor: 'white',
+    borderRadius: 10,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    marginBottom: 10,
   },
+  
   gameImage: {
     width: 142.5,
     height: 190,

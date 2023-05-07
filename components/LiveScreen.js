@@ -335,12 +335,6 @@ getUsernameAndUserId().then(async ({ username, userId }) => {
     </TouchableOpacity>
   ))}
 
-      <TouchableOpacity
-        style={styles.logoutButton}
-        onPress={() => navigation.navigate('Connexion')}
-      >
-        <Text style={styles.logoutButtonText}>Déconnexion</Text>
-      </TouchableOpacity>
       </ScrollView>
 
     </View>
