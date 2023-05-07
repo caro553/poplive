@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import TopBar from './TopBar';
 import BottomBar from './BottomBar';
+import { Video } from 'react-native';
+import { Dimensions } from 'react-native';
 import { View, Text, StyleSheet, ScrollView, Button, Modal, Image, LinearGradient} from 'react-native';
 
 const FAQScreen = () => {
@@ -16,93 +18,33 @@ const FAQScreen = () => {
 
   return (
     <View style={{height:1500,backgroundColor: '#6441a5',}}>
-       <TopBar />
+       <TopBar /> 
       <ScrollView style={styles.scrollView}>
     <View style={styles.container}>
     <View style={styles.topBar}>
    
+    <View style={styles.videoContainer}>
+  <Video source={require('./faqvideo.mp4')}
+         style={styles.video}
+         muted={true}
+         resizeMode='cover'
+         repeat={true}
+         controls={true} />
+</View>
 
-  
+
 
 
     <View style={styles.nouscontacter}>
-      <Button title="Nous contacter"></Button>
+      <Button title=" "/>
+      <Image source={require('./boutoncontacter.png')} style={styles.imgcontacter} />
     </View>
 
 
-
-    
-  
-      <Modal visible={modalVisible} animationType="slide" transparent={true}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modal}>
-            <Text style={styles.modalTitle}>Quel est le but de cette application ?</Text>
-            <Text style={styles.modalText}>Cette application est conçue pour fournir aux utilisateurs les dernières nouvelles et mises à jour dans le monde du stream et d'améliorer leur référencements.</Text>
-            <Button title="Fermer" onPress={() => setModalVisible(false)} />
-          </View>
-        </View>
-      </Modal>
-      
-      
-      
-
-
-
-
-            
-       <View style={styles.buttonContainer}>
-        <View style={{width: '125%',right:35, top:240,height:40, borderRadius: 100, backgroundColor: 'white'}}>
-          <Button 
-            title="Quel est le but de cette application ?" 
-            onPress={() => setModalVisible(true)}
-            color="black"
-          />
-              <Image source={require('./polygone.png')} style={styles.icon} />
-        </View>
-
-      </View>
-  
-      <Modal visible={modalVisible} animationType="slide" transparent={true}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modal}>
-            <Text style={styles.modalTitle}>Quel est le but de cette application ?</Text>
-            <Text style={styles.modalText}>Cette application est conçue pour fournir aux utilisateurs les dernières nouvelles et mises à jour dans le monde du stream et d'améliorer leur référencements.</Text>
-            <Button title="Fermer" onPress={() => setModalVisible(false)} />
-          </View>
-        </View>
-      </Modal>
-      
-
-            
       <View style={styles.buttonContainer}>
-        <View style={{width: '125%',right:35, top:265,height:40, borderRadius: 100, backgroundColor: 'white'}}>
+      <View style={styles.avantmodal}>
           <Button 
-            title="Quel est le but de cette application ?" 
-            onPress={() => setModalVisible(true)}
-            color="black"
-          />
-              <Image source={require('./polygone.png')} style={styles.icon} />
-        </View>
-
-      </View>
-  
-      <Modal visible={modalVisible} animationType="slide" transparent={true}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modal}>
-            <Text style={styles.modalTitle}>Quel est le but de cette application ?</Text>
-            <Text style={styles.modalText}>Cette application est conçue pour fournir aux utilisateurs les dernières nouvelles et mises à jour dans le monde du stream et d'améliorer leur référencements.</Text>
-            <Button title="Fermer" onPress={() => setModalVisible(false)} />
-          </View>
-        </View>
-      </Modal>
-
-
-
-
-      <View style={styles.buttonContainer}>
-        <View style={{width: '125%',right:35, top:290,height:40, borderRadius: 100, backgroundColor: 'white'}}>
-          <Button 
-            title="Quel est le but de cette application ?" 
+            title="Est-ce que l'application respecte la RGPD ?" 
             onPress={() => setModalVisible(true)}
             color="black"
           />
@@ -114,17 +56,18 @@ const FAQScreen = () => {
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modal}>
-            <Text style={styles.modalTitle}>Quel est le but de cette application ?</Text>
+            <Text style={styles.modalTitle}>Y-a-t'il d'autres contenus pour aider les streamers ?</Text>
             <Text style={styles.modalText}>Cette application est conçue pour fournir aux utilisateurs les dernières nouvelles et mises à jour dans le monde du stream et d'améliorer leur référencements.</Text>
             <Button title="Fermer" onPress={() => setModalVisible(false)} />
           </View>
         </View>
       </Modal>
 
+
       <View style={styles.buttonContainer}>
-        <View style={{width: '125%',right:35, top:315,height:40, borderRadius: 100, backgroundColor: 'white'}}>
+      <View style={styles.avantmodal}>
           <Button 
-            title="Quel est le but de cette application ?" 
+            title="Est-ce que l'application respecte la RGPD ?" 
             onPress={() => setModalVisible(true)}
             color="black"
           />
@@ -136,7 +79,7 @@ const FAQScreen = () => {
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modal}>
-            <Text style={styles.modalTitle}>Quel est le but de cette application ?</Text>
+            <Text style={styles.modalTitle}>Est-ce que l'application respecte la RGPD ?</Text>
             <Text style={styles.modalText}>Cette application est conçue pour fournir aux utilisateurs les dernières nouvelles et mises à jour dans le monde du stream et d'améliorer leur référencements.</Text>
             <Button title="Fermer" onPress={() => setModalVisible(false)} />
           </View>
@@ -144,9 +87,9 @@ const FAQScreen = () => {
       </Modal>
 
       <View style={styles.buttonContainer}>
-        <View style={{width: '125%',right:35, top:340,height:40, borderRadius: 100, backgroundColor: 'white'}}>
+      <View style={styles.avantmodal}>
           <Button 
-            title="Quel est le but de cette application ?" 
+            title="Et si j'ai un problème ?" 
             onPress={() => setModalVisible(true)}
             color="black"
           />
@@ -158,43 +101,17 @@ const FAQScreen = () => {
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modal}>
-            <Text style={styles.modalTitle}>Quel est le but de cette application ?</Text>
+            <Text style={styles.modalTitle}>Est-ce que l'application respecte la RGPD ?</Text>
             <Text style={styles.modalText}>Cette application est conçue pour fournir aux utilisateurs les dernières nouvelles et mises à jour dans le monde du stream et d'améliorer leur référencements.</Text>
             <Button title="Fermer" onPress={() => setModalVisible(false)} />
           </View>
         </View>
       </Modal>
-
-      <View style={styles.buttonContainer}>
-        <View style={{width: '125%',right:35, top:365,height:40, borderRadius: 100, backgroundColor: 'white'}}>
-          <Button 
-            title="Quel est le but de cette application ?" 
-            onPress={() => setModalVisible(true)}
-            color="black"
-          />
-               <Image source={require('./polygone.png')} style={styles.icon} />
-        </View>
 
       </View>
   
-      <Modal visible={modalVisible} animationType="slide" transparent={true}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modal}>
-            <Text style={styles.modalTitle}>Quel est le but de cette application ?</Text>
-            <Text style={styles.modalText}>Cette application est conçue pour fournir aux utilisateurs les dernières nouvelles et mises à jour dans le monde du stream et d'améliorer leur référencements.</Text>
-            <Button title="Fermer" onPress={() => setModalVisible(false)} />
-          </View>
-        </View>
-      </Modal>
-      
-      </View>
-
-
-
     </View>
-    <View  style={{top:445,}}>
-    <BottomBar></BottomBar>
-    </View>
+
   </ScrollView>
 
 
@@ -204,13 +121,16 @@ const FAQScreen = () => {
 
 
 const styles = StyleSheet.create({
-
   nouscontacter: {
-    /* Ajouter une hauteur et une largeur pour l'élément */
     height: 50,
     width: 200,
-    top:220,
-    left: 100,
+    top: 160,
+    left: 70,
+  },
+  imgcontacter:{
+    height: 50,
+    width: 250,
+    borderRadius: 8, 
   },
   icon: {
     width: 30,
@@ -309,7 +229,14 @@ const styles = StyleSheet.create({
       height: 30,
       marginRight: 10,
     },
-   
+    avantmodal:{
+      top:220,
+      width: 380,
+      height:40, 
+      borderRadius: 100, 
+      backgroundColor: 'white',
+      marginBottom: 10,
+    },
   });
 
 
