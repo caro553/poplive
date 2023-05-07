@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
     position: 'absolute', // Position the icon absolutely
     bottom: 90, // Increase the bottom value to match the "Déconnexion" button's position
     right: 20,
-    backgroundColor: "#FFB347",
+       backgroundColor: "#FFB347",
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 10, // Add border radius to make it rounded
