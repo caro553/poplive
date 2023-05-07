@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { WebView } from 'react-native-webview';
 import Video from 'react-native-video';
 import Controls from 'react-native-video-controls';
+import TopBar from './TopBar';
+import BottomBar from './BottomBar';
+import { Linking } from 'react-native';
 
 const ProfilStreamer = ({ route }) => {
   console.log('Route params:', route.params);
@@ -250,6 +253,11 @@ useEffect(() => {
   }
   return (
     <View style={styles.container}>
+        <View style={styles.topBar}>
+        <TopBar />
+      </View>
+      {/* Contenu de la page */}
+      <BottomBar />
       <Text style={styles.title}></Text>
       {profileImage && (
         <>
@@ -278,9 +286,11 @@ useEffect(() => {
 <Text style={styles.description}>
         {userDescription}
       </Text>
+      <TouchableOpacity style={styles.liveButton} onPress={() => Linking.openURL(`https://www.twitch.tv/${username}`)}>
+  <Text style={styles.liveButtonText}>Pop sur le live</Text>
+</TouchableOpacity>
 
       {/* Affichez l'image de la catégorie et le nom de la catégorie */}
-      <Text>Catégorie en cours :</Text>
       {gameCategoryImage && (
         <>
           <Image
@@ -304,6 +314,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#6441A4', // nouvelle couleur de fond correspondant à la couleur de Twitch
   },
   title: {
     fontSize: 18,
@@ -315,7 +326,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     position: 'absolute',
     zIndex: 1,
-    top: 170
+    top: 230
   },
   
   description: {
@@ -327,7 +338,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderWidth: 1,
     borderColor: '#ccc',
-    marginBottom: 10,
+    marginBottom: 160,
   },
   
   gameImage: {
@@ -374,7 +385,7 @@ const styles = StyleSheet.create({
   twitchStreamContainer: {
     width: '100%',
     height: 300,
-    top: -220
+    top: -80
   },
   streamBackground: {
     position: 'absolute',
@@ -384,7 +395,31 @@ const styles = StyleSheet.create({
     bottom: 0,
     zIndex: -1,
   },
-  
+  topBar: {
+    backgroundColor: '#5f5f5f',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  liveButton: {
+    alignSelf: 'flex-end', // Align the icon to the right
+    position: 'absolute', // Position the icon absolutely
+    bottom: 90, // Increase the bottom value to match the "Déconnexion" button's position
+    right: 20,
+    backgroundColor: "#FFB347",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10, // Add border radius to make it rounded
+  },
+  liveButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
 });
 
 export default ProfilStreamer;
