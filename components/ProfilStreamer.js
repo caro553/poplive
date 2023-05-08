@@ -244,6 +244,9 @@ const ProfilStreamer = ({ route }) => {
   }
   fetchData();
 }, [username]);
+
+
+
 useEffect(() => {
   async function loadGameImage() {
     const gameImageUrl = await fetchGameImage('516575');

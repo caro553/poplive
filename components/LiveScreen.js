@@ -13,6 +13,7 @@ import firebase from "./firebaseConfig";
 import TopBar from './TopBar';
 import BottomBar from './BottomBar';
 import { useNavigation } from '@react-navigation/native'; // Ajoutez cette ligne en haut
+import Vue from './Vue.png';
 
 const { width } = Dimensions.get('window');
 
@@ -317,9 +318,13 @@ getUsernameAndUserId().then(async ({ username, userId }) => {
           {userInfo.isLive ? (
             <>
               <Text style={styles.streamTitle}>{userInfo.streamTitle}</Text>
-              <Text style={styles.viewerCount}>
-                Nombre de vues: {userInfo.viewerCount}
-              </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+  <Image source={Vue} style={{ width: 15, height: 15, marginRight: 5 }} />
+  <Text style={styles.viewerCount}>
+    {userInfo.viewerCount}
+  </Text>
+</View>
+
             </>
           ) : (
             <Text>L'utilisateur n'est pas en direct.</Text>
