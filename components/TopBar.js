@@ -35,22 +35,9 @@ export default function TopBar() {
   return (
     <View style={styles.container}>
       <View style={styles.burgerContainer}>
+        
         <TouchableOpacity onPress={toggleMenu}>
-          <Ionicons
-            name="menu"
-            size={50}
-            color="white"
-            style={styles.menuIcon}
-          />
-        </TouchableOpacity>
-      </View>
-      <Image source={require("./logo.png")} style={styles.logo} />
-      <View style={styles.profileContainer}>
-        <TouchableOpacity
-          style={styles.logoContainer}
-          onPress={() => navigation.navigate("Compte")}
-        >
-          <Ionicons
+        <Ionicons
             name="person"
             size={50}
             color="white"
@@ -59,6 +46,9 @@ export default function TopBar() {
         </TouchableOpacity>
       </View>
 
+      <Image source={require("./logo_top_menu.png")} style={styles.logo} />
+
+  
       <Modal
         animationType="fade"
         visible={showMenu}
@@ -85,30 +75,39 @@ export default function TopBar() {
             style={{left:190,top:45,}}
           />
             </TouchableOpacity>
+            <TouchableOpacity  onPress={() => navigation.navigate("Compte")}>
             <Text style={styles.textMenu}> Profil</Text>
+            </TouchableOpacity>
+
 
             <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("AlaUne")}>
               <Image source={require('./acceuil.png')} style={styles.logomenu} />
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("AlaUne")}>
             <Text style={styles.textMenu}> Home </Text>
+            </TouchableOpacity>
 
 
-
-            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("LiveScreen")}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Bestof")}>
             <Image source={require('./video.png')} style={styles.logomenu} />
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Bestof")}>
             <Text style={styles.textMenu}> Best-of </Text>
-            
+            </TouchableOpacity>
+
             <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("LiveScreen")}>
             <Image source={require('./direct.png')} style={styles.logomenu} />
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("LiveScreen")}>
             <Text style={styles.textMenu}> Live </Text>
+            </TouchableOpacity>
 
-
-            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("LiveScreen")}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("FAQ")}>
             <Image source={require('./faq.png')} style={styles.logomenu} />
             </TouchableOpacity>
+            <TouchableOpacity  onPress={() => navigation.navigate("FAQ")}>
             <Text style={styles.textMenu}> FAQ </Text>
+            </TouchableOpacity>
 
           </View>
         </TouchableOpacity>
@@ -121,8 +120,9 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#6441a5",
-    height: 50,
+    backgroundColor: "#423083",
+    height: 80,
+    width:'100%',
     paddingHorizontal: 16,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   menuContainer: {
-    backgroundColor: "#483D8B",
+    backgroundColor: "#423083",
     padding: 10,
     borderRadius: 10,
     shadowColor: "black",
@@ -188,7 +188,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   logo: {
-    height: 90,
+    top:15,
+    height: 150,
+    left:110,
     resizeMode: "contain",
   },
   logomenu:{
