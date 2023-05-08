@@ -12,13 +12,10 @@ export default function HomeScreen({ navigation  }) {
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={[styles.loginButton, { marginTop: 20, marginBottom: 10 }]} onPress={() => navigation.navigate('Connexion')}>
-          <Text style={styles.buttonText}>Se connecter</Text>
+          <Text style={styles.buttonText}>SE CONNECTER</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.signupButton, { marginBottom: 20 } ]} onPress={() => navigation.navigate('Inscription')}>
-          <Text style={styles.buttonText}>S'inscrire</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.signupButton, { marginBottom: 20 } ]} onPress={() => navigation.navigate('Bestof')}>
-          <Text style={styles.buttonText}>Cheatcode</Text>
+          <Text style={styles.buttonText}>S'INSCRIRE</Text>
         </TouchableOpacity>
 
 
@@ -71,7 +68,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   buttonText: {
-    color: '#000',
+    color: '#4B388E',
     fontSize: 18,
     fontWeight: 'bold',
   },

@@ -7,12 +7,14 @@ import {
     TouchableOpacity,
     StatusBar,
     Image,
-    Button
+    Button,
+    ScrollView,
   } from 'react-native';
   import firebase from 'firebase/compat/app';
 import 'firebase/auth';
 import { auth } from './firebaseConfig.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Inscription({ navigation }) {
     const [email, setEmail] = useState('');
@@ -69,6 +71,7 @@ export default function Inscription({ navigation }) {
     
   
     return (
+      <LinearGradient colors={['#624F9C', '#714F9B', '#814E9A', '#8B4D99', '#8B4D99', '#8E4D98', '#C24E97', '#E55599', '#F08479', '#FABE4B', '#F3E730']} style={styles.container}>
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
       <View style={styles.logoContainer}>
@@ -76,8 +79,9 @@ export default function Inscription({ navigation }) {
           style={styles.logo}
           source={require('./logo.png')} // Remplacez par le chemin vers l'image du logo Twitch
         />
-      </View>
-
+      </View> 
+      
+      <Text style={styles.Text1}>Email</Text>
       <View style={styles.formContainer}>
         <TextInput
           style={styles.input}
@@ -89,6 +93,8 @@ export default function Inscription({ navigation }) {
           value={email}
           onChangeText={setEmail}
         />
+
+<Text style={styles.Text2}>Mot de passe</Text>
         <TextInput
           style={styles.input}
           placeholder="Mot de passe"
@@ -97,6 +103,8 @@ export default function Inscription({ navigation }) {
           value={password}
           onChangeText={setPassword}
         />
+
+<Text style={styles.Text3}>Pseudo</Text>
         <TextInput
           style={styles.input}
           placeholder="Pseudo"
@@ -110,56 +118,134 @@ export default function Inscription({ navigation }) {
           <Text style={styles.errorMessage}>{errorMessage}</Text>
         ) : null}
         <TouchableOpacity
-          style={styles.buttonContainer}
+          style={styles.buttonsignup}
           onPress={handleSignUp}
         >
           <Text style={styles.buttonText}>S'INSCRIRE</Text>
         </TouchableOpacity>
       </View>
     </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#6441A4', // nouvelle couleur de fond correspondant à la couleur de Twitch
-    justifyContent: 'center', // Centre le contenu verticalement
-  },
-  logoContainer: {
-    position: 'absolute', // Positionne le conteneur du logo absolument
-    top: 40, // Ajoute un espacement depuis le haut
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-  },
-  logo: {
-    width: 150,
-    height: 100,
-  },
-  formContainer: {
-    paddingHorizontal: 30, // Ajoute un rembourrage horizontal pour un meilleur alignement des entrées
-  },
-  input: {
-    height: 40,
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    marginBottom: 20,
-    color: '#FFF',
-    paddingHorizontal: 10,
-    borderRadius: 4, // Ajoute un rayon de bordure pour un champ d'entrée arrondi
-  },
-  buttonContainer: {
-    backgroundColor: '#9146FF', // Couleur violette de Twitch
-    paddingVertical: 15,
-    borderRadius: 4, // Ajoute un rayon de bordure pour un bouton arrondi
-  },
-  buttonText: {
-    textAlign: 'center',
-    color: '#FFFFFF',
-    fontWeight: '700',
-  },
-  errorMessage: {
-    color: '#FF0000',
-    marginBottom: 20,
-  },
+   container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+
+        paddingHorizontal: 20,
+      },
+      logoContainer: {
+        marginBottom: 30,
+      },
+      container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 20,
+      },
+      logoContainer: {
+        marginBottom: 30,
+      },
+      logo: {
+        width: 600,
+        height: 400,
+        bottom:40,
+        resizeMode: 'contain',
+      },
+      title: {
+        fontSize: 28,
+        color: '#fff',
+        fontWeight: 'bold',
+        marginBottom: 20,
+        textAlign: 'center',
+      },
+        
+      errorMessage: {
+        color: '#fff',
+        textAlign: 'center',
+        marginBottom: 20,
+        fontSize: 16,
+      },
+
+      Text1: {
+        color:'#fff',
+        fontWeight: 'bold',
+        fontSize: 16,
+        bottom:60,
+      },
+      Text2: {
+        color:'#fff',
+        fontWeight: 'bold',
+        fontSize: 16,
+        bottom:60,
+        left:130,
+      },
+      Text3: {
+        color:'#fff',
+        fontWeight: 'bold',
+        fontSize: 16,
+        bottom:60,
+        left:150,
+      },
+      title: {
+        fontSize: 28,
+        color: '#fff',
+        fontWeight: 'bold',
+        marginBottom: 20,
+        textAlign: 'center',
+      },
+      input: {
+        bottom:50,
+        width: 350,
+        height: 50,
+        backgroundColor: '#fff',
+        borderColor: '#ccc',
+        borderWidth: 1,
+        marginBottom: 20,
+        paddingHorizontal: 15,
+        borderRadius: 25,
+        fontSize: 16,
+        paddingLeft: 20,
+      },
+      errorMessage: {
+        color: '#fff',
+        textAlign: 'center',
+        marginBottom: 20,
+        fontSize: 16,
+      },
+      buttonContainer: {
+        marginTop: 30,
+        width: '80%',
+        alignItems: 'center',
+      },
+      roundButton: {
+        color: '#4B388E',
+        width: 250,
+        height: 50,
+        backgroundColor: '#fff',
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+        fontWeight: 'bold',
+        fontSize: 16,
+      },
+      buttonsignup:{
+        backgroundColor: '#FFF',
+        borderRadius: 50,
+        height: 50,
+        left:80,
+        width: 200,
+        bottom:50,
+      },
+      buttonText:{
+        color: '#4B388E',
+        fontSize: 18,
+        fontWeight: 'bold',
+        left:50,
+        top:12,
+      },
 });
