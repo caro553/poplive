@@ -6,11 +6,14 @@ import {
   TextInput,
   TouchableOpacity,
   StatusBar,
-  Image
+  Image,
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native';
 import firebase from "./firebaseConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
+import { ScrollView } from 'react-native';
 
 const Connexion = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -108,48 +111,42 @@ const Connexion = ({ navigation }) => {
   };
   
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <View style={styles.logoContainer}>
-        <Image
-          style={styles.logo}
-          source={require('./logo.png')} // Replace with the path to the Twitch logo image
-        />
-      </View>
-      <Text style={styles.Text}>Email</Text>
-      <View style={styles.formContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor="rgba(255,255,255,0.7)"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={email}
-          onChangeText={setEmail}
-        />
-        <Text style={styles.Text2}>Mot de passe</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Mot de passe"
-          placeholderTextColor="rgba(255,255,255,0.7)"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
-        {isPremium ? (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.logoContainer}>
+          <Image
+            style={styles.logo}
+            source={require('./logo.png')} // Replace with the path to the Twitch logo image
+          />
+        </View>
+        <View style={styles.formContainer}>
+          <Text style={styles.Text}>Email</Text>
           <TextInput
             style={styles.input}
-            placeholder="Nom d'utilisateur Twitch"
+            placeholder="Email"
             placeholderTextColor="rgba(255,255,255,0.7)"
+            keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
-            value={twitchUsername}
-            onChangeText={setTwitchUsername}
+            value={email}
+            onChangeText={setEmail}
           />
-        ) : (
-          <View>
-            <Text style={styles.Text3}>Nom d'utilisateur Twitch</Text>
+          <Text style={styles.Text2}>Mot de passe</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Mot de passe"
+            placeholderTextColor="rgba(255,255,255,0.7)"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+          {isPremium ? (
             <TextInput
               style={styles.input}
               placeholder="Nom d'utilisateur Twitch"
@@ -159,18 +156,27 @@ const Connexion = ({ navigation }) => {
               value={twitchUsername}
               onChangeText={setTwitchUsername}
             />
-            <Text style={styles.errorMessage}>
-              Vous devez être premium pour ajouter votre nom d'utilisateur Twitch.
-            </Text>
-          </View>
-        )}
-        <TouchableOpacity style={styles.signupButton} onPress={handleLogin}>
-          <Text style={styles.buttonText}>CONNEXION</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-  
+          ) : (
+            <View>
+              <Text style={styles.Text3}>Nom d'utilisateur Twitch</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Nom d'utilisateur Twitch"
+                placeholderTextColor="rgba(255,255,255,0.7)"
+                autoCapitalize="none"
+                autoCorrect={false}
+                value={twitchUsername}
+                onChangeText={setTwitchUsername}
+              />
+            </View>
+          )}
+          <TouchableOpacity style={styles.signupButton} onPress={handleLogin}>
+            <Text style={styles.buttonText}>CONNEXION</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );  
 };
 const styles = StyleSheet.create({
   Text: {
@@ -208,7 +214,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#6441a5',
   },
   logo: {
-    width: 600,
+    width: 350,
     height: 400,
     bottom:40,
     resizeMode: 'contain',
@@ -253,7 +259,6 @@ const styles = StyleSheet.create({
     left:80,
     bottom:30,
   },
-
 });
 
 export default Connexion;

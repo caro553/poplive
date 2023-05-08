@@ -29,6 +29,7 @@ export default function App() {
         <Stack.Screen name="Abonnement" component={Abonnement} />
         <Stack.Screen name="FAQ" component={FAQScreen} />
         <Stack.Screen name="ProfilStreamer" component={ProfilStreamer} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
