@@ -35,9 +35,12 @@ export default function Compte() {
   const [nom, setNom] = useState("");
   const [prenom, setPrenom] = useState("");
   const [email, setEmail] = useState("");
-  
-  const [profileImageTopBarUrl, setProfileImageTopBarUrl] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
 
+  const [profileImageTopBarUrl, setProfileImageTopBarUrl] = useState("");
+  const toggleEditing = () => {
+    setIsEditing(!isEditing);
+  };
   const handleLogout = async () => {
     try {
       await firebase.auth().signOut();
@@ -67,7 +70,20 @@ const loadEmail = async () => {
         setEmail(storedEmail);
     }
 };
-
+const saveUserData = async () => {
+  try {
+    const userId = firebase.auth().currentUser.uid;
+    const userRef = firebase.database().ref(`users/${userId}`);
+    await userRef.update({
+      nom,
+      prenom,
+      email,
+    });
+    setIsEditing(false);
+  } catch (error) {
+    console.error('Error updating user data:', error);
+  }
+};
 const nomRef = useRef(null);
   const handleNomChange = () => {
     console.log('handleNomChange called');
@@ -233,33 +249,35 @@ useEffect(() => {
           />
         </View>
         <View style={styles.fieldContainer}>
-    <TextInput
-        style={[styles.input, styles.whiteBackground]}
-        value={`Nom: ${nom}`}
-        editable={false}
-    />
-</View>
+        <TextInput
+          style={[styles.input, styles.whiteBackground]}
+          value={nom}
+          onChangeText={setNom} // Update value of 'nom' when edited
+          editable={isEditing} // Allow editing only when 'isEditing' is true
+        />
+      </View>
 
-<View style={styles.fieldContainer}>
-    <TextInput
-        style={[styles.input, styles.whiteBackground]}
-        value={`Prénom: ${prenom}`}
-        editable={false}
-    />
-</View>
+      <View style={styles.fieldContainer}>
+        <TextInput
+          style={[styles.input, styles.whiteBackground]}
+          value={prenom}
+          onChangeText={setPrenom} // Update value of 'prenom' when edited
+          editable={isEditing} // Allow editing only when 'isEditing' is true
+        />
+      </View>
 
-
-<View style={styles.fieldContainer}>
-  <TextInput
-    style={[styles.input, styles.whiteBackground]}
-    value={`Email: ${email}`}
-    editable={false}
-  />
-</View>
+      <View style={styles.fieldContainer}>
+        <TextInput
+          style={[styles.input, styles.whiteBackground]}
+          value={email}
+          onChangeText={setEmail} // Update value of 'email' when edited
+          editable={isEditing} // Allow editing only when 'isEditing' is true
+        />
+      </View>
 
       </View>
       {/* Add your custom icon */}
-    <TouchableOpacity style={styles.customIconContainer}>
+      <TouchableOpacity style={styles.customIconContainer} onPress={isEditing ? saveUserData : toggleEditing}>
       <Image source={require("./Editer.png")} style={styles.customIcon} />
     </TouchableOpacity>
       <View style={styles.logoutContainer}>
