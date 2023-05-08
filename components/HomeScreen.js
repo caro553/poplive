@@ -17,7 +17,9 @@ export default function HomeScreen({ navigation  }) {
         <TouchableOpacity style={[styles.signupButton, { marginBottom: 20 } ]} onPress={() => navigation.navigate('Inscription')}>
           <Text style={styles.buttonText}>S'INSCRIRE</Text>
         </TouchableOpacity>
-
+        <TouchableOpacity style={[styles.signupButton, { marginBottom: 20 } ]} onPress={() => navigation.navigate('Bestof')}>
+          <Text style={styles.buttonText}>CHEATCODE</Text>
+        </TouchableOpacity>
 
       </View>
 

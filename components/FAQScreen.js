@@ -31,24 +31,7 @@ const FAQScreen = () => {
     <View style={styles.container}>
     <View style={styles.topBar}>
    
-    <View style={styles.videoContainer}>
-        <Video source={require('./faqvideo.mp4')}   // Chemin de la vidéo
-           ref={(ref) => {
-             this.player = ref
-           }}                                      // Référence au lecteur vidéo
-           style={styles.video}                     // Style du lecteur vidéo
-           muted={false}                             // Son activé
-           repeat={true}                             // Lecture en boucle
-           resizeMode={'cover'}                      // Mode de redimensionnement
-           controls={true}                           // Affichage des contrôles
-           onBuffer={this.onBuffer}                  // Fonction appelée lors du chargement de la vidéo
-           onError={this.videoError}                 // Fonction appelée en cas d'erreur de la vidéo
-           onEnd={this.onEnd}                        // Fonction appelée à la fin de la vidéo
-           onLoad={this.onLoad}                      // Fonction appelée une fois que la vidéo est chargée
-           onLoadStart={this.onLoadStart}            // Fonction appelée lorsque la vidéo commence à être chargée
-           onProgress={this.onProgress}              // Fonction appelée pendant la lecture de la vidéo
-        />
-      </View>
+
 
 
 

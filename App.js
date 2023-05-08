@@ -11,6 +11,7 @@ import Inscription from "./components/Inscription";
 import LiveCompte from "./components/LiveCompte";
 import Abonnement from "./components/Abonnement";
 import FAQScreen from "./components/FAQScreen";
+import Bestof from "./components/Bestof";
 import ProfilStreamer from "./components/ProfilStreamer";
 
 const Stack = createStackNavigator();
@@ -28,6 +29,7 @@ export default function App() {
         <Stack.Screen name="LiveCompte" component={LiveCompte} />
         <Stack.Screen name="Abonnement" component={Abonnement} />
         <Stack.Screen name="FAQ" component={FAQScreen} />
+        <Stack.Screen name="Bestof" component={Bestof} />
         <Stack.Screen name="ProfilStreamer" component={ProfilStreamer} />
 
       </Stack.Navigator>
