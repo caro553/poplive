@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import TopBar from './TopBar';
 import BottomBar from './BottomBar';
-import { Video } from 'react-native';
-
-import { Dimensions } from 'react-native';
 import { View, Text, StyleSheet, ScrollView, Button, Modal, Image, LinearGradient} from 'react-native';
 
 const FAQScreen = () => {
