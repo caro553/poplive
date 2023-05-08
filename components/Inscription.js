@@ -23,7 +23,9 @@ export default function Inscription({ navigation }) {
     const [password, setPassword] = useState('');
     const [pseudo, setPseudo] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    
+    const [firstName, setFirstName] = useState(''); // Ajoutez cette ligne
+    const [lastName, setLastName] = useState(''); // Ajoutez cette ligne
+
     const saveUsername = async (userId) => {
         await AsyncStorage.setItem('username', pseudo);
         await AsyncStorage.setItem('userId', userId);
@@ -35,7 +37,7 @@ export default function Inscription({ navigation }) {
             .then((userCredential) => {
                 // Add user's pseudo to their profile
                 userCredential.user.updateProfile({
-                    displayName: pseudo,
+                    displayName: `${firstName} ${lastName} - ${pseudo}`, // Modifiez cette ligne
                 })
                     .then(() => {
                         saveUsername(userCredential.user.uid); // Ajoutez l'ID de l'utilisateur ici
@@ -43,14 +45,17 @@ export default function Inscription({ navigation }) {
                         
                         // Ajouter un document pour le nouvel utilisateur dans la collection 'test_users'
                         firebase
-                            .firestore()
-                            .collection('test_users')
-                            .doc(userCredential.user.uid)
-                            .set({
-                                email: email,
-                                twitchUsername: pseudo,
-                                // Ajoutez ici d'autres informations si nécessaire
-                            })
+  .firestore()
+  .collection('test_users')
+  .doc(userCredential.user.uid)
+  .set({
+    nom: lastName, // Changez cette ligne
+    prenom: firstName, // Changez cette ligne
+    email: email,
+    twitchUsername: pseudo,
+    // Ajoutez ici d'autres informations si nécessaire
+})
+
                             .then(() => {
                                 saveUsername();
                                 navigation.navigate('AlaUne', { // Modifiez cette ligne
@@ -71,89 +76,110 @@ export default function Inscription({ navigation }) {
             });
     }
     
-    return (
-      <LinearGradient
-        colors={[
-          "#624F9C",
-          "#714F9B",
-          "#814E9A",
-          "#8B4D99",
-          "#8B4D99",
-          "#8E4D98",
-          "#C24E97",
-          "#E55599",
-          "#F08479",
-          "#FABE4B",
-          "#F3E730",
-        ]}
-        style={styles.container}
+return (
+  <LinearGradient
+    colors={[
+      "#624F9C",
+      "#714F9B",
+      "#814E9A",
+      "#8B4D99",
+      "#8B4D99",
+      "#8E4D98",
+      "#C24E97",
+      "#E55599",
+      "#F08479",
+      "#FABE4B",
+      "#F3E730",
+    ]}
+    style={styles.container}
+  >
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
       >
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
-          <ScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
-            keyboardShouldPersistTaps="handled"
-          >
-            <View style={styles.container}>
-              <StatusBar barStyle="light-content" />
-              <View style={styles.logoContainer}>
-                <Image
-                  style={styles.logo}
-                  source={require("./logo.png")} // Remplacez par le chemin vers l'image du logo Twitch
-                />
-              </View>
-    
-              <Text style={styles.Text1}>Email</Text>
-              <View style={styles.formContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Email"
-                  placeholderTextColor="rgba(255,255,255,0.7)"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  value={email}
-                  onChangeText={setEmail}
-                />
-    
-                <Text style={styles.Text2}>Mot de passe</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Mot de passe"
-                  placeholderTextColor="rgba(255,255,255,0.7)"
-                  secureTextEntry
-                  value={password}
-                  onChangeText={setPassword}
-                />
-    
-                <Text style={styles.Text3}>Pseudo</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Pseudo"
-                  placeholderTextColor="rgba(255,255,255,0.7)"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  value={pseudo}
-                  onChangeText={setPseudo}
-                />
-                {errorMessage ? (
-                  <Text style={styles.errorMessage}>{errorMessage}</Text>
-                ) : null}
-                <TouchableOpacity
-                  style={styles.buttonsignup}
-                  onPress={handleSignUp}
-                >
-                  <Text style={styles.buttonText}>S'INSCRIRE</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </LinearGradient>
-    );
-    
+        <View style={styles.container}>
+          <StatusBar barStyle="light-content" />
+          <View style={styles.logoContainer}>
+            <Image
+              style={styles.logo}
+              source={require("./logo.png")} // Remplacez par le chemin vers l'image du logo Twitch
+            />
+          </View>
+
+          <Text style={styles.Text1}>Email</Text>
+          <View style={styles.formContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              placeholderTextColor="rgba(255,255,255,0.7)"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+              value={email}
+              onChangeText={setEmail}
+            />
+
+            <Text style={styles.Text2}>Mot de passe</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Mot de passe"
+              placeholderTextColor="rgba(255,255,255,0.7)"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+            />
+
+<Text style={styles.Text2}>Prénom</Text> 
+            <TextInput
+              style={styles.input}
+              placeholder="Prénom"
+              placeholderTextColor="rgba(255,255,255,0.7)"
+              autoCapitalize="words"
+              autoCorrect={false}
+              value={firstName}
+              onChangeText={setFirstName}
+            />
+
+            <Text style={styles.Text2}>Nom</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Nom"
+              placeholderTextColor="rgba(255,255,255,0.7)"
+              autoCapitalize="words"
+              autoCorrect={false}
+              value={lastName}
+              onChangeText={setLastName}
+            />
+            <Text style={styles.Text3}>Pseudo</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Pseudo"
+              placeholderTextColor="rgba(255,255,255,0.7)"
+              autoCapitalize="none"
+              autoCorrect={false}
+              value={pseudo}
+              onChangeText={setPseudo}
+            />
+            {errorMessage ? (
+              <Text style={styles.errorMessage}>{errorMessage}</Text>
+            ) : null}
+            <TouchableOpacity
+              style={styles.buttonsignup}
+              onPress={handleSignUp}
+            >
+              <Text style={styles.buttonText}>S'INSCRIRE</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
+  </LinearGradient>
+);
+
 }
 
 const styles = StyleSheet.create({

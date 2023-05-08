@@ -31,11 +31,11 @@ export default function Compte() {
   const [username, setUsername] = useState("");
   const [data, setData] = useState([]);
   const [bio, setBio] = useState("");
-  const [nom, setnom] = useState(async () => await AsyncStorage.getItem('nom') || "");
-  const [prenom, setprenom] = useState(async () => await AsyncStorage.getItem('prenom') || "");
-  const [email, setEmail] = useState(async () => await AsyncStorage.getItem('email') || "");
   const [loading, setLoading] = useState(true);
-
+  const [nom, setNom] = useState("");
+  const [prenom, setPrenom] = useState("");
+  const [email, setEmail] = useState("");
+  
   const [profileImageTopBarUrl, setProfileImageTopBarUrl] = useState("");
 
   const handleLogout = async () => {
@@ -49,14 +49,14 @@ export default function Compte() {
   const loadNom = async () => {
     const storedNom = await AsyncStorage.getItem('nom');
     if (storedNom) {
-        setnom(storedNom);
+      setNom(storedNom);
     }
 };
 
 const loadPrenom = async () => {
     const storedPrenom = await AsyncStorage.getItem('prenom');
     if (storedPrenom) {
-        setprenom(storedPrenom);
+      setPrenom(storedPrenom);
     }
 };
 
@@ -92,8 +92,8 @@ useEffect(() => {
     const data = snapshot.val();
 
     if (data) {
-      setnom(data.nom || "");
-      setprenom(data.prenom || "");
+      setNom(data.nom || "");
+      setPrenom(data.prenom || "");
       setEmail(data.email || "");
     }
 
@@ -106,6 +106,7 @@ useEffect(() => {
     userRef.off('value', handleData);
   };
 }, []);
+
   const handleBioChange = (newBio) => {
     setBio(newBio);
     AsyncStorage.setItem('bio', newBio); // sauvegarder la bio dans le stockage local
@@ -165,8 +166,8 @@ useEffect(() => {
     loadUsername();
     loadNom();
     loadPrenom();
-    loadEmail();
-}, []);
+  }, []);
+  
 
   const removeImage = async () => {
     await AsyncStorage.removeItem("profileImage");
