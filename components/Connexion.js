@@ -116,6 +116,7 @@ const Connexion = ({ navigation }) => {
           source={require('./logo.png')} // Replace with the path to the Twitch logo image
         />
       </View>
+      <Text style={styles.Text}>Email</Text>
       <View style={styles.formContainer}>
         <TextInput
           style={styles.input}
@@ -127,6 +128,7 @@ const Connexion = ({ navigation }) => {
           value={email}
           onChangeText={setEmail}
         />
+        <Text style={styles.Text2}>Mot de passe</Text>
         <TextInput
           style={styles.input}
           placeholder="Mot de passe"
@@ -147,6 +149,7 @@ const Connexion = ({ navigation }) => {
           />
         ) : (
           <View>
+            <Text style={styles.Text3}>Nom d'utilisateur Twitch</Text>
             <TextInput
               style={styles.input}
               placeholder="Nom d'utilisateur Twitch"
@@ -161,7 +164,7 @@ const Connexion = ({ navigation }) => {
             </Text>
           </View>
         )}
-        <TouchableOpacity style={styles.buttonContainer} onPress={handleLogin}>
+        <TouchableOpacity style={styles.signupButton} onPress={handleLogin}>
           <Text style={styles.buttonText}>CONNEXION</Text>
         </TouchableOpacity>
       </View>
@@ -170,43 +173,87 @@ const Connexion = ({ navigation }) => {
   
 };
 const styles = StyleSheet.create({
+  Text: {
+    color:'#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+    bottom:50,
+  },
+  Text2: {
+    color:'#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+    bottom:50,
+    left:130,
+  },
+  Text3: {
+    color:'#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+    bottom:50,
+    left:90,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#6441A4', // nouvelle couleur de fond correspondant à la couleur de Twitch
-    justifyContent: 'center', // Center the content vertically
-  },
-  logoContainer: {
-    position: 'absolute', // Position the logo container absolutely
-    top: 40, // Add some spacing from the top
-    left: 0,
-    right: 0,
     alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#6441a5',
+    paddingHorizontal: 20,
+    fontFamily: 'Calibri, Arial, sans-serif', 
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#6441a5',
   },
   logo: {
-    width: 150,
-    height: 100,
+    width: 600,
+    height: 400,
+    bottom:40,
+    resizeMode: 'contain',
   },
-  formContainer: {
-    paddingHorizontal: 30, // Add horizontal padding for better input alignment
-  },
+
   input: {
-    height: 40,
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    marginBottom: 20,
-    color: '#FFF',
-    paddingHorizontal: 10,
-    borderRadius: 4, // Add border radius for a rounded input field
+    width:322,
+    height: 52,
+    backgroundColor: '#fff',
+    borderColor: '#ccc',
+    borderWidth: 1,
+    marginBottom: 40,
+    borderRadius: 25,
+    fontSize: 16,
+    bottom:45,
+    left:20,
   },
-  buttonContainer: {
-    backgroundColor: '#9146FF', // Twitch's purple color
-    paddingVertical: 15,
-    borderRadius: 4, // Add border radius for a rounded button
-  },
-  buttonText: {
+  errorMessage: {
+    color: '#fff',
     textAlign: 'center',
-    color: '#FFFFFF',
-    fontWeight: '700',
+    bottom:60,
+    fontSize: 16,
   },
+
+  buttonText:{
+    color: '#4B388E',
+    fontSize: 18,
+    fontWeight: 'bold',
+    left:50,
+    top:12,
+  },
+
+  signupButton: {
+    color: '#4B388E',
+    width: 200,
+    height: 50,
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    marginBottom: 20,
+    fontWeight: 'bold',
+    fontSize: 16,
+    left:80,
+    bottom:30,
+  },
+
 });
 
 export default Connexion;
