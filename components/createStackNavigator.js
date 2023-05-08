@@ -2,7 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './HomeScreen';
 import AlaUne from './AlaUne';
 import LiveScreen from './LiveScreen';
-import Bestof from './bestof';
+import Bestof from './Bestof';
 import Compte from './Compte';
 import Connexion from './Connexion';
 import FAQScreen from './FAQScreen';
