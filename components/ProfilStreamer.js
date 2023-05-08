@@ -6,6 +6,7 @@ import Controls from 'react-native-video-controls';
 import TopBar from './TopBar';
 import BottomBar from './BottomBar';
 import { Linking } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 const ProfilStreamer = ({ route }) => {
   console.log('Route params:', route.params);
@@ -26,7 +27,30 @@ const ProfilStreamer = ({ route }) => {
   const [gameCategoryImage, setGameCategoryImage] = useState(null);
   const [streamUrl, setStreamUrl] = useState(null);
 
-
+  async function fetchGameImage(game_id) {
+    const clientId = 'i34nc3xu598asoajw481awags63pnl';
+    const accessToken = '1mmpa37gpq9bsw3bfq2jxtxqwuop9k';
+    const apiUrl = `https://api.twitch.tv/helix/games?id=${game_id}`;
+  
+    try {
+      const response = await fetch(apiUrl, {
+        headers: {
+          'Client-ID': clientId,
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
+      
+      const data = await response.json();
+      const gameImageUrl = data.data[0].box_art_url.replace('{width}', '300').replace('{height}', '400');
+      console.log('Game image URL:', gameImageUrl);
+      return gameImageUrl;
+    } catch (error) {
+      console.error('Error fetching game image:', error);
+    }
+  }
+  
+  fetchGameImage('516575');
+  
 
   async function fetchStreamUrl(streamerId, oauthToken) {
     const response = await fetch(
@@ -139,7 +163,18 @@ const ProfilStreamer = ({ route }) => {
       setCurrentGameId(null);
     }
   }
-  
+  useEffect(() => {
+    async function fetchGameDetails() {
+      if (currentGameId) {
+        console.log("currentGameId:", currentGameId); // Ajoutez ce log
+        console.log("fetchGameInfo is called"); // Ajoutez ce log
+        const oauthToken = await getOAuthToken(clientId, clientSecret);
+        await fetchGameInfo(currentGameId, oauthToken);
+        await fetchGameCategory(currentGameId, oauthToken); // récupérez les informations sur la catégorie
+      }
+    }
+    fetchGameDetails();
+  }, [currentGameId]);
   async function fetchGameInfo(gameId, oauthToken) {
     const response = await fetch(
       `https://api.twitch.tv/helix/games?id=${gameId}`,
@@ -183,21 +218,20 @@ const ProfilStreamer = ({ route }) => {
     }
   
     const data = await response.json();
-    console.log("fetchGameCategory data:", data);
+    console.log("fetchGameCategory data:", data); // Ajoutez ce log
   
     if (data.data.length > 0) {
       setGameCategory(data.data[0].name); // stockez le nom de la catégorie
-      console.log("Game category:", data.data[0].name);
+      console.log("Game category:", data.data[0].name); // Ajoutez ce log
       const imageUrlTemplate = data.data[0].box_art_url;
       const imageUrl = imageUrlTemplate.replace('{width}', '100').replace('{height}', '100');
       setGameCategoryImage(imageUrl); // stockez l'image de la catégorie avec l'URL réelle
-      console.log("Game category image URL:", imageUrl);      
+      console.log("Game category image URL:", imageUrl); // Ajoutez ce log
     } else {
       setGameCategory(null);
       setGameCategoryImage(null);
     }
   }
-  
   
  useEffect(() => {
   async function fetchData() {
@@ -210,6 +244,13 @@ const ProfilStreamer = ({ route }) => {
   }
   fetchData();
 }, [username]);
+useEffect(() => {
+  async function loadGameImage() {
+    const gameImageUrl = await fetchGameImage('516575');
+    setGameCategoryImage(gameImageUrl);
+  }
+  loadGameImage();
+}, []);
 
   
   // Ajoutez ces deux useEffect après le premier useEffect
@@ -223,19 +264,6 @@ useEffect(() => {
   }
   fetchGameData();
 }, [streamerId]);
-
-useEffect(() => {
-  async function fetchGameDetails() {
-    if (currentGameId) {
-      console.log("currentGameId:", currentGameId);
-      console.log("fetchGameInfo is called");
-      const oauthToken = await getOAuthToken(clientId, clientSecret);
-      await fetchGameInfo(currentGameId, oauthToken);
-      await fetchGameCategory(currentGameId, oauthToken); // récupérez les informations sur la catégorie
-    }
-  }
-  fetchGameDetails();
-}, [currentGameId]);
 
 
 
@@ -251,6 +279,7 @@ useEffect(() => {
       </View>
     );
   }
+  
   return (
     <View style={styles.container}>
         <View style={styles.topBar}>
@@ -269,10 +298,6 @@ useEffect(() => {
         </>
       )}
   
-     
-  
-  
-      {/* Ajoutez la WebView pour afficher le live Twitch du streamer */}
       <View style={styles.twitchStreamContainer}>
   <WebView
     style={styles.twitchStream}
@@ -286,24 +311,24 @@ useEffect(() => {
 <Text style={styles.description}>
         {userDescription}
       </Text>
+      {/* Affichez l'image de la catégorie et le nom de la catégorie */}
+   
+
+    {gameCategory && (
+  <Text style={styles.gameCategory}>{gameCategory}</Text>
+)}
+
       <TouchableOpacity style={styles.liveButton} onPress={() => Linking.openURL(`https://www.twitch.tv/${username}`)}>
   <Text style={styles.liveButtonText}>Pop sur le live</Text>
 </TouchableOpacity>
-
-      {/* Affichez l'image de la catégorie et le nom de la catégorie */}
-      {gameCategoryImage && (
-        <>
-          <Image
-            source={{ uri: gameCategoryImage }}
-            style={styles.categoryImage}
-          />
-          {console.log("Displaying game category image URL:", gameCategoryImage)}
-        </>
-      )}
-      {gameCategory && (
-        <Text style={styles.gameCategory}>{gameCategory}</Text>
-      )}
-  
+{
+  gameCategoryImage && (
+    <Image
+      source={{ uri: gameCategoryImage }}
+      style={styles.categoryImage} // Remplacez gameImage par categoryImage
+    />
+  )
+}
       {/* Utilisez les informations du streamerData pour afficher le contenu du profil */}
     </View>
   );  
@@ -338,7 +363,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderWidth: 1,
     borderColor: '#ccc',
-    marginBottom: 160,
+    marginBottom: 20,
   },
   
   gameImage: {
@@ -347,11 +372,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   categoryImage: {
-    width: 100,
-    height: 100,
+    width: 200,
+    height: 150,
     resizeMode: 'contain',
-    marginBottom: 10,
+    marginBottom: -10,
+    marginRight:220, // Ajoutez cette ligne pour décaler l'image par rapport au bord gauche
   },
+  
   
   gameTitle: {
     fontSize: 16,
@@ -372,10 +399,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   gameCategory: {
-    fontSize: 10,
-    color: 'black',
-    fontStyle: 'italic',
-    marginRight: 10,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
+    marginBottom: 60,
   },
   twitchStream: {
     flex: 1,
@@ -413,13 +441,19 @@ const styles = StyleSheet.create({
        backgroundColor: "#FFB347",
     paddingHorizontal: 20,
     paddingVertical: 10,
-    borderRadius: 10, // Add border radius to make it rounded
+    borderRadius: 30, // Add border radius to make it rounded
   },
   liveButtonText: {
     color: 'white',
     fontSize: 14,
     fontWeight: 'bold',
   },
+  gameAndButtonContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 10,
+},
+
 });
 
 export default ProfilStreamer;

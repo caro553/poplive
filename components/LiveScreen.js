@@ -291,7 +291,7 @@ getUsernameAndUserId().then(async ({ username, userId }) => {
       </View>
       {/* Contenu de la page */}
       <BottomBar />
-      <ScrollView>
+      <ScrollView style={styles.scrollView}>
       {Object.entries(users)
   .filter(([_, userInfo]) => userInfo.isLive)
   .map(([_, userInfo]) => (
@@ -419,6 +419,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  scrollView: {
+    marginTop: 70, // La marge en haut pour éviter la top bar
+  },  
 });
   
   export default LiveScreen;
