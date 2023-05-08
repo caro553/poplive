@@ -49,7 +49,6 @@ const ProfilStreamer = ({ route }) => {
     }
   }
   
-  fetchGameImage('516575');
   
 
   async function fetchStreamUrl(streamerId, oauthToken) {
@@ -150,19 +149,19 @@ const ProfilStreamer = ({ route }) => {
     if (!response.ok) {
       throw new Error("Erreur lors de la récupération des informations sur le jeu en cours");
     }
-    setCurrentGameId(data.data[0].game_id);
-    setGameId(data.data[0].game_id); // stockez également l'ID de la catégorie
-    
     const data = await response.json();
     console.log("fetchCurrentGame data:", data);
   
     if (data.data.length > 0 && data.data[0].game_id) {
       setCurrentGameId(data.data[0].game_id);
       console.log("Current game ID:", data.data[0].game_id);
+      const gameImageUrl = await fetchGameImage(data.data[0].game_id);
+      setGameCategoryImage(gameImageUrl);
     } else {
       setCurrentGameId(null);
     }
   }
+  
   useEffect(() => {
     async function fetchGameDetails() {
       if (currentGameId) {
@@ -194,7 +193,7 @@ const ProfilStreamer = ({ route }) => {
     console.log("fetchGameInfo data:", data);
   
     if (data.data.length > 0) {
-      setUserDescription(data.data[0]); // Modifiez cette ligne pour stocker toutes les informations du streamer
+      setUserDescription(data.data[0].name); // Replace with the property that holds the game's name
     } else {
       setUserDescription({
         description: "La description n'est pas disponible",
@@ -247,13 +246,6 @@ const ProfilStreamer = ({ route }) => {
 
 
 
-useEffect(() => {
-  async function loadGameImage() {
-    const gameImageUrl = await fetchGameImage('516575');
-    setGameCategoryImage(gameImageUrl);
-  }
-  loadGameImage();
-}, []);
 
   
   // Ajoutez ces deux useEffect après le premier useEffect
@@ -318,7 +310,7 @@ useEffect(() => {
    
 
     {gameCategory && (
-  <Text style={styles.gameCategory}>{gameCategory}</Text>
+  <Text style={styles.gameCategory}></Text>
 )}
 
       <TouchableOpacity style={styles.liveButton} onPress={() => Linking.openURL(`https://www.twitch.tv/${username}`)}>
@@ -366,7 +358,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderWidth: 1,
     borderColor: '#ccc',
-    marginBottom: 20,
+    marginBottom: -60,
   },
   
   gameImage: {
@@ -375,7 +367,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   categoryImage: {
-    width: 200,
+    width: 150,
     height: 150,
     resizeMode: 'contain',
     marginBottom: -10,
@@ -416,7 +408,7 @@ const styles = StyleSheet.create({
   twitchStreamContainer: {
     width: '100%',
     height: 300,
-    top: -80
+    top: -70
   },
   streamBackground: {
     position: 'absolute',
