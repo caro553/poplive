@@ -11,14 +11,39 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "react-native";
 
+
 export default function TopBar() {
   const navigation = useNavigation();
-
+  const [profileImageUrl, setProfileImageUrl] = useState("");
   const [showMenu, setShowMenu] = useState(false);
+  const [nom, setNom] = useState("");
+  const [prenom, setPrenom] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
+  const loadProfileImage = async () => {
+    const url = await AsyncStorage.getItem("profileImageUrl");
+    if (url) {
+      setProfileImageUrl(url);
+    }
+  };
+  const loadNom = async () => {
+    const storedNom = await AsyncStorage.getItem('nom');
+    if (storedNom) {
+      setNom(storedNom);
+    }
+};
+
+const loadPrenom = async () => {
+    const storedPrenom = await AsyncStorage.getItem('prenom');
+    if (storedPrenom) {
+      setPrenom(storedPrenom);
+    }
+};
+
 
   const handlePage1 = () => {
     // Ajouter l'action à effectuer lorsqu'on clique sur l'icône de la page 1
@@ -37,11 +62,13 @@ export default function TopBar() {
       <View style={styles.burgerContainer}>
         
         <TouchableOpacity onPress={toggleMenu}>
-        <Ionicons
-            name="person"
-            size={50}
-            color="white"
-            style={styles.profileIcon}
+           <Image
+            source={{ uri: profileImageUrl }}
+            style={[
+              styles.logoducomte,
+              { borderColor: "#9b59b6", borderWidth: 7, top:0, width:75, height:75 },
+            ]}
+            resizeMode="contain"
           />
         </TouchableOpacity>
       </View>
@@ -60,7 +87,14 @@ export default function TopBar() {
           <View style={styles.menuContainer}>
           <Image source={require('./logo.png')} style={styles.logo1} />
           <Image source={require('./couronne.png')} style={styles.couronne} />
-          <Image source={require('./demonslayer.jpg')} style={styles.logoducomte} />
+          <Image
+            source={{ uri: profileImageUrl }}
+            style={[
+              styles.logoducomte,
+              { borderColor: "#9b59b6", borderWidth: 10 },
+            ]}
+            resizeMode="contain"
+          />
           <Text style={styles.nomcompte} > NomDuCompte</Text>
           <Text style={styles.pseudo} > @pseudoducompte</Text>
 

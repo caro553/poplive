@@ -9,6 +9,8 @@ import {
   Linking,
   StyleSheet,
   TextInput,
+  Modal,
+  Button,
    
 } from "react-native";
 import { WebView } from "react-native-webview";
@@ -36,6 +38,7 @@ export default function Compte() {
   const [prenom, setPrenom] = useState("");
   const [email, setEmail] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [profileImageTopBarUrl, setProfileImageTopBarUrl] = useState("");
   const toggleEditing = () => {
@@ -43,7 +46,7 @@ export default function Compte() {
   };
   const handleLogout = async () => {
     try {
-      await firebase.auth().signOut();
+      await firebase.auth().signOut(); v 
       navigation.navigate('Home');
     } catch (error) {
       console.error('Error during logout:', error);
@@ -203,9 +206,7 @@ useEffect(() => {
   
   return (
     <View style={styles.container}>
-      <View style={styles.topBar}>
-      <TopBar profileImage={profileImageTopBarUrl} />
-      </View>
+       <TopBar  profileImage={profileImageTopBarUrl}/> 
       <KeyboardAwareScrollView
   contentContainerStyle={styles.keyboardAwareScrollView}
   keyboardShouldPersistTaps="handled"
@@ -280,11 +281,50 @@ useEffect(() => {
       <TouchableOpacity style={styles.customIconContainer} onPress={isEditing ? saveUserData : toggleEditing}>
       <Image source={require("./Editer.png")} style={styles.customIcon} />
     </TouchableOpacity>
-      <View style={styles.logoutContainer}>
+
+
+    <View style={styles.logoutContainer}>
       <LinearGradient
   colors={['#624F9C', '#714F9B', '#814E9A', '#8B4D99', '#8B4D99', '#8E4D98', '#C24E97', '#E55599', '#F08479', '#FABE4B', '#F3E730']}
   style={styles.logoutButton}
 >
+  <TouchableOpacity onPress={() => setModalVisible(true)}>
+    <Text style={[styles.logoutText,{width:150, height:50, fontSize:20, textAlign:'center',}]}>PASSER EN PREMIUM</Text>
+  </TouchableOpacity>
+</LinearGradient>
+</View>
+ 
+
+<Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modal}>
+          <Button title="X" onPress={() => setModalVisible(false)} />
+          <Image source={require("./couronne_premium.png")} style={styles.customIcon} />
+            <Text style={styles.modalTitle}>Le mode</Text>
+            <Text style={styles.modalTitle}>PREMIUM</Text>
+            <View>
+
+              <View id="droite">
+            <Text style={styles.modalText}>EN VEDETTE</Text>
+            <Image source={require("./vedette_premium.png")} style={styles.customIcon} />
+            <Text style={styles.modalText}>Tu seras mis en avant chaque mois sur l'accueil de l'application !</Text>
+            </View>           
+            
+              <View id="gauche">
+              <Text style={styles.modalText}>PROMOTIONS</Text>
+              <Image source={require("./promotion_premium.png")} style={styles.customIcon} />
+              <Text style={styles.modalText}>Promotions des profils sur tout nos réseaux-sociaux ! (Instagram-Tiktok-Twitter)</Text>
+              </View>
+            </View>
+
+          </View>
+        </View>
+      </Modal>
+
+      <View style={styles.logoutContainer}>
+      <LinearGradient
+  colors={['#624F9C', '#714F9B', '#814E9A', '#8B4D99', '#8B4D99', '#8E4D98', '#C24E97', '#E55599', '#F08479', '#FABE4B', '#F3E730']}
+  style={styles.logoutButton}>
   <TouchableOpacity onPress={handleLogout}>
     <Text style={styles.logoutText}>Déconnexion</Text>
   </TouchableOpacity>
@@ -428,5 +468,27 @@ const styles = StyleSheet.create({
   customIcon: {
     width: 50, // Increase the width
     height: 50, // Increase the height
+  },
+  modal: {
+    backgroundColor: 'white',
+  borderRadius: 10,
+  padding: 20,
+  alignItems: 'center',
+  elevation: 5,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 20,
   },
 });
