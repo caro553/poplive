@@ -298,26 +298,42 @@ useEffect(() => {
 <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modal}>
-          <Button title="X" onPress={() => setModalVisible(false)} />
-          <Image source={require("./couronne_premium.png")} style={styles.customIcon} />
-            <Text style={styles.modalTitle}>Le mode</Text>
+          <Button   style={{ right:350,}} title="X" onPress={() => setModalVisible(false)} /> 
+          <Image source={require("./couronne_premium.png")} style={{width:30,height:30,}} />
+            <Text style={{color:'#4B388E',color:'#4B388E'}}>Le mode</Text>
             <Text style={styles.modalTitle}>PREMIUM</Text>
-            <View>
+           
+            <View id="mod" style={{ flexDirection: "row" }}>
+  <View id="droite" style={{ flex: 1 }}>
+    <Text style={{fontSize:20,color:"#4B388E",}}>EN VEDETTE</Text>
+    <Image source={require("./vedette_premium.png")} style={{width:140,height:150}}/>
+    <Text style={{color:"#4B388E",}}>Tu seras mis en avant chaque mois sur l'accueil de l'application !</Text>
+  </View>
+  <View id="gauche" style={{ flex: 1 }}>
+    <Text style={{fontSize:20,color:"#4B388E",}}>PROMOTIONS</Text>
+    <Image source={require("./promotion_premium.png")} style={{width:140,height:150}}/>
+    <Text style={{color:"#4B388E",}}>Promotions des profils sur tout nos réseaux-sociaux ! (Instagram-Tiktok-Twitter)</Text>
+  </View>
+  </View>
+  <View id="bas">
+  <Text style={{color:"#4B388E",}}>Pour seulement 2.49€/mois</Text>
+  <View style={styles.logoutContainer}>
+      <LinearGradient
+  colors={['#624F9C', '#714F9B', '#814E9A', '#8B4D99', '#8B4D99', '#8E4D98', '#C24E97', '#E55599', '#F08479', '#FABE4B', '#F3E730']}
+  style={styles.logoutButton}>
+  <TouchableOpacity>
+    <Text style={styles.logoutText}>Abonne toi !</Text>
+  </TouchableOpacity>
+</LinearGradient>
+</View>
 
-              <View id="droite">
-            <Text style={styles.modalText}>EN VEDETTE</Text>
-            <Image source={require("./vedette_premium.png")} style={styles.customIcon} />
-            <Text style={styles.modalText}>Tu seras mis en avant chaque mois sur l'accueil de l'application !</Text>
-            </View>           
-            
-              <View id="gauche">
-              <Text style={styles.modalText}>PROMOTIONS</Text>
-              <Image source={require("./promotion_premium.png")} style={styles.customIcon} />
-              <Text style={styles.modalText}>Promotions des profils sur tout nos réseaux-sociaux ! (Instagram-Tiktok-Twitter)</Text>
-              </View>
-            </View>
+
+</View>
+
 
           </View>
+
+
         </View>
       </Modal>
 
