@@ -76,7 +76,7 @@ export default function AlaUne({ navigation }) {
         <TouchableOpacity
           style={styles.twitchContainer}
           onPress={() =>
-            navigation.navigate("PageAccueil", {
+            navigation.navigate("Informations", {
               image: require("./gp_explorer_squeezie.jpg"),
               rectangleIndex: 0, // Index du premier rectangle
             })
@@ -102,7 +102,7 @@ export default function AlaUne({ navigation }) {
         <TouchableOpacity
           style={styles.twitchContainer}
           onPress={() =>
-            navigation.navigate("PageAccueil", {
+            navigation.navigate("Informations", {
               image: require("./eleven_allstar.jpg"),
               rectangleIndex: 1, // Index du premier rectangle
             })
@@ -127,7 +127,7 @@ export default function AlaUne({ navigation }) {
         <TouchableOpacity
           style={styles.twitchContainer}
           onPress={() =>
-            navigation.navigate("PageAccueil", {
+            navigation.navigate("Informations", {
               image: require("./zevent.jpg"),
               rectangleIndex: 2, // Index du premier rectangle
             })
@@ -146,7 +146,7 @@ export default function AlaUne({ navigation }) {
         <TouchableOpacity
           style={styles.twitchContainer}
           onPress={() =>
-            navigation.navigate("PageAccueil", {
+            navigation.navigate("Informations", {
               image: require("./concert.png"),
               rectangleIndex: 3, // Index du premier rectangle
             })
@@ -168,7 +168,7 @@ export default function AlaUne({ navigation }) {
         <TouchableOpacity
           style={styles.twitchContainer}
           onPress={() =>
-            navigation.navigate("PageAccueil", {
+            navigation.navigate("Informations", {
               image: require("./Zlan2020.jpg"),
               rectangleIndex: 4, // Index du premier rectangle
             })

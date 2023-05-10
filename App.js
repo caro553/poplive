@@ -13,7 +13,7 @@ import Bestof from "./components/Bestof";
 import Abonnement from "./components/Abonnement";
 import FAQScreen from "./components/FAQScreen";
 import ProfilStreamer from "./components/ProfilStreamer";
-import PageAccueil from "./components/PageAccueil";
+import Informations from "./components/Informations";
 
 const Stack = createStackNavigator();
 
@@ -32,8 +32,7 @@ export default function App() {
         <Stack.Screen name="FAQ" component={FAQScreen} />
         <Stack.Screen name="Bestof" component={Bestof} />
         <Stack.Screen name="ProfilStreamer" component={ProfilStreamer} />
-        <Stack.Screen name="PageAccueil" component={PageAccueil} />
-
+        <Stack.Screen name="Informations" component={Informations} />
       </Stack.Navigator>
     </NavigationContainer>
   );
