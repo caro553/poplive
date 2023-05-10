@@ -104,6 +104,7 @@ export default function AlaUne({ navigation }) {
           onPress={() =>
             navigation.navigate("PageAccueil", {
               image: require("./eleven_allstar.jpg"),
+              rectangleIndex: 1, // Index du premier rectangle
             })
           }
         >
@@ -128,6 +129,7 @@ export default function AlaUne({ navigation }) {
           onPress={() =>
             navigation.navigate("PageAccueil", {
               image: require("./zevent.jpg"),
+              rectangleIndex: 2, // Index du premier rectangle
             })
           }
         >
@@ -146,6 +148,7 @@ export default function AlaUne({ navigation }) {
           onPress={() =>
             navigation.navigate("PageAccueil", {
               image: require("./concert.png"),
+              rectangleIndex: 3, // Index du premier rectangle
             })
           }
         >
@@ -167,6 +170,7 @@ export default function AlaUne({ navigation }) {
           onPress={() =>
             navigation.navigate("PageAccueil", {
               image: require("./Zlan2020.jpg"),
+              rectangleIndex: 4, // Index du premier rectangle
             })
           }
         >
