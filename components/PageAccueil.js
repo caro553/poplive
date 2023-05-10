@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import firebase, { addComment } from "./firebaseConfig";
 import { db } from './firebaseConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { firestore } = firebase;
 
@@ -39,22 +40,19 @@ export default function PageAccueil({ route }) {
   }, [rectangleIndex]); 
   const handleCommentSubmit = async () => {
     try {
-        const commentData = {
-            comment: currentComment,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            // Ajoutez ici d'autres champs si nécessaire
-        };
-        await firestore()
-          .collection('comments')
-          .doc(`rectangle${rectangleIndex}`)
-          .collection('comments')
-          .add(commentData);
-        console.log('Commentaire ajouté avec succès');
-        setCurrentComment(''); // réinitialise le champ de commentaire après la soumission
+      const profileImageTopBarUrl = await AsyncStorage.getItem("profileImageUrl");
+      const commentData = {
+          comment: currentComment,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          profileImageUrl: profileImageTopBarUrl,
+      };
+      await db.collection('comments').doc(`rectangle${rectangleIndex}`).collection('comments').add(commentData);
+      setCurrentComment('');
     } catch (error) {
-        console.error('Erreur lors de l\'ajout du commentaire: ', error);
+      console.error('Erreur lors de l\'ajout du commentaire: ', error);
     }
-};
+  };
+  
 
 
 
@@ -63,10 +61,11 @@ export default function PageAccueil({ route }) {
       <View style={styles.container}>
         <Image source={image} style={styles.image} />
         {comments.map((comment, index) => (
-          <View style={styles.commentBox} key={index}>
-            <Text>{comment.comment}</Text>
-          </View>
-        ))}
+  <View style={styles.commentBox} key={index}>
+    <Image source={{uri: comment.profileImageUrl}} style={styles.profileImage} />
+    <Text>{comment.comment}</Text>
+  </View>
+))}
         <TextInput 
           style={styles.input} 
           placeholder="Ecrivez votre commentaire ici..."
@@ -107,5 +106,10 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     borderRadius: 5,
     marginBottom: 10,
+  },
+  profileImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
   },
 });

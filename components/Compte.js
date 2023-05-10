@@ -149,8 +149,9 @@ useEffect(() => {
 
     if (!result.cancelled) {
       await AsyncStorage.setItem("profileImageUrl", result.uri);
-      setProfileImageUrl(result.uri);
+      setProfileImageTopBarUrl(result.uri);
     }
+    
   };
   const getSavedBio = async () => {
     try {
