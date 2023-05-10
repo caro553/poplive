@@ -3,7 +3,6 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import 'firebase/compat/database';
 
-
 const firebaseConfig = {
   apiKey: "AIzaSyCCSiKrrvo0pWnQI_pIkxeD3DnZPBQxF6o",
   authDomain: "poplive-4d383.firebaseapp.com",
@@ -28,7 +27,17 @@ firebase.auth().signInAnonymously()
   
 
 const auth = firebase.auth();
+const db = firebase.firestore();
 
+export const addComment = async (commentData) => {
+  try {
+    const response = await db.collection('comments').add(commentData);
+    return response;
+  } catch (error) {
+    console.log('Error adding comment:', error);
+    throw error;
+  }
+};
 // Ajoutez la fonction updateUserToPremium ici
 export const updateUserToPremium = async (userId) => {
   try {
