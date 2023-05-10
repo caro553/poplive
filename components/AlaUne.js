@@ -51,7 +51,7 @@ export default function AlaUne({ navigation }) {
 
       <ScrollView style={styles.scrollView}>
         <View style={styles.ProfilUne} zIndex={0}>
-          <Image source={require("./couronne_premium.png")} style={styles.couronne} />
+          <Image source={require("./couronne.png")} style={styles.couronne} />
           <Image
             source={require("./demonslayer.jpg")}
             style={[styles.logoducomte, styles.imageWithBorder]}
@@ -209,6 +209,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     overflow: "hidden",
+    marginBottom: 80,
   },
   topBar: {
     backgroundColor: "#5f5f5f",
@@ -255,7 +256,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     top: 80,
-    left: -25,
+    left: -30,
     zIndex: 1,
   },
   logoducomte: {
