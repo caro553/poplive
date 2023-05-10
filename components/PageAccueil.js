@@ -113,8 +113,8 @@ const handleLike = async (commentId) => {
 
 
         <TextInput 
-          style={styles.input} 
-          placeholder="Ecrivez votre commentaire ici..."
+      style={[styles.input, { marginTop: 20 }]} // Ajouter la propriété marginTop ici
+      placeholder="Ecrivez votre commentaire ici..."
           multiline
           value={currentComment}
           onChangeText={setCurrentComment}
@@ -134,7 +134,8 @@ const handleLike = async (commentId) => {
     image: {
       width: 300,
       height: 300,
-      marginBottom: 20,
+      marginBottom: 40,
+      borderRadius: 40,
     },
     commentContainer: {
         flexDirection: 'row',
@@ -159,14 +160,15 @@ const handleLike = async (commentId) => {
         alignSelf: 'flex-end',
         marginTop: 10,
       },
-    commentBox: {
-      width: '100%',
-      borderWidth: 1,
-      borderColor: 'gray',
-      padding: 10,
-      borderRadius: 5,
-      marginBottom: 10,
-    },
+      commentBox: {
+        width: '100%',
+        borderWidth: 1,
+        borderColor: 'gray',
+        padding: 1, // Réduisez cette valeur pour diminuer l'épaisseur des commentaires
+        borderRadius: 20,
+        marginBottom: 10,
+        backgroundColor: 'white',
+      },
     input: {
       height: 40,
       width: '80%',
@@ -177,10 +179,10 @@ const handleLike = async (commentId) => {
       marginBottom: 10,
     },
     profileImage: {
-      width: 50,
-      height: 50,
-      borderRadius: 25,
-    },
+        width: 50,
+        height: 50,
+        borderRadius: 25, // Cette ligne va arrondir l'image
+      },
     commentScrollView: {
       width: '80%',
       flex: 1,
@@ -194,5 +196,6 @@ const handleLike = async (commentId) => {
       likesCount: {
         marginLeft: 5,
       },
+      
   });
   

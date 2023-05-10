@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity,KeyboardAvoidingView, Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
 import Video from 'react-native-video';
 import Controls from 'react-native-video-controls';
