@@ -121,9 +121,7 @@ const loadPrenom = async () => {
             <Text style={styles.textMenu}> Home </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity  onPress={() => navigation.navigate("Abonnement")}>
-            <Text style={styles.textMenu}> FAQ </Text>
-            </TouchableOpacity>
+
             <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Bestof")}>
             <Image source={require('./video.png')} style={styles.logomenu} />
             </TouchableOpacity>
