@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import {
   View,
   ScrollView,
@@ -15,6 +15,7 @@ import BottomBar from "./BottomBar";
 import { auth } from "./firebaseConfig";
 
 const gradientColors = ["purple", "yellow"];
+
 const screenWidth = Dimensions.get("window").width;
 function renderBorder(colors) {
   const numSegments = colors.length - 1;
@@ -31,6 +32,14 @@ function renderBorder(colors) {
 }
 
 export default function AlaUne({ navigation }) { // Ajoutez { navigation } ici
+  const [comments, setComments] = useState([
+    [], // Commentaires pour le premier rectangle
+    [], // Commentaires pour le deuxième rectangle
+    [], // Commentaires pour le troisième rectangle
+    [], // Commentaires pour le quatrième rectangle
+    [], // Commentaires pour le cinquième rectangle
+  ]);
+  
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
@@ -67,7 +76,10 @@ export default function AlaUne({ navigation }) { // Ajoutez { navigation } ici
         <TouchableOpacity
   style={styles.twitchContainer}
   onPress={() => 
-    navigation.navigate('PageAccueil', { image: require('./Rectangle2.png') })
+    navigation.navigate('PageAccueil', { 
+      image: require('./Rectangle2.png'),
+      rectangleIndex: 0, // Index du premier rectangle
+    })
   }
 >
   <Image

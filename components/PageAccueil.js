@@ -13,8 +13,8 @@ import firebase, { addComment } from "./firebaseConfig";
 const { firestore } = firebase;
 
 export default function PageAccueil({ route }) {
-  const { image } = route.params;
-  const [comments, setComments] = useState([]);
+    const { image, rectangleIndex } = route.params;
+    const [comments, setComments] = useState([]);
   const [currentComment, setCurrentComment] = useState("");
 
   useEffect(() => {

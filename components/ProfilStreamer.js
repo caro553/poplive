@@ -281,7 +281,7 @@ useEffect(() => {
         <TopBar />
       </View>
       {/* Contenu de la page */}
-      <BottomBar />
+   
       <Text style={styles.title}></Text>
       {profileImage && (
         <>
@@ -325,6 +325,7 @@ useEffect(() => {
   )
 }
       {/* Utilisez les informations du streamerData pour afficher le contenu du profil */}
+      <BottomBar style={{ position: 'absolute', bottom: 0 }} />
     </View>
   );  
 };
@@ -335,6 +336,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#6441A4', // nouvelle couleur de fond correspondant à la couleur de Twitch
+    marginBottom: 10, // Ajouter une marge inférieure pour déplacer la barre de navigation en bas
   },
   title: {
     fontSize: 18,

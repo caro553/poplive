@@ -2,7 +2,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import 'firebase/compat/database';
-
+import 'firebase/auth';
 const firebaseConfig = {
   apiKey: "AIzaSyCCSiKrrvo0pWnQI_pIkxeD3DnZPBQxF6o",
   authDomain: "poplive-4d383.firebaseapp.com",
@@ -60,4 +60,6 @@ const storeLiveStreamInfo = async (userId, streamData) => {
 };
 
 export { auth };
+
+
 export default firebase;
