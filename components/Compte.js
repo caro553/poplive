@@ -234,6 +234,7 @@ useEffect(() => {
           <Text style={styles.subscriptionMessage}>Je suis en{'\n'}non-premium !</Text>
         </View>
       )} 
+      <View  zIndex={0}>
       {profileImageUrl ? (
         <TouchableOpacity onPress={selectImage}>
           <Image
@@ -254,7 +255,7 @@ useEffect(() => {
           <Image source={require("./Photo.png")} style={styles.logo} />
         </TouchableOpacity>
       )}
-  
+         </View>
       <View style={styles.usernameContainer}>
         <Text style={{ fontSize: 30, color: "white" }}>{username}</Text>
       </View>
@@ -322,30 +323,36 @@ useEffect(() => {
           <View style={styles.modal}>
           <Button   style={{ right:350,}} title="X" onPress={() => setModalVisible(false)} /> 
           <Image source={require("./couronne_premium.png")} style={{width:30,height:30,}} />
-            <Text style={{color:'#4B388E',color:'#4B388E'}}>Le mode</Text>
+            <Text style={{color:'#4B388E',color:'#4B388E', fontWeight: 'bold',}}>Le mode</Text>
             <Text style={styles.modalTitle}>PREMIUM</Text>
            
             <View id="mod" style={{ flexDirection: "row" }}>
   <View id="droite" style={{ flex: 1 }}>
-    <Text style={{fontSize:20,color:"#4B388E",}}>EN VEDETTE</Text>
+
+
+
+    <Text style={{fontSize:15,color:"#4B388E", fontWeight: 'bold',}}>EN VEDETTE</Text>
     <Image source={require("./vedette_premium.png")} style={{width:140,height:150}}/>
-    <Text style={{color:"#4B388E",}}>Tu seras mis en avant chaque mois sur l'accueil de l'application !</Text>
+    <Text style={{color:"#4B388E",fontWeight: 'bold',}}>Tu seras mis en avant chaque mois sur l'accueil de l'application !</Text>
   </View>
+
+
+
   <View id="gauche" style={{ flex: 1 }}>
-    <Text style={{fontSize:20,color:"#4B388E",}}>PROMOTIONS</Text>
+    <Text style={{fontSize:15,color:"#4B388E",fontWeight: 'bold',}}>PROMOTIONS</Text>
     <Image source={require("./promotion_premium.png")} style={{width:140,height:150}}/>
-    <Text style={{color:"#4B388E",}}>Promotions des profils sur tout nos réseaux-sociaux ! (Instagram-Tiktok-Twitter)</Text>
+    <Text style={{color:"#4B388E",  textAlign: "justify",fontWeight: 'bold',}}>Promotions des profils sur tout nos réseaux-sociaux ! (Instagram-Tiktok-Twitter)</Text>
   </View>
   </View>
   <View id="bas">
-  <Text style={{color:"#4B388E",}}>Pour seulement 2.49€/mois</Text>
-  <View style={styles.logoutContainer}>
+  <Text style={{color:"#4B388E",top:30,fontWeight: 'bold',}}>Pour seulement 2.49€/mois</Text>
+  <View style={[styles.logoutContainer,{top:25,},]} >
       <LinearGradient
   colors={['#624F9C', '#714F9B', '#814E9A', '#8B4D99', '#8B4D99', '#8E4D98', '#C24E97', '#E55599', '#F08479', '#FABE4B', '#F3E730']}
   style={styles.logoutButton}>
-  <TouchableOpacity>
+  <TouchableOpacity >
   {!isSubscribed && (
-        <TouchableOpacity onPress={handleSubscribe}>
+        <TouchableOpacity onPress={handleSubscribe} >
           <Text style={styles.logoutText}>Abonne toi !</Text>
         </TouchableOpacity>
       )} 
@@ -484,6 +491,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 10, // Add border radius to make it rounded
+
   },
   logoutText: {
     color: "white",
@@ -519,11 +527,13 @@ const styles = StyleSheet.create({
   },
   modal: {
     backgroundColor: 'white',
-  borderRadius: 10,
+  borderRadius: 30,
   padding: 20,
   alignItems: 'center',
   elevation: 5,
-  },
+  width:'90%',
+
+},
   modalContainer: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -539,21 +549,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 20,
   },
+
   etoile:{
     top:150,
     right:90,
-    zIndex: 1,
+    zIndex: 2,
   },
   subscriptionMessage:{
     top:80,
     right:90,
-    zIndex: 9999,
     color: 'pink',
     fontWeight: 'bold',
     fontSize:17,
     position: 'absolute',
+  textAlign: "center",
+  marginTop: 10,
+  zIndex: 1,
   },
   couronne:{
-    right:200,
+  width:40,
+  height:40,
+  top:25,
   },
 });
