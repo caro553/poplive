@@ -215,12 +215,21 @@ useEffect(() => {
   
   return (
     <View style={styles.container}>
+
        <TopBar  profileImage={profileImageTopBarUrl}/> 
       <KeyboardAwareScrollView
   contentContainerStyle={styles.keyboardAwareScrollView}
   keyboardShouldPersistTaps="handled"
   keyboardDismissMode="on-drag"
 >
+
+
+<Image source={require("./etoile_premium.png")} style={styles.etoile} />
+<Text style={styles.textEtoile}>JE SUIS EN NON-PREMIUM</Text>
+<Image source={require("./couronne_premium.png")} style={styles.couronneEtoile} />
+<Text style={styles.textEtoile}>JE SUIS EN PREMIUM</Text>
+
+
       {profileImageUrl ? (
         <TouchableOpacity onPress={selectImage}>
           <Image
@@ -331,7 +340,7 @@ useEffect(() => {
   colors={['#624F9C', '#714F9B', '#814E9A', '#8B4D99', '#8B4D99', '#8E4D98', '#C24E97', '#E55599', '#F08479', '#FABE4B', '#F3E730']}
   style={styles.logoutButton}>
   <TouchableOpacity>
-    <Text style={styles.logoutText}>Abonne toi !</Text>
+    <Text style={[styles.abonneText]}>Abonne toi !</Text>
   </TouchableOpacity>
 </LinearGradient>
 </View>
@@ -515,5 +524,11 @@ const styles = StyleSheet.create({
   modalText: {
     fontSize: 16,
     marginBottom: 20,
+  },
+  etoile:{
+    top:100,
+    right:90,
+    zIndex: 9999,
+    opacity: 0.5, 
   },
 });

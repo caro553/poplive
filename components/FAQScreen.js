@@ -51,7 +51,7 @@ const FAQScreen = () => {
 
 
     <View style={styles.nouscontacter}>
-  <TouchableOpacity onPress={() => Linking.openURL('mailto:poplive@gmail.com')}>
+  <TouchableOpacity onPress={() => Linking.openURL('mailto:service.poplive@gmail.com')}>
     <Image source={require('./boutoncontacter.png')} style={styles.imgcontacter} />
   </TouchableOpacity>
 </View>
@@ -83,7 +83,7 @@ const FAQScreen = () => {
       <View style={styles.buttonContainer}>
       <View style={styles.avantmodal}>
           <Button 
-            title="Quelle est la différence entre le premium et le non-premium ?" 
+            title="Quelle est la différence entre le premium..." 
             onPress={() => setModalVisible2(true)}
             color="black"
           />
@@ -105,7 +105,7 @@ const FAQScreen = () => {
       <View style={styles.buttonContainer}>
       <View style={styles.avantmodal}>
           <Button 
-            title="Est-ce que je risque un ban Twitch si j'utilise l'application ?" 
+            title="Est-ce que je risque un ban Twitch si..." 
             onPress={() => setModalVisible3(true)}
             color="black"
           />
@@ -127,7 +127,7 @@ const FAQScreen = () => {
       <View style={styles.buttonContainer}>
       <View style={styles.avantmodal}>
           <Button 
-            title="Quels sont les avantages de l'application en tant que viewer ?" 
+            title="Quels sont les avantages de l'application..." 
             onPress={() => setModalVisible5(true)}
             color="black"
           />
@@ -151,7 +151,7 @@ const FAQScreen = () => {
       <View style={styles.buttonContainer}>
       <View style={styles.avantmodal}>
           <Button 
-            title="Le mode premium me boostera-t-il que sur l'application ?" 
+            title="Le mode premium me boostera-t-il que..." 
             onPress={() => setModalVisible6(true)}
             color="black"
           />
@@ -173,10 +173,10 @@ const FAQScreen = () => {
       <View style={styles.buttonContainer}>
       <View style={styles.avantmodal}>
           <Button 
-            title="Est-ce que l'application respecte la RGPD ?" 
+            title="Est-ce que l'application respecte la RGPD..." 
             onPress={() => setModalVisible8(true)}
             color="black"
-          />
+                      />
                <Image source={require('./polygone.png')} style={styles.icon} />
         </View>
 
@@ -199,12 +199,10 @@ const FAQScreen = () => {
       </View>
   
     </View>
-    <View style={{top:225}}>
-        <BottomBar />
-      </View>
+    <View style={{top:370,}}>
+  <BottomBar />
+  </View>
   </ScrollView>
- 
-
   </View>
   );
 };
@@ -329,6 +327,9 @@ const styles = StyleSheet.create({
     },
     buttonContainer:{
       top:220,
+    },
+    videoStyle:{
+      top:150,
     },
   });
 
