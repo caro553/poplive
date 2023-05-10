@@ -217,12 +217,12 @@ useEffect(() => {
   keyboardDismissMode="on-drag"
 >
 
-
+<View zIndex={0}>
 <Image source={require('./etoile_premium.png')} style={styles.etoile} />
-
+</View>
 {isSubscribed && (
         <View style={styles.premiumContainer}>
-          <Text style={styles.subscriptionMessage}>Je suis premium !</Text>
+          <Text style={styles.subscriptionMessagePremium}>Je suis{'\n'} premium !</Text>
           <Image source={require('./couronne_premium.png')} style={styles.couronne} />
         </View>
       )} 
@@ -548,16 +548,27 @@ const styles = StyleSheet.create({
   },
 
   etoile:{
-    top:150,
+    top:100,
     right:90,
     zIndex: 2,
   },
   subscriptionMessage:{
-    top:80,
-    right:90,
-    color: 'pink',
+    top:10,
+    right:40,
+    color: 'black',
     fontWeight: 'bold',
-    fontSize:17,
+    fontSize:12,
+    position: 'absolute',
+  textAlign: "center",
+  marginTop: 10,
+  zIndex: 1,
+  },
+  subscriptionMessagePremium:{
+    top:10,
+    right:80,
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize:12,
     position: 'absolute',
   textAlign: "center",
   marginTop: 10,
