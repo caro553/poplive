@@ -341,7 +341,7 @@ getUsernameAndUserId().then(async ({ username, userId }) => {
   ))}
 
       </ScrollView>
-
+      <BottomBar/>
     </View>
   );
   

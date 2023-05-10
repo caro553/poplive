@@ -9,7 +9,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { WebView } from "react-native-webview";
-import { Dimensions } from "react-native";
+import { Dimensions } from "react-native";  
 import TopBar from "./TopBar";
 import BottomBar from "./BottomBar";
 import { auth } from "./firebaseConfig";
@@ -142,6 +142,7 @@ export default function AlaUne() {
 
         {/* Ajoutez autant d'éléments <TouchableOpacity> que vous le souhaitez ici */}
       </ScrollView>
+      <BottomBar/>
     </View>
   );
 }

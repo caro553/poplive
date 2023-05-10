@@ -35,17 +35,18 @@ export default function Bestof() {
   <Text style={styles.titleText}>
     Vidéos youtube de nos streamers
   </Text>
+  <Image source={require('./bar.png')} style={{bottom:5,left:90,width:250,}} />
   <View style={styles.titleLine} />
 </View>
         <ScrollView style={styles.scrollView}>
   {videoData.map((video, index) => (
   <TouchableOpacity key={index} style={styles.twitchContainer} onPress={() => Linking.openURL(
-    index === 0 ? `https://www.youtube.com/watch?v=${videoIds[0]}` :
-    index === 1 ? `https://www.youtube.com/watch?v=${videoIds[1]}` :
-    index === 2 ? `https://www.youtube.com/watch?v=${videoIds[2]}` :
-    index === 3 ? `https://www.youtube.com/watch?v=${videoIds[3]}` :
-    index === 4 ? `https://www.youtube.com/watch?v=${videoIds[4]}` :
-    index === 5 ? `https://www.youtube.com/watch?v=${videoIds[5]}` :
+    index === 0 ? `https://youtu.be/OYThhaHdJKo` :
+    index === 1 ? `https://youtu.be/kGee1PRy-so` :
+    index === 2 ? `https://youtu.be/wvDAyt1h6rM` :
+    index === 3 ? `https://youtu.be/jWraTbrf_kY` :
+    index === 4 ? `https://youtu.be/6UCMmsoa1eI` :
+    index === 5 ? `https://youtu.be/YoZ1aehyZ3I` :
     'https://www.youtube.com/watch?v=defaultLink'
   )}>
   

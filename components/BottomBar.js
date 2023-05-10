@@ -7,6 +7,8 @@ export default function BottomBar() {
   const navigation = useNavigation();
 
   return (
+    <View>
+    <Image source={require('./bar.png')} style={{bottom:62,width:450, height:5,}} />
     <View style={styles.bottomContainer}>
       <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate("AlaUne")}>
         <Image source={require('./acceuil.png')} style={styles.logo} />
@@ -20,6 +22,7 @@ export default function BottomBar() {
       <TouchableOpacity style={styles.logoContainer} onPress={() =>  navigation.navigate("FAQ")}>
         <Image source={require('./faq.png')} style={styles.logo} />
       </TouchableOpacity>
+    </View>
     </View>
   );
 }
