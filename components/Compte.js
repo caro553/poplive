@@ -45,12 +45,14 @@ export default function Compte() {
     setIsEditing(!isEditing);
   };
   const handleLogout = async () => {
+    
     try {
       await firebase.auth().signOut(); v 
       navigation.navigate('Home');
     } catch (error) {
       console.error('Error during logout:', error);
     }
+    navigation.navigate('Connexion');
   };
   const loadNom = async () => {
     const storedNom = await AsyncStorage.getItem('nom');
@@ -377,9 +379,9 @@ useEffect(() => {
       <LinearGradient
   colors={['#624F9C', '#714F9B', '#814E9A', '#8B4D99', '#8B4D99', '#8E4D98', '#C24E97', '#E55599', '#F08479', '#FABE4B', '#F3E730']}
   style={styles.logoutButton}>
-  <TouchableOpacity onPress={handleLogout}>
-    <Text style={styles.logoutText}>Déconnexion</Text>
-  </TouchableOpacity>
+<TouchableOpacity onPress={handleLogout}>
+  <Text style={styles.logoutText}>Déconnexion</Text>
+</TouchableOpacity>
 </LinearGradient>
 </View>
  

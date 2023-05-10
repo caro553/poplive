@@ -37,12 +37,12 @@ export default function HomeScreen({ navigation }) {
         >
           <Text style={styles.buttonText}>S'INSCRIRE</Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={[styles.signupButton, { marginBottom: 20 }]}
           onPress={() => navigation.navigate("AlaUne")}
         >
           <Text style={styles.buttonText}>CHEATCODE</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </LinearGradient>
   );

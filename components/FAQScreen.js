@@ -192,9 +192,10 @@ const FAQScreen = () => {
       </View>
   
     </View>
-    <View style={{top:165,}}>
+    <View style={{top:100,}}>
   <BottomBar />
-  </View>
+</View>
+
   </ScrollView>
   
   </View>
@@ -214,6 +215,7 @@ const styles = StyleSheet.create({
     width: 250,
     borderRadius: 8, 
   },
+  
   icon: {
     width: 30,
     height: 30,
