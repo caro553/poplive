@@ -23,8 +23,8 @@ export default function Inscription({ navigation }) {
     const [password, setPassword] = useState('');
     const [pseudo, setPseudo] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [firstName, setFirstName] = useState(''); // Ajoutez cette ligne
-    const [lastName, setLastName] = useState(''); // Ajoutez cette ligne
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState(''); 
 
     const saveUsername = async (userId) => {
         await AsyncStorage.setItem('username', pseudo);
@@ -35,15 +35,13 @@ export default function Inscription({ navigation }) {
     const handleSignUp = () => {
         auth.createUserWithEmailAndPassword(email, password)
             .then((userCredential) => {
-                // Add user's pseudo to their profile
                 userCredential.user.updateProfile({
-                    displayName: `${firstName} ${lastName} - ${pseudo}`, // Modifiez cette ligne
+                    displayName: `${firstName} ${lastName} - ${pseudo}`, 
                 })
                     .then(() => {
-                        saveUsername(userCredential.user.uid); // Ajoutez l'ID de l'utilisateur ici
+                        saveUsername(userCredential.user.uid); 
                         console.log('Utilisateur créé avec succès');
                         
-                        // Ajouter un document pour le nouvel utilisateur dans la collection 'test_users'
                         firebase
   .firestore()
   .collection('test_users')
