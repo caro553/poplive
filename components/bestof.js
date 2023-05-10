@@ -39,6 +39,7 @@ export default function Bestof() {
   <View style={styles.titleLine} />
 </View>
         <ScrollView style={styles.scrollView}>
+        <Image source={require('./couronne.png')} style={{width:40,height:40, left:15,top:30,}} />
   {videoData.map((video, index) => (
   <TouchableOpacity key={index} style={styles.twitchContainer} onPress={() => Linking.openURL(
     index === 0 ? `https://youtu.be/OYThhaHdJKo` :
@@ -50,13 +51,13 @@ export default function Bestof() {
     'https://www.youtube.com/watch?v=defaultLink'
   )}>
   
+
       <Image source={{ uri: video.thumbnailUrl }} style={styles.videoImage} />
       <View style={styles.rectangle}>
         <Image style={styles.twitchImage} source={{ uri: video.thumbnail }} />
         <View style={styles.twitchTextContainer}>
           <Text style={styles.name}>{video.channelTitle}</Text>
-          <Text numberOfLines={2} style={[styles.twitchTitle, { fontWeight: 'bold' }]}>{video.title}</Text>
-          <Text style={styles.twitchDate}>30 avril 2023</Text>
+          <Text numberOfLines={2} style={styles.twitchTitle}>{video.title}</Text>
         </View>
       </View>
 
@@ -105,7 +106,7 @@ profileContainer: {
 
  
 rectangle: { //interieur des recs blancs
-  marginTop: 50,
+  marginTop: 10,
   width: 170,
   height: 50,
   backgroundColor: 'white',
@@ -125,6 +126,8 @@ icon: {
 videoImage: {
   width: 160,
   height: 99,
+  left:5,
+  
   borderRadius: 20,
 },
 
