@@ -10,6 +10,8 @@ import {
   Keyboard 
 } from 'react-native';
 import firebase, { addComment } from "./firebaseConfig";
+import { db } from './firebaseConfig';
+
 const { firestore } = firebase;
 
 export default function PageAccueil({ route }) {
@@ -20,6 +22,9 @@ export default function PageAccueil({ route }) {
   useEffect(() => {
     const subscriber = firestore()
       .collection('comments')
+      .doc(`rectangle${rectangleIndex}`)
+      .collection('comments')
+      .orderBy('createdAt', 'desc')
       .onSnapshot(querySnapshot => {
         const comments = querySnapshot.docs.map(documentSnapshot => {
           return {
@@ -29,17 +34,29 @@ export default function PageAccueil({ route }) {
         });
         setComments(comments);
       });
-
-    // Remember to unsubscribe from the snapshot
+  
     return () => subscriber();
-  }, []);
-
+  }, [rectangleIndex]); 
   const handleCommentSubmit = async () => {
-    if (currentComment.length > 0) {
-      await addComment({ comment: currentComment });
-      setCurrentComment("");
+    try {
+        const commentData = {
+            comment: currentComment,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            // Ajoutez ici d'autres champs si nécessaire
+        };
+        await firestore()
+          .collection('comments')
+          .doc(`rectangle${rectangleIndex}`)
+          .collection('comments')
+          .add(commentData);
+        console.log('Commentaire ajouté avec succès');
+        setCurrentComment(''); // réinitialise le champ de commentaire après la soumission
+    } catch (error) {
+        console.error('Erreur lors de l\'ajout du commentaire: ', error);
     }
-  }
+};
+
+
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -57,7 +74,7 @@ export default function PageAccueil({ route }) {
           value={currentComment}
           onChangeText={setCurrentComment}
         />
-        <Button title="Envoyer" onPress={handleCommentSubmit} />
+<Button title="Envoyer" onPress={handleCommentSubmit} />
       </View>
     </TouchableWithoutFeedback>
   );

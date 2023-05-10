@@ -17,6 +17,8 @@ const firebaseConfig = {
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
+} else {
+  firebase.app(); // Si Firebase est déjà initialisé, utilisez cette application
 }
 
 // Ajoutez cette partie pour vous connecter anonymement
@@ -29,14 +31,15 @@ firebase.auth().signInAnonymously()
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-export const addComment = async (commentData) => {
-  try {
-    const response = await db.collection('comments').add(commentData);
-    return response;
-  } catch (error) {
-    console.log('Error adding comment:', error);
-    throw error;
-  }
+export const addComment = async ({ comment, rectangleIndex }) => {
+  await firestore()
+    .collection('comments')
+    .doc(`rectangle${rectangleIndex}`)
+    .collection('comments')
+    .add({
+      comment,
+      createdAt: firestore.FieldValue.serverTimestamp(),
+    });
 };
 // Ajoutez la fonction updateUserToPremium ici
 export const updateUserToPremium = async (userId) => {
@@ -61,5 +64,6 @@ const storeLiveStreamInfo = async (userId, streamData) => {
 
 export { auth };
 
+export { db };
 
 export default firebase;
