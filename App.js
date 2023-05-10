@@ -31,7 +31,6 @@ export default function App() {
         <Stack.Screen name="FAQ" component={FAQScreen} />
         <Stack.Screen name="Bestof" component={Bestof} />
         <Stack.Screen name="ProfilStreamer" component={ProfilStreamer} />
-
       </Stack.Navigator>
     </NavigationContainer>
   );
