@@ -8,7 +8,8 @@ import {
   Text, 
   TouchableWithoutFeedback, 
   Keyboard,
-  ScrollView
+  ScrollView,
+  TouchableOpacity
 } from 'react-native';
 import firebase, { addComment } from "./firebaseConfig";
 import { db } from './firebaseConfig';
@@ -45,15 +46,42 @@ export default function PageAccueil({ route }) {
       const profileImageTopBarUrl = await AsyncStorage.getItem("profileImageUrl");
       const username = await AsyncStorage.getItem('username'); // Récupérer le pseudo
       const commentData = {
-          comment: currentComment,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          profileImageUrl: profileImageTopBarUrl,
-          username, // Ajouter le pseudo ici
-      };
+        comment: currentComment,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        profileImageUrl: profileImageTopBarUrl,
+        username, // Ajouter le pseudo ici
+        likes: 0, // Ajouter ce champ
+      };      
       await db.collection('comments').doc(`rectangle${rectangleIndex}`).collection('comments').add(commentData);
       setCurrentComment('');
     } catch (error) {
       console.error('Erreur lors de l\'ajout du commentaire: ', error);
+    }
+  };
+  const handleCommentDelete = async (commentId) => {
+    try {
+        await db
+          .collection('comments')
+          .doc(`rectangle${rectangleIndex}`)
+          .collection('comments')
+          .doc(commentId)
+          .delete();
+
+        console.log('Commentaire supprimé avec succès');
+    } catch (error) {
+        console.error('Erreur lors de la suppression du commentaire: ', error);
+    }
+};
+const handleLike = async (commentId) => {
+    try {
+      const commentRef = db.collection('comments').doc(`rectangle${rectangleIndex}`).collection('comments').doc(commentId);
+  
+      // Incrémente le champ "likes"
+      await commentRef.update({
+        likes: firebase.firestore.FieldValue.increment(1)
+      });
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du commentaire: ', error);
     }
   };
   
@@ -63,13 +91,25 @@ export default function PageAccueil({ route }) {
       <View style={styles.container}>
         <Image source={image} style={styles.image} />
         <ScrollView style={styles.commentScrollView}>
-  {comments.map((comment, index) => (
-    <View style={styles.commentBox} key={index}>
-      <Image source={{uri: comment.profileImageUrl}} style={styles.profileImage} />
-      <Text>{comment.username}: {comment.comment}</Text>
+        {comments.map((comment, index) => (
+  <View style={styles.commentContainer} key={index}>
+    <Image source={{uri: comment.profileImageUrl}} style={styles.profileImage} />
+    <View style={styles.commentBox}>
+      <Text style={styles.username}>{comment.username}</Text>
+      <Text>{comment.comment}</Text>
+      <View style={styles.likesContainer}>
+        <TouchableOpacity onPress={() => handleLike(comment.key)}>
+          <Image source={require('./like.png')} style={styles.likeIcon} />
+        </TouchableOpacity>
+        <Text style={styles.likesCount}>{comment.likes}</Text>
+      </View>
     </View>
-  ))}
+  </View>
+))}
+
 </ScrollView>
+
+
 
 
         <TextInput 
@@ -89,12 +129,36 @@ export default function PageAccueil({ route }) {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
+      backgroundColor: '#6441A4', // nouvelle couleur de fond correspondant à la couleur de Twitch
     },
     image: {
       width: 300,
       height: 300,
       marginBottom: 20,
     },
+    commentContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20,
+        marginRight: 50, // Ajoutez cette ligne
+      },
+      profileImage: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        marginRight: 10,
+      },
+     
+      username: {
+        fontWeight: 'bold',
+        marginBottom: 10,
+      },
+      likeIcon: {
+        width: 20,
+        height: 20,
+        alignSelf: 'flex-end',
+        marginTop: 10,
+      },
     commentBox: {
       width: '100%',
       borderWidth: 1,
@@ -121,5 +185,14 @@ export default function PageAccueil({ route }) {
       width: '80%',
       flex: 1,
     },
+    likesContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        marginTop: 10,
+      },
+      likesCount: {
+        marginLeft: 5,
+      },
   });
   
