@@ -66,7 +66,7 @@ const loadPrenom = async () => {
             source={{ uri: profileImageUrl }}
             style={[
               styles.logoducomte,
-              { borderColor: "#9b59b6", borderWidth: 7, top:0, width:75, height:75 },
+              { borderColor: "#9b59b6", borderWidth: 5, top:0, left:10,width:65, height:65 },
             ]}
             resizeMode="contain"
           />
@@ -86,12 +86,12 @@ const loadPrenom = async () => {
         <TouchableOpacity style={styles.menuOverlay} onPress={toggleMenu}>
           <View style={styles.menuContainer}>
           <Image source={require('./logo.png')} style={styles.logo1} />
-          <Image source={require('./couronne.png')} style={styles.couronne} />
+          <Image source={require('./couronne_premium.png')} style={styles.couronne} />
           <Image
             source={{ uri: profileImageUrl }}
             style={[
               styles.logoducomte,
-              { borderColor: "#9b59b6", borderWidth: 10 },
+              { borderColor: "#9b59b6", borderWidth: 7 },
             ]}
             resizeMode="contain"
           />
@@ -275,6 +275,6 @@ const styles = StyleSheet.create({
     width:35,
     height:35,
     top:25,
-    left:30,
+    left:25,
   },
 });

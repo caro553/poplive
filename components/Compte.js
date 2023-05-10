@@ -81,12 +81,16 @@ const saveUserData = async () => {
       nom,
       prenom,
       email,
+      username, // Ajoutez le pseudo ici
     });
     setIsEditing(false);
+    // Stockez également le pseudo dans AsyncStorage pour qu'il puisse être récupéré ailleurs dans l'application
+    await AsyncStorage.setItem('username', username);
   } catch (error) {
     console.error('Error updating user data:', error);
   }
 };
+
 const nomRef = useRef(null);
   const handleNomChange = () => {
     console.log('handleNomChange called');
@@ -109,11 +113,13 @@ useEffect(() => {
 
   const handleData = (snapshot) => {
     const data = snapshot.val();
+    console.log('Data from Firebase:', data); // Ajout pour le débogage
 
     if (data) {
       setNom(data.nom || "");
       setPrenom(data.prenom || "");
       setEmail(data.email || "");
+      setUsername(data.username || ""); // Récupérez l'username ici
     }
 
     setLoading(false);
@@ -125,6 +131,7 @@ useEffect(() => {
     userRef.off('value', handleData);
   };
 }, []);
+
 
   const handleBioChange = (newBio) => {
     setBio(newBio);
@@ -176,7 +183,8 @@ useEffect(() => {
 
   const loadUsername = async () => {
     const name = await AsyncStorage.getItem('username');
-        if (name) {
+    console.log('Username from AsyncStorage:', name); // Ajout pour le débogage
+    if (name) {
       setUsername(name);
     }
   };
