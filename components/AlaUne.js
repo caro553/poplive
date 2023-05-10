@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   ScrollView,
@@ -9,7 +9,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { WebView } from "react-native-webview";
-import { Dimensions } from "react-native";  
+import { Dimensions } from "react-native";
 import TopBar from "./TopBar";
 import BottomBar from "./BottomBar";
 import { auth } from "./firebaseConfig";
@@ -31,7 +31,8 @@ function renderBorder(colors) {
   ));
 }
 
-export default function AlaUne({ navigation }) { // Ajoutez { navigation } ici
+export default function AlaUne({ navigation }) {
+  // Ajoutez { navigation } ici
   const [comments, setComments] = useState([
     [], // Commentaires pour le premier rectangle
     [], // Commentaires pour le deuxième rectangle
@@ -39,7 +40,7 @@ export default function AlaUne({ navigation }) { // Ajoutez { navigation } ici
     [], // Commentaires pour le quatrième rectangle
     [], // Commentaires pour le cinquième rectangle
   ]);
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
@@ -55,13 +56,9 @@ export default function AlaUne({ navigation }) { // Ajoutez { navigation } ici
             source={require("./demonslayer.jpg")}
             style={[styles.logoducomte, styles.imageWithBorder]}
           />
-          <View style={styles.starContainer}>
-            <View style={styles.starShape}>
-              <Text style={styles.starText}>
-                Découvrez le streamer à la une !
-              </Text>
-            </View>
-          </View>
+
+          <Image source={require("./Star.png")} style={styles.starShape} />
+          <Text style={styles.starText}>Découvrez le streamer à la une !</Text>
         </View>
 
         <View style={styles.descriptionContainer} zIndex={0}>
@@ -69,112 +66,126 @@ export default function AlaUne({ navigation }) { // Ajoutez { navigation } ici
             Daksu est un jeune streamer passionné des jeux Fromsoftare et de
             l’univers Pokémon !! Découvrez le monde de Daksu !
           </Text>
-          {renderBorder(gradientColors)}
         </View>
+        <Image
+          source={require("./rectangle-gradient.png")}
+          style={styles.descriptionGradient}
+        />
 
         <Text style={styles.scrollText}>En ce moment sur Twitch :</Text>
         <TouchableOpacity
-  style={styles.twitchContainer}
-  onPress={() => 
-    navigation.navigate('PageAccueil', { 
-      image: require('./Rectangle2.png'),
-      rectangleIndex: 0, // Index du premier rectangle
-    })
-  }
->
-  <Image
-    source={require("./Rectangle2.png")}
-    style={styles.twitchIcon}
-  />
-  <View style={styles.twitchTextContainer}>
-    <Title text="Wig on twitch" />
-    <Description text="7h de live du lundi au dimanche 14 " />
-    <View style={styles.iconsContainer}>
-      <Image source={require('./comment.png')} style={styles.icon} />
-      <Image source={require('./like.png')} style={styles.icon} />
-    </View>
-  </View>
-</TouchableOpacity>
+          style={styles.twitchContainer}
+          onPress={() =>
+            navigation.navigate("PageAccueil", {
+              image: require("./gp_explorer_squeezie.jpg"),
+              rectangleIndex: 0, // Index du premier rectangle
+            })
+          }
+        >
+          <Image
+            source={require("./gp_explorer_squeezie.jpg")}
+            style={styles.twitchIcon}
+          />
+          <View style={styles.twitchTextContainer}>
+            <Title text="GP Explorer" />
+            <Description
+              style={styles.twitchText}
+              text="Course de F4 organisé par Squeezie"
+            />
+            <View style={styles.iconsContainer}>
+              <Image source={require("./comment.png")} style={styles.iconCom} />
+              <Image source={require("./like.png")} style={styles.iconCom} />
+            </View>
+          </View>
+        </TouchableOpacity>
 
-<TouchableOpacity
-  style={styles.twitchContainer}
-  onPress={() => 
-    navigation.navigate('PageAccueil', { image: require('./Rectangle2.png') })
-  }
->
-  <Image
-    source={require("./Rectangle2.png")}
-    style={styles.twitchIcon}
-  />
-  <View style={styles.twitchTextContainer}>
-    <Title text="Wig on twitch" />
-    <Description text="7h de live du lundi au dimanche 14 " />
-    <View style={styles.iconsContainer}>
-      <Image source={require('./comment.png')} style={styles.icon} />
-      <Image source={require('./like.png')} style={styles.icon} />
-    </View>
-  </View>
-</TouchableOpacity>
-<TouchableOpacity
-  style={styles.twitchContainer}
-  onPress={() => 
-    navigation.navigate('PageAccueil', { image: require('./rectangle.png') })
-  }
->
-  <Image
-    source={require("./rectangle.png")}
-    style={styles.twitchIcon}
-  />
-  <View style={styles.twitchTextContainer}>
-    <Title text="Wig on twitch" />
-    <Description text="7h de live du lundi au dimanche 14 " />
-    <View style={styles.iconsContainer}>
-      <Image source={require('./comment.png')} style={styles.icon} />
-      <Image source={require('./like.png')} style={styles.icon} />
-    </View>
-  </View>
-</TouchableOpacity>
-<TouchableOpacity
-  style={styles.twitchContainer}
-  onPress={() => 
-    navigation.navigate('PageAccueil', { image: require('./rectangle.png') })
-  }
->
-  <Image
-    source={require("./rectangle.png")}
-    style={styles.twitchIcon}
-  />
-  <View style={styles.twitchTextContainer}>
-    <Title text="Wig on twitch" />
-    <Description text="7h de live du lundi au dimanche 14 " />
-    <View style={styles.iconsContainer}>
-      <Image source={require('./comment.png')} style={styles.icon} />
-      <Image source={require('./like.png')} style={styles.icon} />
-    </View>
-  </View>
-</TouchableOpacity>
-<TouchableOpacity
-  style={styles.twitchContainer}
-  onPress={() => 
-    navigation.navigate('PageAccueil', { image: require('./rectangle.png') })
-  }
->
-  <Image
-    source={require("./rectangle.png")}
-    style={styles.twitchIcon}
-  />
-  <View style={styles.twitchTextContainer}>
-    <Title text="Wig on twitch" />
-    <Description text="7h de live du lundi au dimanche 14 " />
-    <View style={styles.iconsContainer}>
-      <Image source={require('./comment.png')} style={styles.icon} />
-      <Image source={require('./like.png')} style={styles.icon} />
-    </View>
-  </View>
-</TouchableOpacity>
+        <TouchableOpacity
+          style={styles.twitchContainer}
+          onPress={() =>
+            navigation.navigate("PageAccueil", {
+              image: require("./eleven_allstar.jpg"),
+            })
+          }
+        >
+          <Image
+            source={require("./eleven_allstar.jpg")}
+            style={styles.twitchIcon}
+          />
+          <View style={styles.twitchTextContainer}>
+            <Title text="Eleven All Stars" />
+            <Description
+              style={styles.twitchText}
+              text="Match de football avec des célébrités"
+            />
+            <View style={styles.iconsContainer}>
+              <Image source={require("./comment.png")} style={styles.iconCom} />
+              <Image source={require("./like.png")} style={styles.iconCom} />
+            </View>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.twitchContainer}
+          onPress={() =>
+            navigation.navigate("PageAccueil", {
+              image: require("./zevent.jpg"),
+            })
+          }
+        >
+          <Image source={require("./zevent.jpg")} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Title text="ZEvent" />
+            <Description style={styles.twitchText} text="Evenement caritatif" />
+            <View style={styles.iconsContainer}>
+              <Image source={require("./comment.png")} style={styles.iconCom} />
+              <Image source={require("./like.png")} style={styles.iconCom} />
+            </View>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.twitchContainer}
+          onPress={() =>
+            navigation.navigate("PageAccueil", {
+              image: require("./concert.png"),
+            })
+          }
+        >
+          <Image source={require("./concert.png")} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Title text="Concert en Live" />
+            <Description
+              style={styles.twitchText}
+              text="Un grand concert en direct"
+            />
+            <View style={styles.iconsContainer}>
+              <Image source={require("./comment.png")} style={styles.iconCom} />
+              <Image source={require("./like.png")} style={styles.iconCom} />
+            </View>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.twitchContainer}
+          onPress={() =>
+            navigation.navigate("PageAccueil", {
+              image: require("./Zlan2020.jpg"),
+            })
+          }
+        >
+          <Image source={require("./Zlan2020.jpg")} style={styles.twitchIcon} />
+          <View style={styles.twitchTextContainer}>
+            <Title text="ZLan" />
+            <Description
+              style={styles.twitchText}
+              text="Une LAN sur plusieurs jeux vidéos"
+            />
+            <View style={styles.iconsContainer}>
+              <Image source={require("./comment.png")} style={styles.iconCom} />
+              <Image source={require("./like.png")} style={styles.iconCom} />
+            </View>
+          </View>
+        </TouchableOpacity>
         {/* Ajoutez autant d'éléments <TouchableOpacity> que vous le souhaitez ici */}
       </ScrollView>
-      <BottomBar/>
+      <BottomBar />
     </View>
   );
 }
@@ -244,7 +255,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     top: 80,
-    left: 0,
+    left: -25,
     zIndex: 1,
   },
   logoducomte: {
@@ -254,27 +265,32 @@ const styles = StyleSheet.create({
     top: 30,
     marginVertical: 40,
   },
-  starContainer: {
-    position: "absolute",
-    top: 80,
-    right: 80,
-  },
+  starContainer: {},
   starShape: {
-    width: 70,
-    height: 70,
-    backgroundColor: "white",
+    position: "absolute",
+    top: 60,
+    right: 60,
+    width: 110,
+    height: 110,
     // transform: [{ rotateZ: "-30deg" }],
   },
   starText: {
+    position: "absolute",
+    top: 80,
+    right: 80,
+    width: 70,
+    height: 70,
     color: "#6441A4",
     textAlign: "center",
     marginTop: 10,
+    zIndex: 2,
   },
   imageWithBorder: {
     borderWidth: 5, // Épaisseur du contour
     borderColor: "yellow", // Couleur du contour
   },
   descriptionContainer: {
+    width: "100%",
     marginTop: 10,
     width: screenWidth,
     paddingHorizontal: 60,
@@ -286,6 +302,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 10,
     fontWeight: 700,
+  },
+  descriptionGradient: {
+    width: "100%",
   },
   borderSegment: {
     height: 5,
@@ -302,6 +321,7 @@ const styles = StyleSheet.create({
   },
 
   twitchContainer: {
+    maxWidth: "90%",
     width: "90%",
     marginHorizontal: "5%",
     height: 90,
@@ -311,24 +331,33 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  twitchTextContainer: {
+    marginLeft: 5,
+  },
   twitchIcon: {
     borderRadius: 20,
     height: 86,
+    width: 120,
     marginLeft: 2,
   }, // Added the missing closing curly brace
-    title: {
+  title: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   description: {
     fontSize: 14,
   },
   iconsContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
-  icon: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
+  iconCom: {
+    width: 18,
+    height: 15,
+    marginLeft: 5,
+  },
+  twitchText: {
+    maxWidth: "50%",
+    width: "50%",
+    overflow: "hidden",
   },
 });
