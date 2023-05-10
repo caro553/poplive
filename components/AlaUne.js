@@ -50,7 +50,7 @@ export default function AlaUne({ navigation }) { // Ajoutez { navigation } ici
 
       <ScrollView style={styles.scrollView}>
         <View style={styles.ProfilUne} zIndex={0}>
-          <Image source={require("./couronne.png")} style={styles.couronne} />
+          <Image source={require("./couronne_premium.png")} style={styles.couronne} />
           <Image
             source={require("./demonslayer.jpg")}
             style={[styles.logoducomte, styles.imageWithBorder]}
