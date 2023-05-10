@@ -54,7 +54,8 @@ export default function Bestof() {
 
       <Image source={{ uri: video.thumbnailUrl }} style={styles.videoImage} />
       <View style={styles.rectangle}>
-        <Image style={styles.twitchImage} source={{ uri: video.thumbnail }} />
+      <Image style={styles.twitchImage} source={{ uri: video.thumbnailUrl }} />
+
         <View style={styles.twitchTextContainer}>
           <Text style={styles.name}>{video.channelTitle}</Text>
           <Text numberOfLines={2} style={styles.twitchTitle}>{video.title}</Text>
