@@ -78,6 +78,7 @@ export default function AlaUne({ navigation }) {
           onPress={() =>
             navigation.navigate("Informations", {
               image: require("./gp_explorer_squeezie.jpg"),
+              description: "Course de F4 organisé par Squeezie", // Ajouter la description ici
               rectangleIndex: 0, // Index du premier rectangle
             })
           }
@@ -104,6 +105,7 @@ export default function AlaUne({ navigation }) {
           onPress={() =>
             navigation.navigate("Informations", {
               image: require("./eleven_allstar.jpg"),
+              description: "Match de football avec des célébrités", // Ajouter la description ici
               rectangleIndex: 1, // Index du premier rectangle
             })
           }
@@ -129,6 +131,7 @@ export default function AlaUne({ navigation }) {
           onPress={() =>
             navigation.navigate("Informations", {
               image: require("./zevent.jpg"),
+              description: "ZEvent", // Ajouter la description ici
               rectangleIndex: 2, // Index du premier rectangle
             })
           }
@@ -148,6 +151,7 @@ export default function AlaUne({ navigation }) {
           onPress={() =>
             navigation.navigate("Informations", {
               image: require("./concert.png"),
+              description: "Concert en Live", // Ajouter la description ici
               rectangleIndex: 3, // Index du premier rectangle
             })
           }

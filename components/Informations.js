@@ -18,7 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const { firestore } = firebase;
 
 export default function Informations({ route }) {
-  const { image, rectangleIndex } = route.params;
+  const { image, description, rectangleIndex } = route.params;
   const [comments, setComments] = useState([]);
   const [currentComment, setCurrentComment] = useState("");
 
@@ -98,14 +98,18 @@ export default function Informations({ route }) {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
+        
         <Image source={image} style={styles.image} />
+        <Text style={{ color: 'white' }}>{description}</Text>
         <ScrollView style={styles.commentScrollView}>
           {comments.map((comment, index) => (
             <View style={styles.commentContainer} key={index}>
+              
               <Image
                 source={{ uri: comment.profileImageUrl }}
                 style={styles.profileImage}
               />
+              
               <View style={styles.commentBox}>
                 <Text style={styles.username}>{comment.username}</Text>
                 <Text>{comment.comment}</Text>
