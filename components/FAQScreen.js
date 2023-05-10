@@ -4,6 +4,7 @@ import BottomBar from './BottomBar';
 import { Video } from 'expo-av';
 import Controls from 'react-native-video-controls';
 import { View, Text, StyleSheet, ScrollView, Button, Modal, Image, LinearGradient, Linking, TouchableOpacity,} from 'react-native';
+import video from './faqvideo.mp4';
 
 const FAQScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -16,7 +17,7 @@ const FAQScreen = () => {
   const [modalVisible8, setModalVisible8] = useState(false);
   const [modalVisible9, setModalVisible9] = useState(false);
 
-  const video=React.useRef(null);
+  const videoRef = React.useRef(null);
   const[status,setStatus] = React.useState({});
   const [hovered, setHovered] = useState(false);
   const handleMouseEnter = () => {
@@ -31,22 +32,20 @@ const FAQScreen = () => {
     <View style={{height:1500,backgroundColor: '#6441a5',}}>
        <TopBar /> 
       <ScrollView style={styles.scrollView}>
-    <View style={styles.container}>
-    <View style={styles.topBar}>
-   
-   <View id="video">
+        <View style={styles.container}>
+          <View style={styles.topBar}>
+            <View id="video">
+            <Video
+  ref={videoRef}
+  source={video}
+  style={{ width: "100%", height: 300 }}
+  controls={false}
+  resizeMode="contain"
+  isLooping
+  onPlaybackStatusUpdate={status => setStatus(() => status)}
+/>
 
-
-    <Video
-    source={{uri:"https://youtu.be/2qCmRJz3NOE"}}
-    style={styles.videoStyle}
-    controls={false}
-    resizeMode="contain"
-    isLooping
-    onPlaybackStatusUpdate={setStatus}
-  />
-    </View>
-
+            </View>
 
 
 
