@@ -12,14 +12,14 @@ import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "react-native";
 
 
-export default function TopBar({username}) {  // Ajoutez la prop ici
-  console.log('TopBar received username:', username);
+export default function TopBar() {
   const navigation = useNavigation();
   const [profileImageUrl, setProfileImageUrl] = useState("");
   const [showMenu, setShowMenu] = useState(false);
   const [nom, setNom] = useState("");
   const [prenom, setPrenom] = useState("");
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -56,7 +56,6 @@ const loadPrenom = async () => {
   const handlePage3 = () => {
     // Ajouter l'action à effectuer lorsqu'on clique sur l'icône de la page 3
   };
-  console.log('Rendering TopBar with username:', username);
 
   return (
     <View style={styles.container}>
@@ -96,7 +95,7 @@ const loadPrenom = async () => {
             ]}
             resizeMode="contain"
           />
-<Text style={{...styles.nomcompte, backgroundColor: 'red', color: 'black'}}>{username}</Text>
+          <Text style={styles.nomcompte} > NomDuCompte</Text>
           <Text style={styles.pseudo} > @pseudoducompte</Text>
 
 
@@ -122,7 +121,9 @@ const loadPrenom = async () => {
             <Text style={styles.textMenu}> Home </Text>
             </TouchableOpacity>
 
-
+            <TouchableOpacity  onPress={() => navigation.navigate("Abonnement")}>
+            <Text style={styles.textMenu}> FAQ </Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Bestof")}>
             <Image source={require('./video.png')} style={styles.logomenu} />
             </TouchableOpacity>
@@ -143,6 +144,7 @@ const loadPrenom = async () => {
             <TouchableOpacity  onPress={() => navigation.navigate("FAQ")}>
             <Text style={styles.textMenu}> FAQ </Text>
             </TouchableOpacity>
+        
 
           </View>
         </TouchableOpacity>

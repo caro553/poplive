@@ -325,7 +325,6 @@ useEffect(() => {
   )
 }
       {/* Utilisez les informations du streamerData pour afficher le contenu du profil */}
-      <BottomBar style={{ position: 'absolute', bottom: 0 }} />
     </View>
   );  
 };

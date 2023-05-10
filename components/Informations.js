@@ -10,6 +10,8 @@ import {
   Keyboard,
   ScrollView,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform 
 } from "react-native";
 import firebase, { addComment } from "./firebaseConfig";
 import { db } from "./firebaseConfig";
@@ -101,44 +103,49 @@ export default function Informations({ route }) {
         
         <Image source={image} style={styles.image} />
         <Text style={{ color: 'white' }}>{description}</Text>
-        <ScrollView style={styles.commentScrollView}>
-          {comments.map((comment, index) => (
-            <View style={styles.commentContainer} key={index}>
-              
-              <Image
-                source={{ uri: comment.profileImageUrl }}
-                style={styles.profileImage}
+  
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.container}
+        >
+          <ScrollView style={styles.commentScrollView}>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={[styles.input, { marginTop: 20 }]} // Ajouter la propriété marginTop ici
+                placeholder="Ecrivez votre commentaire ici..."
+                multiline
+                value={currentComment}
+                onChangeText={setCurrentComment}
               />
-              
-              <View style={styles.commentBox}>
-                <Text style={styles.username}>{comment.username}</Text>
-                <Text>{comment.comment}</Text>
-                <View style={styles.likesContainer}>
-                  <TouchableOpacity onPress={() => handleLike(comment.key)}>
-                    <Image
-                      source={require("./like.png")}
-                      style={styles.likeIcon}
-                    />
-                  </TouchableOpacity>
-                  <Text style={styles.likesCount}>{comment.likes}</Text>
+              <Button title="Envoyer" onPress={handleCommentSubmit} />
+            </View>
+            {comments.map((comment, index) => (
+              <View style={styles.commentContainer} key={index}>
+                <Image
+                  source={{ uri: comment.profileImageUrl }}
+                  style={styles.profileImage}
+                />
+                <View style={styles.commentBox}>
+                  <Text style={styles.username}>{comment.username}</Text>
+                  <Text>{comment.comment}</Text>
+                  <View style={styles.likesContainer}>
+                    <TouchableOpacity onPress={() => handleLike(comment.key)}>
+                      <Image
+                        source={require("./like.png")}
+                        style={styles.likeIcon}
+                      />
+                    </TouchableOpacity>
+                    <Text style={styles.likesCount}>{comment.likes}</Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          ))}
-        </ScrollView>
-
-        <TextInput
-          style={[styles.input, { marginTop: 20 }]} // Ajouter la propriété marginTop ici
-          placeholder="Ecrivez votre commentaire ici..."
-          multiline
-          value={currentComment}
-          onChangeText={setCurrentComment}
-        />
-        <Button title="Envoyer" onPress={handleCommentSubmit} />
+            ))}
+          </ScrollView>
+        </KeyboardAvoidingView>
       </View>
     </TouchableWithoutFeedback>
   );
-}
+            }  
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -210,5 +217,9 @@ const styles = StyleSheet.create({
   },
   likesCount: {
     marginLeft: 5,
+  },
+  inputContainer: {
+    marginBottom: 20,
+    marginLeft: 50, // déplace le conteneur d'entrée vers la droite
   },
 });
