@@ -81,16 +81,12 @@ const saveUserData = async () => {
       nom,
       prenom,
       email,
-      username, // Ajoutez le pseudo ici
     });
     setIsEditing(false);
-    // Stockez également le pseudo dans AsyncStorage pour qu'il puisse être récupéré ailleurs dans l'application
-    await AsyncStorage.setItem('username', username);
   } catch (error) {
     console.error('Error updating user data:', error);
   }
 };
-
 const nomRef = useRef(null);
   const handleNomChange = () => {
     console.log('handleNomChange called');
@@ -113,13 +109,11 @@ useEffect(() => {
 
   const handleData = (snapshot) => {
     const data = snapshot.val();
-    console.log('Data from Firebase:', data); // Ajout pour le débogage
 
     if (data) {
       setNom(data.nom || "");
       setPrenom(data.prenom || "");
       setEmail(data.email || "");
-      setUsername(data.username || ""); // Récupérez l'username ici
     }
 
     setLoading(false);
@@ -131,7 +125,6 @@ useEffect(() => {
     userRef.off('value', handleData);
   };
 }, []);
-
 
   const handleBioChange = (newBio) => {
     setBio(newBio);
@@ -156,9 +149,8 @@ useEffect(() => {
 
     if (!result.cancelled) {
       await AsyncStorage.setItem("profileImageUrl", result.uri);
-      setProfileImageTopBarUrl(result.uri);
+      setProfileImageUrl(result.uri);
     }
-    
   };
   const getSavedBio = async () => {
     try {
@@ -183,8 +175,7 @@ useEffect(() => {
 
   const loadUsername = async () => {
     const name = await AsyncStorage.getItem('username');
-    console.log('Username from AsyncStorage:', name); // Ajout pour le débogage
-    if (name) {
+        if (name) {
       setUsername(name);
     }
   };
@@ -212,10 +203,13 @@ useEffect(() => {
     fetchData();
   }, []);
 
+    const [isSubscribed, setIsSubscribed] = useState(false);
   
+    const handleSubscribe = () => {
+      setIsSubscribed(true);
+    };
   return (
     <View style={styles.container}>
-
        <TopBar  profileImage={profileImageTopBarUrl}/> 
       <KeyboardAwareScrollView
   contentContainerStyle={styles.keyboardAwareScrollView}
@@ -224,12 +218,19 @@ useEffect(() => {
 >
 
 
-<Image source={require("./etoile_premium.png")} style={styles.etoile} />
-<Text style={styles.textEtoile}>JE SUIS EN NON-PREMIUM</Text>
-<Image source={require("./couronne_premium.png")} style={styles.couronneEtoile} />
-<Text style={styles.textEtoile}>JE SUIS EN PREMIUM</Text>
+<Image source={require('./etoile_premium.png')} style={styles.etoile} />
 
-
+{isSubscribed && (
+        <View style={styles.premiumContainer}>
+          <Text style={styles.subscriptionMessage}>Je suis premium !</Text>
+          <Image source={require('./couronne_premium.png')} style={styles.couronne} />
+        </View>
+      )} 
+      {!isSubscribed && (
+        <View style={styles.premiumContainer}>
+          <Text style={styles.subscriptionMessage}>Je suis en{'\n'}non-premium !</Text>
+        </View>
+      )} 
       {profileImageUrl ? (
         <TouchableOpacity onPress={selectImage}>
           <Image
@@ -340,7 +341,17 @@ useEffect(() => {
   colors={['#624F9C', '#714F9B', '#814E9A', '#8B4D99', '#8B4D99', '#8E4D98', '#C24E97', '#E55599', '#F08479', '#FABE4B', '#F3E730']}
   style={styles.logoutButton}>
   <TouchableOpacity>
-    <Text style={[styles.abonneText]}>Abonne toi !</Text>
+  {!isSubscribed && (
+        <TouchableOpacity onPress={handleSubscribe}>
+          <Text style={styles.logoutText}>Abonne toi !</Text>
+        </TouchableOpacity>
+      )} 
+
+{isSubscribed && (
+        <TouchableOpacity onPress={handleSubscribe}>
+          <Text style={styles.logoutText}>Se désabonner</Text>
+        </TouchableOpacity>
+      )}
   </TouchableOpacity>
 </LinearGradient>
 </View>
@@ -528,7 +539,15 @@ const styles = StyleSheet.create({
   etoile:{
     top:100,
     right:90,
+    zIndex: 10,
+    opacity: 0.5, 
+  },
+  subscriptionMessage:{
+    right:90,
     zIndex: 9999,
     opacity: 0.5, 
+  },
+  couronne:{
+
   },
 });

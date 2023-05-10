@@ -40,10 +40,7 @@ const FAQScreen = () => {
   source={video}
   style={{ width: "100%", height: 300 }}
   controls={false}
-  resizeMode="contain"
-  isLooping
-  onPlaybackStatusUpdate={status => setStatus(() => status)}
-/>
+  resizeMode="contain"/>
 
             </View>
 
