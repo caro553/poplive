@@ -30,7 +30,7 @@ function renderBorder(colors) {
   ));
 }
 
-export default function AlaUne() {
+export default function AlaUne({ navigation }) { // Ajoutez { navigation } ici
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
@@ -65,86 +65,113 @@ export default function AlaUne() {
 
         <Text style={styles.scrollText}>En ce moment sur Twitch :</Text>
         <TouchableOpacity
-          style={styles.twitchContainer}
-          onPress={() =>
-            Linking.openURL("https://www.youtube.com/watch?v=r67zVQK7zE0")
-          }
-        >
-          <Image
-            source={require("./rectangle.png")}
-            style={styles.twitchIcon}
-          />
-          <View style={styles.twitchTextContainer}>
-            <Text style={styles.twitchTitle}>Deuxième vidéo sur Youtube</Text>
-            <Text style={styles.twitchChannel}>Chaîne Youtube 2</Text>
-          </View>
-        </TouchableOpacity>
+  style={styles.twitchContainer}
+  onPress={() => 
+    navigation.navigate('PageAccueil', { image: require('./Rectangle2.png') })
+  }
+>
+  <Image
+    source={require("./Rectangle2.png")}
+    style={styles.twitchIcon}
+  />
+  <View style={styles.twitchTextContainer}>
+    <Title text="Wig on twitch" />
+    <Description text="7h de live du lundi au dimanche 14 " />
+    <View style={styles.iconsContainer}>
+      <Image source={require('./comment.png')} style={styles.icon} />
+      <Image source={require('./like.png')} style={styles.icon} />
+    </View>
+  </View>
+</TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.twitchContainer}
-          onPress={() => Linking.openURL("https://www.twitch.tv")}
-        >
-          <Image
-            source={require("./rectangle.png")}
-            style={styles.twitchIcon}
-          />
-          <View style={styles.twitchTextContainer}>
-            <Text style={styles.twitchTitle}>Stream en direct sur Twitch</Text>
-            <Text style={styles.twitchChannel}>Chaîne Twitch 1</Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.twitchContainer}
-          onPress={() =>
-            Linking.openURL("https://www.youtube.com/watch?v=ZXsQAXx_ao0")
-          }
-        >
-          <Image
-            source={require("./rectangle.png")}
-            style={styles.twitchIcon}
-          />
-          <View style={styles.twitchTextContainer}>
-            <Text style={styles.twitchTitle}>Première vidéo sur Youtube</Text>
-            <Text style={styles.twitchChannel}>Chaîne Youtube 1</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.twitchContainer}
-          onPress={() =>
-            Linking.openURL("https://www.youtube.com/watch?v=ZXsQAXx_ao0")
-          }
-        >
-          <Image
-            source={require("./rectangle.png")}
-            style={styles.twitchIcon}
-          />
-          <View style={styles.twitchTextContainer}>
-            <Text style={styles.twitchTitle}>Première vidéo sur Youtube</Text>
-            <Text style={styles.twitchChannel}>Chaîne Youtube 1</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.twitchContainer}
-          onPress={() =>
-            Linking.openURL("https://www.youtube.com/watch?v=ZXsQAXx_ao0")
-          }
-        >
-          <Image
-            source={require("./rectangle.png")}
-            style={styles.twitchIcon}
-          />
-          <View style={styles.twitchTextContainer}>
-            <Text style={styles.twitchTitle}>Première vidéo sur Youtube</Text>
-            <Text style={styles.twitchChannel}>Chaîne Youtube 1</Text>
-          </View>
-        </TouchableOpacity>
-
+<TouchableOpacity
+  style={styles.twitchContainer}
+  onPress={() => 
+    navigation.navigate('PageAccueil', { image: require('./Rectangle2.png') })
+  }
+>
+  <Image
+    source={require("./Rectangle2.png")}
+    style={styles.twitchIcon}
+  />
+  <View style={styles.twitchTextContainer}>
+    <Title text="Wig on twitch" />
+    <Description text="7h de live du lundi au dimanche 14 " />
+    <View style={styles.iconsContainer}>
+      <Image source={require('./comment.png')} style={styles.icon} />
+      <Image source={require('./like.png')} style={styles.icon} />
+    </View>
+  </View>
+</TouchableOpacity>
+<TouchableOpacity
+  style={styles.twitchContainer}
+  onPress={() => 
+    navigation.navigate('PageAccueil', { image: require('./rectangle.png') })
+  }
+>
+  <Image
+    source={require("./rectangle.png")}
+    style={styles.twitchIcon}
+  />
+  <View style={styles.twitchTextContainer}>
+    <Title text="Wig on twitch" />
+    <Description text="7h de live du lundi au dimanche 14 " />
+    <View style={styles.iconsContainer}>
+      <Image source={require('./comment.png')} style={styles.icon} />
+      <Image source={require('./like.png')} style={styles.icon} />
+    </View>
+  </View>
+</TouchableOpacity>
+<TouchableOpacity
+  style={styles.twitchContainer}
+  onPress={() => 
+    navigation.navigate('PageAccueil', { image: require('./rectangle.png') })
+  }
+>
+  <Image
+    source={require("./rectangle.png")}
+    style={styles.twitchIcon}
+  />
+  <View style={styles.twitchTextContainer}>
+    <Title text="Wig on twitch" />
+    <Description text="7h de live du lundi au dimanche 14 " />
+    <View style={styles.iconsContainer}>
+      <Image source={require('./comment.png')} style={styles.icon} />
+      <Image source={require('./like.png')} style={styles.icon} />
+    </View>
+  </View>
+</TouchableOpacity>
+<TouchableOpacity
+  style={styles.twitchContainer}
+  onPress={() => 
+    navigation.navigate('PageAccueil', { image: require('./rectangle.png') })
+  }
+>
+  <Image
+    source={require("./rectangle.png")}
+    style={styles.twitchIcon}
+  />
+  <View style={styles.twitchTextContainer}>
+    <Title text="Wig on twitch" />
+    <Description text="7h de live du lundi au dimanche 14 " />
+    <View style={styles.iconsContainer}>
+      <Image source={require('./comment.png')} style={styles.icon} />
+      <Image source={require('./like.png')} style={styles.icon} />
+    </View>
+  </View>
+</TouchableOpacity>
         {/* Ajoutez autant d'éléments <TouchableOpacity> que vous le souhaitez ici */}
       </ScrollView>
       <BottomBar/>
     </View>
   );
+}
+function Title({ text }) {
+  return <Text style={styles.title}>{text}</Text>;
+}
+
+function Description({ text }) {
+  return <Text style={styles.description}>{text}</Text>;
 }
 
 const styles = StyleSheet.create({
@@ -277,4 +304,19 @@ const styles = StyleSheet.create({
     height: 86,
     marginLeft: 2,
   }, // Added the missing closing curly brace
+    title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  description: {
+    fontSize: 14,
+  },
+  iconsContainer: {
+    flexDirection: 'row',
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    marginRight: 10,
+  },
 });
