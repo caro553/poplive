@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -10,10 +10,10 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "react-native";
-import { AsyncStorage } from 'react-native';
 
 
-export default function TopBar({ profileImage, username }) {
+export default function TopBar({username}) {  // Ajoutez la prop ici
+  console.log('TopBar received username:', username);
   const navigation = useNavigation();
   const [profileImageUrl, setProfileImageUrl] = useState("");
   const [showMenu, setShowMenu] = useState(false);
@@ -35,21 +35,14 @@ export default function TopBar({ profileImage, username }) {
     if (storedNom) {
       setNom(storedNom);
     }
-  };
+};
 
-  const loadPrenom = async () => {
+const loadPrenom = async () => {
     const storedPrenom = await AsyncStorage.getItem('prenom');
     if (storedPrenom) {
       setPrenom(storedPrenom);
     }
-  };
-
-  useEffect(() => {
-    loadProfileImage();
-    loadNom();
-    loadPrenom();
-  }, [])
-
+};
 
 
   const handlePage1 = () => {
@@ -63,8 +56,8 @@ export default function TopBar({ profileImage, username }) {
   const handlePage3 = () => {
     // Ajouter l'action à effectuer lorsqu'on clique sur l'icône de la page 3
   };
-;
-  
+  console.log('Rendering TopBar with username:', username);
+
   return (
     <View style={styles.container}>
       <View style={styles.burgerContainer}>
@@ -103,7 +96,7 @@ export default function TopBar({ profileImage, username }) {
             ]}
             resizeMode="contain"
           />
-<Text style={styles.nomcompte}>{username}</Text>
+<Text style={{...styles.nomcompte, backgroundColor: 'red', color: 'black'}}>{username}</Text>
           <Text style={styles.pseudo} > @pseudoducompte</Text>
 
 
