@@ -87,6 +87,8 @@ const saveUserData = async () => {
     console.error('Error updating user data:', error);
   }
 };
+
+
 const nomRef = useRef(null);
   const handleNomChange = () => {
     console.log('handleNomChange called');
@@ -109,15 +111,17 @@ useEffect(() => {
 
   const handleData = (snapshot) => {
     const data = snapshot.val();
-
+    console.log('Data from Firebase:', data); // Ajout pour le débogage
+  
     if (data) {
       setNom(data.nom || "");
       setPrenom(data.prenom || "");
       setEmail(data.email || "");
     }
-
+  
     setLoading(false);
   };
+  
 
   userRef.on('value', handleData);
 
@@ -174,17 +178,19 @@ useEffect(() => {
   };
 
   const loadUsername = async () => {
-    const name = await AsyncStorage.getItem('username');
-        if (name) {
-      setUsername(name);
+    const storedUsername = await AsyncStorage.getItem('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
     }
   };
+  
 
   useEffect(() => {
     loadProfileImage();
     loadUsername();
     loadNom();
     loadPrenom();
+    loadEmail();
   }, []);
   
 

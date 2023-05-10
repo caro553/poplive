@@ -39,8 +39,10 @@ const FAQScreen = () => {
   ref={videoRef}
   source={video}
   style={{ width: "100%", height: 300 }}
-  controls={false}
-  resizeMode="contain"/>
+  useNativeControls
+  resizeMode="contain"
+  shouldPlay/>
+
 
             </View>
 
@@ -187,11 +189,6 @@ const FAQScreen = () => {
           </View>
         </View>
       </Modal>
-
-
-
-
-
       </View>
   
     </View>
