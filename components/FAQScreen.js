@@ -38,7 +38,7 @@ const FAQScreen = () => {
             <Video
   ref={videoRef}
   source={video}
-  style={{ width: "100%", height: 300 }}
+  style={{ width: "90%", height: 193, borderRadius: 17, left:20, top:10}}
   useNativeControls
   resizeMode="contain"
   shouldPlay/>
@@ -56,7 +56,7 @@ const FAQScreen = () => {
 
 
       <View style={styles.buttonContainer}>
-      <View style={styles.avantmodal}>
+      <View style={styles.avantmodal}  onPress={() => setModalVisible(true)}>
           <Button 
             title="Qu'est-ce que PopLive ?" 
             onPress={() => setModalVisible(true)}
@@ -79,7 +79,7 @@ const FAQScreen = () => {
 
 
       <View style={styles.buttonContainer}>
-      <View style={styles.avantmodal}>
+      <View style={styles.avantmodal} onPress={() => setModalVisible2(true)}>
           <Button 
             title="Quelle est la différence entre le premium..." 
             onPress={() => setModalVisible2(true)}
@@ -101,7 +101,7 @@ const FAQScreen = () => {
       </Modal>
 
       <View style={styles.buttonContainer}>
-      <View style={styles.avantmodal}>
+      <View style={styles.avantmodal} onPress={() => setModalVisible3(true)}>
           <Button 
             title="Est-ce que je risque un ban Twitch si..." 
             onPress={() => setModalVisible3(true)}
@@ -123,7 +123,7 @@ const FAQScreen = () => {
       </Modal>
 
       <View style={styles.buttonContainer}>
-      <View style={styles.avantmodal}>
+      <View style={styles.avantmodal} onPress={() => setModalVisible5(true)}>
           <Button 
             title="Quels sont les avantages de l'application..." 
             onPress={() => setModalVisible5(true)}
@@ -147,7 +147,7 @@ const FAQScreen = () => {
       </Modal>
 
       <View style={styles.buttonContainer}>
-      <View style={styles.avantmodal}>
+      <View style={styles.avantmodal} onPress={() => setModalVisible6(true)}>
           <Button 
             title="Le mode premium me boostera-t-il que..." 
             onPress={() => setModalVisible6(true)}
@@ -169,7 +169,7 @@ const FAQScreen = () => {
       </Modal>
 
       <View style={styles.buttonContainer}>
-      <View style={styles.avantmodal}>
+      <View style={styles.avantmodal} onPress={() => setModalVisible8(true)}>
           <Button 
             title="Est-ce que l'application respecte la RGPD..." 
             onPress={() => setModalVisible8(true)}
@@ -192,10 +192,11 @@ const FAQScreen = () => {
       </View>
   
     </View>
-    <View style={{top:370,}}>
+    <View style={{top:165,}}>
   <BottomBar />
   </View>
   </ScrollView>
+  
   </View>
   );
 };
@@ -205,7 +206,7 @@ const styles = StyleSheet.create({
   nouscontacter: {
     height: 50,
     width: 200,
-    top: 160,
+    top: 25,
     left: 70,
   },
   imgcontacter:{
@@ -319,7 +320,7 @@ const styles = StyleSheet.create({
       marginBottom: 10,
     },
     buttonContainer:{
-      top:220,
+      top:90,
     },
     videoStyle:{
       top:150,

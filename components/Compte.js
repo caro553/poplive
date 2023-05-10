@@ -87,8 +87,6 @@ const saveUserData = async () => {
     console.error('Error updating user data:', error);
   }
 };
-
-
 const nomRef = useRef(null);
   const handleNomChange = () => {
     console.log('handleNomChange called');
@@ -111,17 +109,15 @@ useEffect(() => {
 
   const handleData = (snapshot) => {
     const data = snapshot.val();
-    console.log('Data from Firebase:', data); // Ajout pour le débogage
-  
+
     if (data) {
       setNom(data.nom || "");
       setPrenom(data.prenom || "");
       setEmail(data.email || "");
     }
-  
+
     setLoading(false);
   };
-  
 
   userRef.on('value', handleData);
 
@@ -178,19 +174,17 @@ useEffect(() => {
   };
 
   const loadUsername = async () => {
-    const storedUsername = await AsyncStorage.getItem('username');
-    if (storedUsername) {
-      setUsername(storedUsername);
+    const name = await AsyncStorage.getItem('username');
+        if (name) {
+      setUsername(name);
     }
   };
-  
 
   useEffect(() => {
     loadProfileImage();
     loadUsername();
     loadNom();
     loadPrenom();
-    loadEmail();
   }, []);
   
 
@@ -543,17 +537,20 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   etoile:{
-    top:100,
+    top:150,
     right:90,
-    zIndex: 10,
-    opacity: 0.5, 
+    zIndex: 1,
   },
   subscriptionMessage:{
+    top:80,
     right:90,
     zIndex: 9999,
-    opacity: 0.5, 
+    color: 'pink',
+    fontWeight: 'bold',
+    fontSize:17,
+    position: 'absolute',
   },
   couronne:{
-
+    right:200,
   },
 });
