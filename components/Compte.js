@@ -181,13 +181,11 @@ useEffect(() => {
   };
 
   useEffect(() => {
-    console.log('useEffect called'); // Ajout pour le débogage
     loadProfileImage();
     loadUsername();
     loadNom();
     loadPrenom();
   }, []);
-  
   
 
   const removeImage = async () => {
@@ -210,7 +208,6 @@ useEffect(() => {
     const handleSubscribe = () => {
       setIsSubscribed(true);
     };
-    console.log('rendering with username:', username); // Ajout pour le débogage
   return (
     <View style={styles.container}>
        <TopBar  profileImage={profileImageTopBarUrl}/> 
